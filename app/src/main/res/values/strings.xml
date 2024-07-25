@@ -42,14 +42,16 @@
     <string name="general_heartbeat_interval">Heartbeat Interval</string>
     <string name="general_ble_settings">Bluetooth Settings</string>
     <string name="general_axis_setting">3-Axis Settings</string>
+    <string name="standby_mode">Standby Mode</string>
     <string name="timing_mode">Timing Mode</string>
     <string name="periodic_mode">Periodic Mode</string>
     <string name="motion_mode">Motion Mode</string>
     <string name="downlink_for_position">Downlink For Position</string>
-    <string name="vibration_detection">Shock Detection</string>
+    <string name="shock_detection">Shock Detection</string>
     <string name="man_down_detection">ManDown Detection</string>
     <string name="active_state_count">Active State Count</string>
     <string name="device_information">Device Information</string>
+    <string name="on_off_settings">ON/OFF Settings</string>
     <string name="local_data_sync">Local Data Sync</string>
     <string name="indicator_settings">Indicator Settings</string>
     <string name="low_power_prompt_tips">*When the battery is less than or equal to %s, the green LED will flash once every 10 seconds.</string>

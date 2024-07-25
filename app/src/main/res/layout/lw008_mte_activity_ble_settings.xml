@@ -119,8 +119,8 @@
                 android:text="(-40,-20,-16,-12,-8-4,0,+2,+3,+4,+5,+6,+7,+8)"
                 android:textColor="@color/lw008_grey_b3b3b3"
                 android:textSize="12sp"
-                app:layout_constraintTop_toBottomOf="@id/tx_power"
-                app:layout_constraintLeft_toLeftOf="parent" />
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tx_power" />
 
             <SeekBar
                 android:id="@+id/sb_tx_power"
@@ -159,6 +159,28 @@
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/sb_tx_power" />
 
+            <CheckBox
+                android:id="@+id/cbBeaconMode"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_marginTop="10dp"
+                android:button="null"
+                android:drawableRight="@drawable/lw008_selector_cb_btn"
+                android:text="Beacon Mode"
+                android:textColor="@color/lw008_black_333333"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/sb_tx_power" />
+
+            <View
+                style="@style/lw008_divider_line"
+                android:layout_width="0dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/cbBeaconMode" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -174,7 +196,6 @@
                 android:id="@+id/et_adv_timeout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
                 android:gravity="center"
                 android:hint="1~60"
                 android:inputType="number"
@@ -186,7 +207,7 @@
                 app:layout_constraintHorizontal_bias="0.82"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/sb_tx_power"
+                app:layout_constraintTop_toBottomOf="@id/cbBeaconMode"
                 app:layout_constraintWidth_percent="0.2" />
 
             <TextView

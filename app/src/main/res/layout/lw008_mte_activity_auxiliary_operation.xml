@@ -127,31 +127,6 @@
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_vibration_detection" />
-
-            <View
-                style="@style/lw008_divider_line"
-                android:layout_width="0dp"
-                android:layout_marginTop="10dp"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_man_down_detection" />
-
-            <TextView
-                android:id="@+id/tv_active_state_count"
-                android:layout_width="0dp"
-                android:layout_height="40dp"
-                android:layout_marginTop="20dp"
-                android:clickable="true"
-                android:drawableRight="@drawable/lw008_ic_arrow_right"
-                android:gravity="center_vertical"
-                android:onClick="onActiveStateCount"
-                android:text="@string/active_state_count"
-                android:textColor="@color/lw008_black_333333"
-                android:textSize="15sp"
-                android:textStyle="bold"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_man_down_detection" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </LinearLayout>

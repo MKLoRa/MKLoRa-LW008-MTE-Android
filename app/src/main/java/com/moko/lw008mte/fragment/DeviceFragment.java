@@ -2,6 +2,7 @@ package com.moko.lw008mte.fragment;
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,10 +24,7 @@ public class DeviceFragment extends Fragment {
 
     private ArrayList<String> mTimeZones;
     private int mSelectedTimeZone;
-    //    private ArrayList<String> mLowPowerPrompts;
-//    private int mSelectedLowPowerPrompt;
     private boolean mLowPowerPayloadEnable;
-    private boolean mShutdownPayloadEnable;
 
 
     private DeviceInfoActivity activity;
@@ -64,9 +62,6 @@ public class DeviceFragment extends Fragment {
                 }
             }
         }
-//        mLowPowerPrompts = new ArrayList<>();
-//        mLowPowerPrompts.add("5%");
-//        mLowPowerPrompts.add("10%");
         return mBind.getRoot();
     }
 
@@ -81,18 +76,12 @@ public class DeviceFragment extends Fragment {
         dialog.setListener(value -> {
             mSelectedTimeZone = value;
             mBind.tvTimeZone.setText(mTimeZones.get(value));
-            activity.showSyncingProgressDialog();
-            ArrayList<OrderTask> orderTasks = new ArrayList<>();
-            orderTasks.add(OrderTaskAssembler.setTimeZone(value - 24));
-            orderTasks.add(OrderTaskAssembler.getTimeZone());
-            LoRaLW008MTEMokoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
         });
         dialog.show(activity.getSupportFragmentManager());
     }
 
-    public void setShutdownPayload(int enable) {
-        mShutdownPayloadEnable = enable == 1;
-        mBind.ivShutdownPayload.setImageResource(mShutdownPayloadEnable ? R.drawable.lw008_ic_checked : R.drawable.lw008_ic_unchecked);
+    public void setLowPowerReportInterval(int interval) {
+        mBind.etLowPowerReportInterval.setText(String.valueOf(interval));
     }
 
 
@@ -101,45 +90,30 @@ public class DeviceFragment extends Fragment {
         mBind.ivLowPowerPayload.setImageResource(mLowPowerPayloadEnable ? R.drawable.lw008_ic_checked : R.drawable.lw008_ic_unchecked);
     }
 
-//    public void setLowPower(int lowPower) {
-//        mSelectedLowPowerPrompt = lowPower;
-//        tvLowPowerPrompt.setText(mLowPowerPrompts.get(mSelectedLowPowerPrompt));
-//        tvLowPowerPromptTips.setText(getString(R.string.low_power_prompt_tips, mLowPowerPrompts.get(mSelectedLowPowerPrompt)));
-//    }
-
-    public void changeShutdownPayload() {
-        mShutdownPayloadEnable = !mShutdownPayloadEnable;
-        activity.showSyncingProgressDialog();
-        ArrayList<OrderTask> orderTasks = new ArrayList<>();
-        orderTasks.add(OrderTaskAssembler.setShutdownPayloadEnable(mShutdownPayloadEnable ? 1 : 0));
-        orderTasks.add(OrderTaskAssembler.getShutdownPayloadEnable());
-        LoRaLW008MTEMokoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
-    }
 
     public void changeLowPowerPayload() {
         mLowPowerPayloadEnable = !mLowPowerPayloadEnable;
-        activity.showSyncingProgressDialog();
-        ArrayList<OrderTask> orderTasks = new ArrayList<>();
-        orderTasks.add(OrderTaskAssembler.setLowPowerReportEnable(mLowPowerPayloadEnable ? 1 : 0));
-        orderTasks.add(OrderTaskAssembler.getLowPowerPayloadEnable());
-        LoRaLW008MTEMokoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
     }
 
-//    public void showLowPowerDialog() {
-//        BottomDialog dialog = new BottomDialog();
-//        dialog.setDatas(mLowPowerPrompts, mSelectedLowPowerPrompt);
-//        dialog.setListener(value -> {
-//            mSelectedLowPowerPrompt = value;
-//            tvLowPowerPrompt.setText(mLowPowerPrompts.get(value));
-//            tvLowPowerPromptTips.setText(getString(R.string.low_power_prompt_tips, mLowPowerPrompts.get(value)));
-//            activity.showSyncingProgressDialog();
-//            ArrayList<OrderTask> orderTasks = new ArrayList<>();
-//            orderTasks.add(OrderTaskAssembler.setLowPowerPercent(value));
-//            orderTasks.add(OrderTaskAssembler.getLowPowerPercent());
-//            LoRaLW008MTEMokoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
-//        });
-//        dialog.show(activity.getSupportFragmentManager());
-//
-//    }
+    public boolean isValid() {
+        final String intervalStr = mBind.etLowPowerReportInterval.getText().toString();
+        if (TextUtils.isEmpty(intervalStr))
+            return false;
+        final int interval = Integer.parseInt(intervalStr);
+        if (interval < 1 || interval > 255) {
+            return false;
+        }
+        return true;
+    }
 
+    public void saveParams() {
+        final String intervalStr = mBind.etLowPowerReportInterval.getText().toString();
+        final int interval = Integer.parseInt(intervalStr);
+        activity.showSyncingProgressDialog();
+        ArrayList<OrderTask> orderTasks = new ArrayList<>();
+        orderTasks.add(OrderTaskAssembler.setTimeZone(mSelectedTimeZone - 24));
+        orderTasks.add(OrderTaskAssembler.setLowPowerPayloadEnable(mLowPowerPayloadEnable ? 1 : 0));
+        orderTasks.add(OrderTaskAssembler.setLowPowerReportInterval(interval));
+        LoRaLW008MTEMokoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
+    }
 }

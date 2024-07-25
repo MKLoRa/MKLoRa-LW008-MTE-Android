@@ -26,6 +26,22 @@ public class ParamsWriteTask extends OrderTask {
         return data;
     }
 
+    /**
+     * 上行配置参数
+     *
+     * @param flag  0 1
+     * @param times 1-4
+     */
+    public void setPayloadInfo(@IntRange(from = 0, to = 1) int flag, @IntRange(from = 1, to = 4) int times, int key) {
+        response.responseValue = data = new byte[]{
+                (byte) 0xED,
+                (byte) 0x01,
+                (byte) key,
+                (byte) 0x02,
+                (byte) flag,
+                (byte) times
+        };
+    }
 
     public void close() {
         data = new byte[]{
@@ -142,16 +158,16 @@ public class ParamsWriteTask extends OrderTask {
     }
 
 
-    public void setShutdownInfoReport(@IntRange(from = 0, to = 1) int enable) {
-        data = new byte[]{
-                (byte) 0xED,
-                (byte) 0x01,
-                (byte) ParamsKeyEnum.KEY_SHUTDOWN_PAYLOAD_ENABLE.getParamsKey(),
-                (byte) 0x01,
-                (byte) enable
-        };
-        response.responseValue = data;
-    }
+//    public void setShutdownInfoReport(@IntRange(from = 0, to = 1) int enable) {
+//        data = new byte[]{
+//                (byte) 0xED,
+//                (byte) 0x01,
+//                (byte) ParamsKeyEnum.KEY_SHUTDOWN_PAYLOAD_ENABLE.getParamsKey(),
+//                (byte) 0x01,
+//                (byte) enable
+//        };
+//        response.responseValue = data;
+//    }
 
     public void setOfflineLocationEnable(@IntRange(from = 0, to = 1) int enable) {
         data = new byte[]{
@@ -164,7 +180,7 @@ public class ParamsWriteTask extends OrderTask {
     }
 
 
-    public void setLowPowerReportEnable(@IntRange(from = 0, to = 1) int enable) {
+    public void setLowPowerPayloadEnable(@IntRange(from = 0, to = 1) int enable) {
         data = new byte[]{
                 (byte) 0xED,
                 (byte) 0x01,
@@ -174,23 +190,44 @@ public class ParamsWriteTask extends OrderTask {
         };
         response.responseValue = data;
     }
+    public void setOffByMagneticEnable(@IntRange(from = 0, to = 1) int enable) {
+        data = new byte[]{
+                (byte) 0xED,
+                (byte) 0x01,
+                (byte) ParamsKeyEnum.KEY_OFF_BY_MAGNETIC.getParamsKey(),
+                (byte) 0x01,
+                (byte) enable
+        };
+        response.responseValue = data;
+    }
 
-//    public void setLowPowerPercent(@IntRange(from = 0, to = 1) int percent) {
-//        data = new byte[]{
-//                (byte) 0xED,
-//                (byte) 0x01,
-//                (byte) ParamsKeyEnum.KEY_LOW_POWER_PERCENT.getParamsKey(),
-//                (byte) 0x01,
-//                (byte) percent
-//        };
-//        response.responseValue = data;
-//    }
+    public void setLowPowerReportInterval(@IntRange(from = 1, to = 255) int interval) {
+        data = new byte[]{
+                (byte) 0xED,
+                (byte) 0x01,
+                (byte) ParamsKeyEnum.KEY_LOW_POWER_REPORT_INTERVAL.getParamsKey(),
+                (byte) 0x01,
+                (byte) interval
+        };
+        response.responseValue = data;
+    }
 
     public void setPasswordVerifyEnable(@IntRange(from = 0, to = 1) int enable) {
         data = new byte[]{
                 (byte) 0xED,
                 (byte) 0x01,
                 (byte) ParamsKeyEnum.KEY_PASSWORD_VERIFY_ENABLE.getParamsKey(),
+                (byte) 0x01,
+                (byte) enable
+        };
+        response.responseValue = data;
+    }
+
+    public void setBeaconEnable(@IntRange(from = 0, to = 1) int enable) {
+        data = new byte[]{
+                (byte) 0xED,
+                (byte) 0x01,
+                (byte) ParamsKeyEnum.KEY_BEACON_MODE.getParamsKey(),
                 (byte) 0x01,
                 (byte) enable
         };
@@ -247,7 +284,18 @@ public class ParamsWriteTask extends OrderTask {
         response.responseValue = data;
     }
 
-    public void setPeriodicPosStrategy(@IntRange(from = 0, to = 6) int strategy) {
+    public void setStandbyPosStrategy(@IntRange(from = 0, to = 3) int strategy) {
+        data = new byte[]{
+                (byte) 0xED,
+                (byte) 0x01,
+                (byte) ParamsKeyEnum.KEY_STANDBY_MODE_POS_STRATEGY.getParamsKey(),
+                (byte) 0x01,
+                (byte) strategy
+        };
+        response.responseValue = data;
+    }
+
+    public void setPeriodicPosStrategy(@IntRange(from = 0, to = 4) int strategy) {
         data = new byte[]{
                 (byte) 0xED,
                 (byte) 0x01,
@@ -275,7 +323,7 @@ public class ParamsWriteTask extends OrderTask {
     }
 
 
-    public void setTimePosStrategy(@IntRange(from = 0, to = 6) int strategy) {
+    public void setTimePosStrategy(@IntRange(from = 0, to = 3) int strategy) {
         data = new byte[]{
                 (byte) 0xED,
                 (byte) 0x01,
@@ -330,7 +378,7 @@ public class ParamsWriteTask extends OrderTask {
         response.responseValue = data;
     }
 
-    public void setMotionStartPosStrategy(@IntRange(from = 0, to = 2) int strategy) {
+    public void setMotionStartPosStrategy(@IntRange(from = 0, to = 3) int strategy) {
         data = new byte[]{
                 (byte) 0xED,
                 (byte) 0x01,
@@ -357,7 +405,7 @@ public class ParamsWriteTask extends OrderTask {
         response.responseValue = data;
     }
 
-    public void setMotionTripPosStrategy(@IntRange(from = 0, to = 6) int strategy) {
+    public void setMotionTripPosStrategy(@IntRange(from = 0, to = 4) int strategy) {
         data = new byte[]{
                 (byte) 0xED,
                 (byte) 0x01,
@@ -405,7 +453,7 @@ public class ParamsWriteTask extends OrderTask {
         response.responseValue = data;
     }
 
-    public void setMotionEndPosStrategy(@IntRange(from = 0, to = 6) int strategy) {
+    public void setMotionEndPosStrategy(@IntRange(from = 0, to = 3) int strategy) {
         data = new byte[]{
                 (byte) 0xED,
                 (byte) 0x01,
@@ -416,38 +464,62 @@ public class ParamsWriteTask extends OrderTask {
         response.responseValue = data;
     }
 
-    public void setWifiPosDataType(@IntRange(from = 0, to = 1) int type) {
+    public void setMotionStationaryInterval(@IntRange(from = 1, to = 14400) int interval) {
+        byte[] intervalBytes = MokoUtils.toByteArray(interval, 2);
         data = new byte[]{
                 (byte) 0xED,
                 (byte) 0x01,
-                (byte) ParamsKeyEnum.KEY_WIFI_POS_DATA_TYPE.getParamsKey(),
-                (byte) 0x01,
-                (byte) type
+                (byte) ParamsKeyEnum.KEY_MOTION_MODE_STATIONARY_REPORT_INTERVAL.getParamsKey(),
+                (byte) 0x02,
+                intervalBytes[0],
+                intervalBytes[1]
         };
         response.responseValue = data;
     }
 
-    public void setWifiPosTimeout(@IntRange(from = 1, to = 4) int timeout) {
+    public void setMotionStationaryPosStrategy(@IntRange(from = 0, to = 3) int strategy) {
         data = new byte[]{
                 (byte) 0xED,
                 (byte) 0x01,
-                (byte) ParamsKeyEnum.KEY_WIFI_POS_TIMEOUT.getParamsKey(),
+                (byte) ParamsKeyEnum.KEY_MOTION_MODE_STATIONARY_POS_STRATEGY.getParamsKey(),
                 (byte) 0x01,
-                (byte) timeout
+                (byte) strategy
         };
         response.responseValue = data;
     }
 
-    public void setWifiPosBSSIDNumber(@IntRange(from = 1, to = 5) int number) {
-        data = new byte[]{
-                (byte) 0xED,
-                (byte) 0x01,
-                (byte) ParamsKeyEnum.KEY_WIFI_POS_BSSID_NUMBER.getParamsKey(),
-                (byte) 0x01,
-                (byte) number
-        };
-        response.responseValue = data;
-    }
+//    public void setWifiPosDataType(@IntRange(from = 0, to = 1) int type) {
+//        data = new byte[]{
+//                (byte) 0xED,
+//                (byte) 0x01,
+//                (byte) ParamsKeyEnum.KEY_WIFI_POS_DATA_TYPE.getParamsKey(),
+//                (byte) 0x01,
+//                (byte) type
+//        };
+//        response.responseValue = data;
+//    }
+//
+//    public void setWifiPosTimeout(@IntRange(from = 1, to = 4) int timeout) {
+//        data = new byte[]{
+//                (byte) 0xED,
+//                (byte) 0x01,
+//                (byte) ParamsKeyEnum.KEY_WIFI_POS_TIMEOUT.getParamsKey(),
+//                (byte) 0x01,
+//                (byte) timeout
+//        };
+//        response.responseValue = data;
+//    }
+//
+//    public void setWifiPosBSSIDNumber(@IntRange(from = 1, to = 5) int number) {
+//        data = new byte[]{
+//                (byte) 0xED,
+//                (byte) 0x01,
+//                (byte) ParamsKeyEnum.KEY_WIFI_POS_BSSID_NUMBER.getParamsKey(),
+//                (byte) 0x01,
+//                (byte) number
+//        };
+//        response.responseValue = data;
+//    }
 
     public void setBlePosTimeout(@IntRange(from = 1, to = 10) int timeout) {
         data = new byte[]{
@@ -482,16 +554,16 @@ public class ParamsWriteTask extends OrderTask {
         response.responseValue = data;
     }
 
-    public void setFilterBleScanPhy(@IntRange(from = 0, to = 4) int type) {
-        data = new byte[]{
-                (byte) 0xED,
-                (byte) 0x01,
-                (byte) ParamsKeyEnum.KEY_FILTER_BLE_SCAN_PHY.getParamsKey(),
-                (byte) 0x01,
-                (byte) type
-        };
-        response.responseValue = data;
-    }
+//    public void setFilterBleScanPhy(@IntRange(from = 0, to = 4) int type) {
+//        data = new byte[]{
+//                (byte) 0xED,
+//                (byte) 0x01,
+//                (byte) ParamsKeyEnum.KEY_FILTER_BLE_SCAN_PHY.getParamsKey(),
+//                (byte) 0x01,
+//                (byte) type
+//        };
+//        response.responseValue = data;
+//    }
 
     public void setFilterRelationship(@IntRange(from = 0, to = 6) int relationship) {
         data = new byte[]{
@@ -813,6 +885,200 @@ public class ParamsWriteTask extends OrderTask {
         response.responseValue = data;
     }
 
+    public void setFilterMkPirEnable(@IntRange(from = 0, to = 1) int enable) {
+        response.responseValue = data = new byte[]{
+                (byte) 0xED,
+                (byte) 0x01,
+                (byte) ParamsKeyEnum.KEY_FILTER_MK_PIR_ENABLE.getParamsKey(),
+                (byte) 0x01,
+                (byte) enable
+        };
+    }
+
+    public void setFilterMkPirSensorDetectionStatus(@IntRange(from = 0, to = 2) int type) {
+        response.responseValue = data = new byte[]{
+                (byte) 0xED,
+                (byte) 0x01,
+                (byte) ParamsKeyEnum.KEY_FILTER_MK_PIR_DETECTION_STATUS.getParamsKey(),
+                (byte) 0x01,
+                (byte) type
+        };
+    }
+
+    public void setFilterMkPirSensorSensitivity(@IntRange(from = 0, to = 3) int type) {
+        response.responseValue = data = new byte[]{
+                (byte) 0xED,
+                (byte) 0x01,
+                (byte) ParamsKeyEnum.KEY_FILTER_MK_PIR_SENSOR_SENSITIVITY.getParamsKey(),
+                (byte) 0x01,
+                (byte) type
+        };
+    }
+
+    public void setFilterMkPirDoorStatus(@IntRange(from = 0, to = 2) int type) {
+        response.responseValue = data = new byte[]{
+                (byte) 0xED,
+                (byte) 0x01,
+                (byte) ParamsKeyEnum.KEY_FILTER_MK_PIR_DOOR_STATUS.getParamsKey(),
+                (byte) 0x01,
+                (byte) type
+        };
+    }
+
+    public void setFilterMkPirDelayResStatus(@IntRange(from = 0, to = 3) int type) {
+        response.responseValue = data = new byte[]{
+                (byte) 0xED,
+                (byte) 0x01,
+                (byte) ParamsKeyEnum.KEY_FILTER_MK_PIR_DELAY_RES_STATUS.getParamsKey(),
+                (byte) 0x01,
+                (byte) type
+        };
+    }
+
+    public void setFilterMkPirMajorRange(@IntRange(from = 0, to = 65535) int min,
+                                         @IntRange(from = 0, to = 65535) int max) {
+        byte[] minBytes = MokoUtils.toByteArray(min, 2);
+        byte[] maxBytes = MokoUtils.toByteArray(max, 2);
+        response.responseValue = data = new byte[]{
+                (byte) 0xED,
+                (byte) 0x01,
+                (byte) ParamsKeyEnum.KEY_FILTER_MK_PIR_MAJOR.getParamsKey(),
+                (byte) 0x04,
+                minBytes[0],
+                minBytes[1],
+                maxBytes[0],
+                maxBytes[1]
+        };
+    }
+
+    public void setFilterMkPirMinorRange(@IntRange(from = 0, to = 65535) int min,
+                                         @IntRange(from = 0, to = 65535) int max) {
+        byte[] minBytes = MokoUtils.toByteArray(min, 2);
+        byte[] maxBytes = MokoUtils.toByteArray(max, 2);
+        response.responseValue = data = new byte[]{
+                (byte) 0xED,
+                (byte) 0x01,
+                (byte) ParamsKeyEnum.KEY_FILTER_MK_PIR_MINOR.getParamsKey(),
+                (byte) 0x04,
+                minBytes[0],
+                minBytes[1],
+                maxBytes[0],
+                maxBytes[1]
+        };
+    }
+
+    public void setFilterMkTofEnable(@IntRange(from = 0, to = 1) int enable) {
+        data = new byte[]{
+                (byte) 0xED,
+                (byte) 0x01,
+                (byte) ParamsKeyEnum.KEY_FILTER_MK_TOF_ENABLE.getParamsKey(),
+                (byte) 0x01,
+                (byte) enable
+        };
+        response.responseValue = data;
+    }
+
+    public void setFilterMkTofRules(ArrayList<String> filterMkTofRules) {
+        if (filterMkTofRules == null || filterMkTofRules.size() == 0) {
+            data = new byte[]{
+                    (byte) 0xED,
+                    (byte) 0x01,
+                    (byte) ParamsKeyEnum.KEY_FILTER_MK_TOF_MFG_CODE.getParamsKey(),
+                    (byte) 0x00
+            };
+        } else {
+            int length = 0;
+            for (String mac : filterMkTofRules) {
+                length += 1;
+                length += mac.length() / 2;
+            }
+            data = new byte[4 + length];
+            data[0] = (byte) 0xED;
+            data[1] = (byte) 0x01;
+            data[2] = (byte) ParamsKeyEnum.KEY_FILTER_MK_TOF_MFG_CODE.getParamsKey();
+            data[3] = (byte) length;
+            int index = 0;
+            for (int i = 0, size = filterMkTofRules.size(); i < size; i++) {
+                String mac = filterMkTofRules.get(i);
+                byte[] macBytes = MokoUtils.hex2bytes(mac);
+                int l = macBytes.length;
+                data[4 + index] = (byte) l;
+                index++;
+                for (int j = 0; j < l; j++, index++) {
+                    data[4 + index] = macBytes[j];
+                }
+            }
+        }
+        response.responseValue = data;
+    }
+
+    public void setFilterBXPSensorInfoEnable(@IntRange(from = 0, to = 1) int enable) {
+        data = new byte[]{
+                (byte) 0xED,
+                (byte) 0x01,
+                (byte) ParamsKeyEnum.KEY_FILTER_BXP_SENSOR_INFO_ENABLE.getParamsKey(),
+                (byte) 0x01,
+                (byte) enable
+        };
+        response.responseValue = data;
+    }
+
+    public void setFilterBXPSensorInfoPrecise(@IntRange(from = 0, to = 1) int enable) {
+        data = new byte[]{
+                (byte) 0xED,
+                (byte) 0x01,
+                (byte) ParamsKeyEnum.KEY_FILTER_BXP_SENSOR_INFO_PRECISE.getParamsKey(),
+                (byte) 0x01,
+                (byte) enable
+        };
+        response.responseValue = data;
+    }
+
+    public void setFilterBXPSensorInfoReverse(@IntRange(from = 0, to = 1) int enable) {
+        data = new byte[]{
+                (byte) 0xED,
+                (byte) 0x01,
+                (byte) ParamsKeyEnum.KEY_FILTER_BXP_SENSOR_INFO_REVERSE.getParamsKey(),
+                (byte) 0x01,
+                (byte) enable
+        };
+        response.responseValue = data;
+    }
+
+    public void setFilterBXPSensorInfoRules(ArrayList<String> filterBXPTagRules) {
+        if (filterBXPTagRules == null || filterBXPTagRules.size() == 0) {
+            data = new byte[]{
+                    (byte) 0xED,
+                    (byte) 0x01,
+                    (byte) ParamsKeyEnum.KEY_FILTER_BXP_SENSOR_INFO_RULES.getParamsKey(),
+                    (byte) 0x00
+            };
+        } else {
+            int length = 0;
+            for (String mac : filterBXPTagRules) {
+                length += 1;
+                length += mac.length() / 2;
+            }
+            data = new byte[4 + length];
+            data[0] = (byte) 0xED;
+            data[1] = (byte) 0x01;
+            data[2] = (byte) ParamsKeyEnum.KEY_FILTER_BXP_SENSOR_INFO_RULES.getParamsKey();
+            data[3] = (byte) length;
+            int index = 0;
+            for (int i = 0, size = filterBXPTagRules.size(); i < size; i++) {
+                String mac = filterBXPTagRules.get(i);
+                byte[] macBytes = MokoUtils.hex2bytes(mac);
+                int l = macBytes.length;
+                data[4 + index] = (byte) l;
+                index++;
+                for (int j = 0; j < l; j++, index++) {
+                    data[4 + index] = macBytes[j];
+                }
+            }
+        }
+        response.responseValue = data;
+    }
+
     public void setFilterBXPButtonEnable(@IntRange(from = 0, to = 1) int enable) {
         data = new byte[]{
                 (byte) 0xED,
@@ -1076,102 +1342,124 @@ public class ParamsWriteTask extends OrderTask {
         response.responseValue = data;
     }
 
-    public void setGPSPosTimeout(@IntRange(from = 1, to = 5) int timeout) {
+    public void setOutdoorBleReportInterval(@IntRange(from = 1, to = 100) int interval) {
         data = new byte[]{
                 (byte) 0xED,
                 (byte) 0x01,
-                (byte) ParamsKeyEnum.KEY_GPS_POS_TIMEOUT.getParamsKey(),
+                (byte) ParamsKeyEnum.KEY_OUTDOOR_BLE_REPORT_INTERVAL.getParamsKey(),
                 (byte) 0x01,
-                (byte) timeout
+                (byte) interval,
         };
         response.responseValue = data;
     }
 
-    public void setGPSPosSatelliteThreshold(@IntRange(from = 4, to = 10) int threshold) {
+    public void setOutdoorGpsReportInterval(@IntRange(from = 1, to = 14400) int interval) {
         data = new byte[]{
                 (byte) 0xED,
                 (byte) 0x01,
-                (byte) ParamsKeyEnum.KEY_GPS_POS_SATELLITE_THRESHOLD.getParamsKey(),
+                (byte) ParamsKeyEnum.KEY_OUTDOOR_GPS_REPORT_INTERVAL.getParamsKey(),
                 (byte) 0x01,
-                (byte) threshold
+                (byte) interval,
         };
         response.responseValue = data;
     }
 
-    public void setGPSPosDataType(@IntRange(from = 0, to = 1) int type) {
-        data = new byte[]{
-                (byte) 0xED,
-                (byte) 0x01,
-                (byte) ParamsKeyEnum.KEY_GPS_POS_DATA_TYPE.getParamsKey(),
-                (byte) 0x01,
-                (byte) type
-        };
-        response.responseValue = data;
-    }
-
-    public void setGPSPosSystem(@IntRange(from = 0, to = 2) int type) {
-        data = new byte[]{
-                (byte) 0xED,
-                (byte) 0x01,
-                (byte) ParamsKeyEnum.KEY_GPS_POS_SYSTEM.getParamsKey(),
-                (byte) 0x01,
-                (byte) type
-        };
-        response.responseValue = data;
-    }
-
-    public void setGPSPosAutoEnable(@IntRange(from = 0, to = 1) int enable) {
-        data = new byte[]{
-                (byte) 0xED,
-                (byte) 0x01,
-                (byte) ParamsKeyEnum.KEY_GPS_POS_AUTONMOUS_AIDING_ENABLE.getParamsKey(),
-                (byte) 0x01,
-                (byte) enable
-        };
-        response.responseValue = data;
-    }
-
-    public void setGPSPosAuxiliaryLatLon(@IntRange(from = -9000000, to = 9000000) int lat, @IntRange(from = -18000000, to = 18000000) int lon) {
-        byte[] latBytes = MokoUtils.toByteArray(lat, 4);
-        byte[] lonBytes = MokoUtils.toByteArray(lon, 4);
-        data = new byte[]{
-                (byte) 0xED,
-                (byte) 0x01,
-                (byte) ParamsKeyEnum.KEY_GPS_POS_AUXILIARY_LAT_LON.getParamsKey(),
-                (byte) 0x08,
-                latBytes[0],
-                latBytes[1],
-                latBytes[2],
-                latBytes[3],
-                lonBytes[0],
-                lonBytes[1],
-                lonBytes[2],
-                lonBytes[3],
-        };
-        response.responseValue = data;
-    }
-
-    public void setGPSPosEphemerisStartNotifyEnable(@IntRange(from = 0, to = 1) int enable) {
-        data = new byte[]{
-                (byte) 0xED,
-                (byte) 0x01,
-                (byte) ParamsKeyEnum.KEY_GPS_POS_EPHEMERIS_START_NOTIFY_ENABLE.getParamsKey(),
-                (byte) 0x01,
-                (byte) enable
-        };
-        response.responseValue = data;
-    }
-
-    public void setGPSPosEphemerisEndNotifyEnable(@IntRange(from = 0, to = 1) int enable) {
-        data = new byte[]{
-                (byte) 0xED,
-                (byte) 0x01,
-                (byte) ParamsKeyEnum.KEY_GPS_POS_EPHEMERIS_END_NOTIFY_ENABLE.getParamsKey(),
-                (byte) 0x01,
-                (byte) enable
-        };
-        response.responseValue = data;
-    }
+//    public void setGPSPosTimeout(@IntRange(from = 1, to = 5) int timeout) {
+//        data = new byte[]{
+//                (byte) 0xED,
+//                (byte) 0x01,
+//                (byte) ParamsKeyEnum.KEY_GPS_POS_TIMEOUT.getParamsKey(),
+//                (byte) 0x01,
+//                (byte) timeout
+//        };
+//        response.responseValue = data;
+//    }
+//
+//    public void setGPSPosSatelliteThreshold(@IntRange(from = 4, to = 10) int threshold) {
+//        data = new byte[]{
+//                (byte) 0xED,
+//                (byte) 0x01,
+//                (byte) ParamsKeyEnum.KEY_GPS_POS_SATELLITE_THRESHOLD.getParamsKey(),
+//                (byte) 0x01,
+//                (byte) threshold
+//        };
+//        response.responseValue = data;
+//    }
+//
+//    public void setGPSPosDataType(@IntRange(from = 0, to = 1) int type) {
+//        data = new byte[]{
+//                (byte) 0xED,
+//                (byte) 0x01,
+//                (byte) ParamsKeyEnum.KEY_GPS_POS_DATA_TYPE.getParamsKey(),
+//                (byte) 0x01,
+//                (byte) type
+//        };
+//        response.responseValue = data;
+//    }
+//
+//    public void setGPSPosSystem(@IntRange(from = 0, to = 2) int type) {
+//        data = new byte[]{
+//                (byte) 0xED,
+//                (byte) 0x01,
+//                (byte) ParamsKeyEnum.KEY_GPS_POS_SYSTEM.getParamsKey(),
+//                (byte) 0x01,
+//                (byte) type
+//        };
+//        response.responseValue = data;
+//    }
+//
+//    public void setGPSPosAutoEnable(@IntRange(from = 0, to = 1) int enable) {
+//        data = new byte[]{
+//                (byte) 0xED,
+//                (byte) 0x01,
+//                (byte) ParamsKeyEnum.KEY_GPS_POS_AUTONMOUS_AIDING_ENABLE.getParamsKey(),
+//                (byte) 0x01,
+//                (byte) enable
+//        };
+//        response.responseValue = data;
+//    }
+//
+//    public void setGPSPosAuxiliaryLatLon(@IntRange(from = -9000000, to = 9000000) int lat, @IntRange(from = -18000000, to = 18000000) int lon) {
+//        byte[] latBytes = MokoUtils.toByteArray(lat, 4);
+//        byte[] lonBytes = MokoUtils.toByteArray(lon, 4);
+//        data = new byte[]{
+//                (byte) 0xED,
+//                (byte) 0x01,
+//                (byte) ParamsKeyEnum.KEY_GPS_POS_AUXILIARY_LAT_LON.getParamsKey(),
+//                (byte) 0x08,
+//                latBytes[0],
+//                latBytes[1],
+//                latBytes[2],
+//                latBytes[3],
+//                lonBytes[0],
+//                lonBytes[1],
+//                lonBytes[2],
+//                lonBytes[3],
+//        };
+//        response.responseValue = data;
+//    }
+//
+//    public void setGPSPosEphemerisStartNotifyEnable(@IntRange(from = 0, to = 1) int enable) {
+//        data = new byte[]{
+//                (byte) 0xED,
+//                (byte) 0x01,
+//                (byte) ParamsKeyEnum.KEY_GPS_POS_EPHEMERIS_START_NOTIFY_ENABLE.getParamsKey(),
+//                (byte) 0x01,
+//                (byte) enable
+//        };
+//        response.responseValue = data;
+//    }
+//
+//    public void setGPSPosEphemerisEndNotifyEnable(@IntRange(from = 0, to = 1) int enable) {
+//        data = new byte[]{
+//                (byte) 0xED,
+//                (byte) 0x01,
+//                (byte) ParamsKeyEnum.KEY_GPS_POS_EPHEMERIS_END_NOTIFY_ENABLE.getParamsKey(),
+//                (byte) 0x01,
+//                (byte) enable
+//        };
+//        response.responseValue = data;
+//    }
 
     public void setBlePosMechanism(@IntRange(from = 0, to = 1) int mechanism) {
         data = new byte[]{
@@ -1377,17 +1665,7 @@ public class ParamsWriteTask extends OrderTask {
         };
     }
 
-    public void setLoraMaxRetransmissionTimes(@IntRange(from = 1, to = 4) int interval) {
-        data = new byte[]{
-                (byte) 0xED,
-                (byte) 0x01,
-                (byte) ParamsKeyEnum.KEY_LORA_MAX_RETRANSMISSION_TIMES.getParamsKey(),
-                (byte) 0x01,
-                (byte) interval
-        };
-    }
-
-    public void setDownLinkPosStrategy(@IntRange(from = 0, to = 6) int strategy) {
+    public void setDownLinkPosStrategy(@IntRange(from = 0, to = 3) int strategy) {
         data = new byte[]{
                 (byte) 0xED,
                 (byte) 0x01,
@@ -1559,7 +1837,6 @@ public class ParamsWriteTask extends OrderTask {
                 (byte) enable
         };
     }
-
 
 
     public void setBatteryReset() {

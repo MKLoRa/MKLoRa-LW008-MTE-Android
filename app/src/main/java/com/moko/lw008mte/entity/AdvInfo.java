@@ -6,6 +6,7 @@ public class AdvInfo {
     public int rssi;
     public String mac;
     public boolean lowPower;
+    public int batteryPower;
     public long scanTime;
     public long intervalTime;
     public int txPower;

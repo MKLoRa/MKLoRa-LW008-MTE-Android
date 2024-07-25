@@ -39,7 +39,8 @@
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:background="@color/lw008_white_ffffff"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingBottom="20dp">
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -220,6 +221,7 @@
             </RelativeLayout>
 
             <View style="@style/lw008_divider_line" />
+
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
@@ -309,6 +311,7 @@
             </RelativeLayout>
 
             <View style="@style/lw008_divider_line" />
+
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
@@ -344,6 +347,7 @@
             </RelativeLayout>
 
             <View style="@style/lw008_divider_line" />
+
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
@@ -363,6 +367,114 @@
 
                 <TextView
                     android:id="@+id/tv_filter_by_bxp_tag"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="12dp"
+                    android:layout_marginRight="12dp"
+                    android:drawableRight="@drawable/lw008_ic_arrow_right"
+                    android:drawablePadding="10dp"
+                    android:gravity="center_vertical"
+                    android:text="ON"
+                    android:textColor="@color/lw008_black_333333"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+            </RelativeLayout>
+
+            <View style="@style/lw008_divider_line" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:clickable="true"
+                android:onClick="onFilterByPIR">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="12dp"
+                    android:layout_marginRight="12dp"
+                    android:text="MK-PIR"
+                    android:textColor="@color/lw008_black_333333"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tv_filter_by_pir"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="12dp"
+                    android:layout_marginRight="12dp"
+                    android:drawableRight="@drawable/lw008_ic_arrow_right"
+                    android:drawablePadding="10dp"
+                    android:gravity="center_vertical"
+                    android:text="ON"
+                    android:textColor="@color/lw008_black_333333"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+            </RelativeLayout>
+
+            <View style="@style/lw008_divider_line" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:clickable="true"
+                android:onClick="onFilterByTOF">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="12dp"
+                    android:layout_marginRight="12dp"
+                    android:text="BXP-TOF"
+                    android:textColor="@color/lw008_black_333333"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tv_filter_by_tof"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="12dp"
+                    android:layout_marginRight="12dp"
+                    android:drawableRight="@drawable/lw008_ic_arrow_right"
+                    android:drawablePadding="10dp"
+                    android:gravity="center_vertical"
+                    android:text="ON"
+                    android:textColor="@color/lw008_black_333333"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+            </RelativeLayout>
+
+            <View style="@style/lw008_divider_line" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:clickable="true"
+                android:onClick="onFilterBySensorInfo">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="12dp"
+                    android:layout_marginRight="12dp"
+                    android:text="BXP-Sensor Info"
+                    android:textColor="@color/lw008_black_333333"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tv_filter_by_sensor_info"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"

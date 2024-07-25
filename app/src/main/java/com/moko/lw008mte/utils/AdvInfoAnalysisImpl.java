@@ -3,10 +3,12 @@ package com.moko.lw008mte.utils;
 import android.os.ParcelUuid;
 import android.os.SystemClock;
 
+import com.moko.ble.lib.utils.MokoUtils;
 import com.moko.lw008mte.entity.AdvInfo;
 import com.moko.support.lw008mte.entity.DeviceInfo;
 import com.moko.support.lw008mte.service.DeviceInfoParseable;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -28,21 +30,21 @@ public class AdvInfoAnalysisImpl implements DeviceInfoParseable<AdvInfo> {
         Map<ParcelUuid, byte[]> map = record.getServiceData();
         if (map == null || map.isEmpty())
             return null;
-        // 0x00:LR1110,0x10:L76
+        // 0x00:LW008-MTE,0x10:LW008-PTE,0x20:LW001-BGE,0x30:LW011-MT
         int deviceType = -1;
-        int txPower = -1;
+        int batteryPower = -1;
         boolean lowPower = false;
         boolean verifyEnable = false;
         Iterator iterator = map.keySet().iterator();
         while (iterator.hasNext()) {
             ParcelUuid parcelUuid = (ParcelUuid) iterator.next();
-            if (parcelUuid.toString().startsWith("0000aa09")) {
+            if (parcelUuid.toString().startsWith("0000aa12")) {
                 byte[] bytes = map.get(parcelUuid);
                 if (bytes != null) {
                     deviceType = bytes[0] & 0xFF;
-                    txPower = bytes[1];
-                    lowPower = (bytes[3] & 0x01) == 0x01;
-                    verifyEnable = (bytes[3] & 0x02) == 0x02;
+                    batteryPower = MokoUtils.toInt(Arrays.copyOfRange(bytes, 7, 9));
+                    lowPower = bytes[9] == 0x01;
+                    verifyEnable = bytes[11] == 0x01;
                 }
             }
         }
@@ -55,11 +57,12 @@ public class AdvInfoAnalysisImpl implements DeviceInfoParseable<AdvInfo> {
             advInfo.rssi = deviceInfo.rssi;
             advInfo.lowPower = lowPower;
             advInfo.deviceType = deviceType;
+            advInfo.batteryPower = batteryPower;
             long currentTime = SystemClock.elapsedRealtime();
             long intervalTime = currentTime - advInfo.scanTime;
             advInfo.intervalTime = intervalTime;
             advInfo.scanTime = currentTime;
-            advInfo.txPower = txPower;
+            advInfo.txPower = record.getTxPowerLevel();
             advInfo.verifyEnable = verifyEnable;
             advInfo.connectable = result.isConnectable();
         } else {
@@ -69,8 +72,9 @@ public class AdvInfoAnalysisImpl implements DeviceInfoParseable<AdvInfo> {
             advInfo.rssi = deviceInfo.rssi;
             advInfo.lowPower = lowPower;
             advInfo.deviceType = deviceType;
+            advInfo.batteryPower = batteryPower;
             advInfo.scanTime = SystemClock.elapsedRealtime();
-            advInfo.txPower = txPower;
+            advInfo.txPower = record.getTxPowerLevel();
             advInfo.verifyEnable = verifyEnable;
             advInfo.connectable = result.isConnectable();
             advInfoHashMap.put(deviceInfo.mac, advInfo);

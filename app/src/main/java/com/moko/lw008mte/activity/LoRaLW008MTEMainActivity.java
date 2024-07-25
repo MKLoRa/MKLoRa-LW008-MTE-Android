@@ -25,6 +25,7 @@ import com.moko.ble.lib.task.OrderTaskResponse;
 import com.moko.lw008mte.AppConstants;
 import com.moko.lw008mte.BuildConfig;
 import com.moko.lw008mte.R;
+import com.moko.lw008mte.activity.device.LogDataActivity;
 import com.moko.lw008mte.adapter.DeviceListAdapter;
 import com.moko.lw008mte.databinding.Lw008MteActivityMainBinding;
 import com.moko.lw008mte.dialog.AlertMessageDialog;
@@ -128,7 +129,7 @@ public class LoRaLW008MTEMainActivity extends BaseActivity implements MokoScanDe
         }
         animation = AnimationUtils.loadAnimation(this, R.anim.lw008_rotate_refresh);
         mBind.ivRefresh.startAnimation(animation);
-        beaconInfoParseable = new AdvInfoAnalysisImpl();
+        advInfoAnalysis = new AdvInfoAnalysisImpl();
         mokoBleScanner.startScanDevice(this);
         mHandler.postDelayed(new Runnable() {
             @Override
@@ -139,7 +140,7 @@ public class LoRaLW008MTEMainActivity extends BaseActivity implements MokoScanDe
     }
 
 
-    private AdvInfoAnalysisImpl beaconInfoParseable;
+    private AdvInfoAnalysisImpl advInfoAnalysis;
     public String filterName;
     public int filterRssi = -127;
 
@@ -164,7 +165,7 @@ public class LoRaLW008MTEMainActivity extends BaseActivity implements MokoScanDe
 
     @Override
     public void onScanDevice(DeviceInfo deviceInfo) {
-        AdvInfo beaconInfo = beaconInfoParseable.parseDeviceInfo(deviceInfo);
+        AdvInfo beaconInfo = advInfoAnalysis.parseDeviceInfo(deviceInfo);
         if (beaconInfo == null)
             return;
         beaconInfoHashMap.put(beaconInfo.mac, beaconInfo);

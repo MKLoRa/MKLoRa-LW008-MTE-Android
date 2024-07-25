@@ -11,15 +11,16 @@
         android:layout_height="wrap_content"
         android:padding="10dp">
 
+
         <TextView
-            android:id="@+id/tv_wifi_fix"
+            android:id="@+id/tv_ble_fix"
             android:layout_width="0dp"
             android:layout_height="40dp"
             android:clickable="true"
             android:drawableRight="@drawable/lw008_ic_arrow_right"
             android:gravity="center_vertical"
-            android:onClick="onWifiFix"
-            android:text="@string/wifi_fix"
+            android:onClick="onBleFix"
+            android:text="@string/bluetooth_fix"
             android:textColor="@color/lw008_black_333333"
             android:textSize="15sp"
             android:textStyle="bold"
@@ -33,32 +34,8 @@
             android:layout_marginTop="10dp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_wifi_fix" />
-
-        <TextView
-            android:id="@+id/tv_ble_fix"
-            android:layout_width="0dp"
-            android:layout_height="40dp"
-            android:layout_marginTop="20dp"
-            android:clickable="true"
-            android:drawableRight="@drawable/lw008_ic_arrow_right"
-            android:gravity="center_vertical"
-            android:onClick="onBleFix"
-            android:text="@string/bluetooth_fix"
-            android:textColor="@color/lw008_black_333333"
-            android:textSize="15sp"
-            android:textStyle="bold"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_wifi_fix" />
-
-        <View
-            style="@style/lw008_divider_line"
-            android:layout_width="0dp"
-            android:layout_marginTop="10dp"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_ble_fix" />
+
 
         <TextView
             android:id="@+id/tv_gps_fix"
@@ -103,10 +80,10 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:src="@drawable/lw008_ic_unchecked"
-            android:padding="6dp"
             android:clickable="true"
             android:onClick="onOfflineFix"
+            android:padding="6dp"
+            android:src="@drawable/lw008_ic_unchecked"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_gps_fix" />
 
@@ -130,5 +107,30 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/offline_fix_tips" />
+
+        <TextView
+            android:id="@+id/tvBleAndGPS"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="20dp"
+            android:clickable="true"
+            android:drawableRight="@drawable/lw008_ic_arrow_right"
+            android:gravity="center_vertical"
+            android:onClick="onBleAndGPS"
+            android:text="BLE&amp;GPS"
+            android:textColor="@color/lw008_black_333333"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/offline_fix_tips" />
+
+        <View
+            style="@style/lw008_divider_line"
+            android:layout_width="0dp"
+            android:layout_marginTop="10dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvBleAndGPS" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>
