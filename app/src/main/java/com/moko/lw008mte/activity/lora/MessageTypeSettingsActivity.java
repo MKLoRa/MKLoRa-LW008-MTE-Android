@@ -94,11 +94,11 @@ public class MessageTypeSettingsActivity extends BaseActivity {
         });
         mBind.tvShockPayloadType.setOnClickListener(v -> {
             int index = unconfirmed.equals(mBind.tvShockPayloadType.getText().toString().trim()) ? 0 : 1;
-            showBottomDialog(payloadTypes, index, mBind.tvShockPayloadType, 5);
+            showBottomDialog(payloadTypes, index, mBind.tvShockPayloadType, 4);
         });
         mBind.tvManDownPayloadType.setOnClickListener(v -> {
             int index = unconfirmed.equals(mBind.tvManDownPayloadType.getText().toString().trim()) ? 0 : 1;
-            showBottomDialog(payloadTypes, index, mBind.tvManDownPayloadType, 4);
+            showBottomDialog(payloadTypes, index, mBind.tvManDownPayloadType, 5);
         });
         mBind.tvEventPayloadType.setOnClickListener(v -> {
             int index = unconfirmed.equals(mBind.tvEventPayloadType.getText().toString().trim()) ? 0 : 1;

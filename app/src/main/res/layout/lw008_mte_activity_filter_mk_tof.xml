@@ -26,7 +26,8 @@
             android:layout_centerInParent="true"
             android:text="MK-TOF Filter"
             android:textColor="@color/lw008_white_ffffff"
-            android:textSize="17sp" />
+            android:textSize="17sp"
+            android:textStyle="bold" />
 
         <ImageView
             android:layout_width="wrap_content"

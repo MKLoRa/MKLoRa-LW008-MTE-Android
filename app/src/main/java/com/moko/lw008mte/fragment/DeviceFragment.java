@@ -86,13 +86,7 @@ public class DeviceFragment extends Fragment {
 
 
     public void setLowPowerPayload(int enable) {
-        mLowPowerPayloadEnable = enable == 1;
-        mBind.ivLowPowerPayload.setImageResource(mLowPowerPayloadEnable ? R.drawable.lw008_ic_checked : R.drawable.lw008_ic_unchecked);
-    }
-
-
-    public void changeLowPowerPayload() {
-        mLowPowerPayloadEnable = !mLowPowerPayloadEnable;
+        mBind.cbLowPowerPayload.setChecked(enable == 1);
     }
 
     public boolean isValid() {
@@ -109,10 +103,9 @@ public class DeviceFragment extends Fragment {
     public void saveParams() {
         final String intervalStr = mBind.etLowPowerReportInterval.getText().toString();
         final int interval = Integer.parseInt(intervalStr);
-        activity.showSyncingProgressDialog();
         ArrayList<OrderTask> orderTasks = new ArrayList<>();
         orderTasks.add(OrderTaskAssembler.setTimeZone(mSelectedTimeZone - 24));
-        orderTasks.add(OrderTaskAssembler.setLowPowerPayloadEnable(mLowPowerPayloadEnable ? 1 : 0));
+        orderTasks.add(OrderTaskAssembler.setLowPowerPayloadEnable(mBind.cbLowPowerPayload.isChecked() ? 1 : 0));
         orderTasks.add(OrderTaskAssembler.setLowPowerReportInterval(interval));
         LoRaLW008MTEMokoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
     }

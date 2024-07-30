@@ -687,8 +687,7 @@ public class ParamsWriteTask extends OrderTask {
         response.responseValue = data;
     }
 
-    public void setFilterIBeaconMajorRange(@IntRange(from = 0, to = 1) int enable,
-                                           @IntRange(from = 0, to = 65535) int min,
+    public void setFilterIBeaconMajorRange(@IntRange(from = 0, to = 65535) int min,
                                            @IntRange(from = 0, to = 65535) int max) {
         byte[] minBytes = MokoUtils.toByteArray(min, 2);
         byte[] maxBytes = MokoUtils.toByteArray(max, 2);
@@ -696,8 +695,7 @@ public class ParamsWriteTask extends OrderTask {
                 (byte) 0xED,
                 (byte) 0x01,
                 (byte) ParamsKeyEnum.KEY_FILTER_IBEACON_MAJOR_RANGE.getParamsKey(),
-                (byte) 0x05,
-                (byte) enable,
+                (byte) 0x04,
                 minBytes[0],
                 minBytes[1],
                 maxBytes[0],
@@ -706,8 +704,7 @@ public class ParamsWriteTask extends OrderTask {
         response.responseValue = data;
     }
 
-    public void setFilterIBeaconMinorRange(@IntRange(from = 0, to = 1) int enable,
-                                           @IntRange(from = 0, to = 65535) int min,
+    public void setFilterIBeaconMinorRange(@IntRange(from = 0, to = 65535) int min,
                                            @IntRange(from = 0, to = 65535) int max) {
         byte[] minBytes = MokoUtils.toByteArray(min, 2);
         byte[] maxBytes = MokoUtils.toByteArray(max, 2);
@@ -715,8 +712,7 @@ public class ParamsWriteTask extends OrderTask {
                 (byte) 0xED,
                 (byte) 0x01,
                 (byte) ParamsKeyEnum.KEY_FILTER_IBEACON_MINOR_RANGE.getParamsKey(),
-                (byte) 0x05,
-                (byte) enable,
+                (byte) 0x04,
                 minBytes[0],
                 minBytes[1],
                 maxBytes[0],
@@ -758,8 +754,7 @@ public class ParamsWriteTask extends OrderTask {
         response.responseValue = data;
     }
 
-    public void setFilterBXPIBeaconMajorRange(@IntRange(from = 0, to = 1) int enable,
-                                              @IntRange(from = 0, to = 65535) int min,
+    public void setFilterBXPIBeaconMajorRange(@IntRange(from = 0, to = 65535) int min,
                                               @IntRange(from = 0, to = 65535) int max) {
         byte[] minBytes = MokoUtils.toByteArray(min, 2);
         byte[] maxBytes = MokoUtils.toByteArray(max, 2);
@@ -767,8 +762,7 @@ public class ParamsWriteTask extends OrderTask {
                 (byte) 0xED,
                 (byte) 0x01,
                 (byte) ParamsKeyEnum.KEY_FILTER_BXP_IBEACON_MAJOR_RANGE.getParamsKey(),
-                (byte) 0x05,
-                (byte) enable,
+                (byte) 0x04,
                 minBytes[0],
                 minBytes[1],
                 maxBytes[0],
@@ -777,8 +771,7 @@ public class ParamsWriteTask extends OrderTask {
         response.responseValue = data;
     }
 
-    public void setFilterBXPIBeaconMinorRange(@IntRange(from = 0, to = 1) int enable,
-                                              @IntRange(from = 0, to = 65535) int min,
+    public void setFilterBXPIBeaconMinorRange(@IntRange(from = 0, to = 65535) int min,
                                               @IntRange(from = 0, to = 65535) int max) {
         byte[] minBytes = MokoUtils.toByteArray(min, 2);
         byte[] maxBytes = MokoUtils.toByteArray(max, 2);
@@ -786,8 +779,7 @@ public class ParamsWriteTask extends OrderTask {
                 (byte) 0xED,
                 (byte) 0x01,
                 (byte) ParamsKeyEnum.KEY_FILTER_BXP_IBEACON_MINOR_RANGE.getParamsKey(),
-                (byte) 0x05,
-                (byte) enable,
+                (byte) 0x04,
                 minBytes[0],
                 minBytes[1],
                 maxBytes[0],

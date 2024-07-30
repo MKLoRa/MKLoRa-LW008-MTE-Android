@@ -712,12 +712,6 @@ public class DeviceInfoActivity extends BaseActivity implements RadioGroup.OnChe
         deviceFragment.showTimeZoneDialog();
     }
 
-    public void onLowPowerPayload(View view) {
-        if (isWindowLocked())
-            return;
-        deviceFragment.changeLowPowerPayload();
-    }
-
 
 //    public void selectLowPowerPrompt(View view) {
 //        if (isWindowLocked())

@@ -124,24 +124,18 @@ public class FilterBXPIBeaconActivity extends BaseActivity {
                                         break;
                                     case KEY_FILTER_BXP_IBEACON_MAJOR_RANGE:
                                         if (length > 0) {
-                                            int enable = value[4] & 0xFF;
-                                            if (enable == 1) {
-                                                int majorMin = MokoUtils.toInt(Arrays.copyOfRange(value, 5, 7));
-                                                int majorMax = MokoUtils.toInt(Arrays.copyOfRange(value, 7, 9));
-                                                mBind.etIbeaconMajorMin.setText(String.valueOf(majorMin));
-                                                mBind.etIbeaconMajorMax.setText(String.valueOf(majorMax));
-                                            }
+                                            int majorMin = MokoUtils.toInt(Arrays.copyOfRange(value, 5, 7));
+                                            int majorMax = MokoUtils.toInt(Arrays.copyOfRange(value, 7, 9));
+                                            mBind.etIbeaconMajorMin.setText(String.valueOf(majorMin));
+                                            mBind.etIbeaconMajorMax.setText(String.valueOf(majorMax));
                                         }
                                         break;
                                     case KEY_FILTER_BXP_IBEACON_MINOR_RANGE:
                                         if (length > 0) {
-                                            int enable = value[4] & 0xFF;
-                                            if (enable == 1) {
-                                                int minorMin = MokoUtils.toInt(Arrays.copyOfRange(value, 5, 7));
-                                                int minorMax = MokoUtils.toInt(Arrays.copyOfRange(value, 7, 9));
-                                                mBind.etIbeaconMinorMin.setText(String.valueOf(minorMin));
-                                                mBind.etIbeaconMinorMax.setText(String.valueOf(minorMax));
-                                            }
+                                            int minorMin = MokoUtils.toInt(Arrays.copyOfRange(value, 5, 7));
+                                            int minorMax = MokoUtils.toInt(Arrays.copyOfRange(value, 7, 9));
+                                            mBind.etIbeaconMinorMin.setText(String.valueOf(minorMin));
+                                            mBind.etIbeaconMinorMax.setText(String.valueOf(minorMax));
                                         }
                                         break;
                                     case KEY_FILTER_BXP_IBEACON_ENABLE:
@@ -226,18 +220,18 @@ public class FilterBXPIBeaconActivity extends BaseActivity {
         List<OrderTask> orderTasks = new ArrayList<>();
         orderTasks.add(OrderTaskAssembler.setFilterMKIBeaconUUID(uuid));
         if (TextUtils.isEmpty(majorMinStr) && TextUtils.isEmpty(majorMaxStr))
-            orderTasks.add(OrderTaskAssembler.setFilterMKIBeaconMajorRange(0, 0, 0));
+            orderTasks.add(OrderTaskAssembler.setFilterMKIBeaconMajorRange(0, 0));
         else {
             final int majorMin = Integer.parseInt(majorMinStr);
             final int majorMax = Integer.parseInt(majorMaxStr);
-            orderTasks.add(OrderTaskAssembler.setFilterMKIBeaconMajorRange(1, majorMin, majorMax));
+            orderTasks.add(OrderTaskAssembler.setFilterMKIBeaconMajorRange(majorMin, majorMax));
         }
         if (TextUtils.isEmpty(minorMinStr) && TextUtils.isEmpty(minorMaxStr))
-            orderTasks.add(OrderTaskAssembler.setFilterMKIBeaconMinorRange(0, 0, 0));
+            orderTasks.add(OrderTaskAssembler.setFilterMKIBeaconMinorRange(0, 0));
         else {
             final int minorMin = Integer.parseInt(minorMinStr);
             final int minorMax = Integer.parseInt(minorMaxStr);
-            orderTasks.add(OrderTaskAssembler.setFilterMKIBeaconMinorRange(1, minorMin, minorMax));
+            orderTasks.add(OrderTaskAssembler.setFilterMKIBeaconMinorRange(minorMin, minorMax));
         }
         orderTasks.add(OrderTaskAssembler.setFilterMKIBeaconEnable(mBind.cbIbeacon.isChecked() ? 1 : 0));
         LoRaLW008MTEMokoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));

@@ -49,10 +49,10 @@ public class FilterBXPSensorInfoActivity extends BaseActivity {
         showSyncingProgressDialog();
         mBind.cbPreciseMatch.postDelayed(() -> {
             List<OrderTask> orderTasks = new ArrayList<>();
-            orderTasks.add(OrderTaskAssembler.getFilterBXPTagEnable());
-            orderTasks.add(OrderTaskAssembler.getFilterBXPTagPrecise());
-            orderTasks.add(OrderTaskAssembler.getFilterBXPTagReverse());
-            orderTasks.add(OrderTaskAssembler.getFilterBXPTagRules());
+            orderTasks.add(OrderTaskAssembler.getFilterBXPSensorInfoEnable());
+            orderTasks.add(OrderTaskAssembler.getFilterBXPSensorInfoPrecise());
+            orderTasks.add(OrderTaskAssembler.getFilterBXPSensorInfoReverse());
+            orderTasks.add(OrderTaskAssembler.getFilterBXPSensorInfoRules());
             LoRaLW008MTEMokoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
         }, 500);
     }

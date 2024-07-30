@@ -101,6 +101,10 @@ public class FilterTLMActivity extends BaseActivity {
                                 int result = value[4] & 0xFF;
                                 switch (configKeyEnum) {
                                     case KEY_FILTER_EDDYSTONE_TLM_VERSION:
+                                        if (result != 1) {
+                                            savedParamsError = true;
+                                        }
+                                        break;
                                     case KEY_FILTER_EDDYSTONE_TLM_ENABLE:
                                         if (result != 1) {
                                             savedParamsError = true;
@@ -158,6 +162,15 @@ public class FilterTLMActivity extends BaseActivity {
         finish();
     }
 
+    public void onSave(View view) {
+        if (isWindowLocked())
+            return;
+        showSyncingProgressDialog();
+        List<OrderTask> orderTasks = new ArrayList<>();
+        orderTasks.add(OrderTaskAssembler.setFilterEddystoneTlmVersion(mSelected));
+        orderTasks.add(OrderTaskAssembler.setFilterEddystoneTlmEnable(mTLMEnable ? 1 : 0));
+        LoRaLW008MTEMokoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
+    }
 
     public void onTLMVersion(View view) {
         if (isWindowLocked())
@@ -167,11 +180,6 @@ public class FilterTLMActivity extends BaseActivity {
         dialog.setListener(value -> {
             mSelected = value;
             mBind.tvTlmVersion.setText(mValues.get(mSelected));
-            showSyncingProgressDialog();
-            List<OrderTask> orderTasks = new ArrayList<>();
-            orderTasks.add(OrderTaskAssembler.setFilterEddystoneTlmVersion(mSelected));
-            orderTasks.add(OrderTaskAssembler.getFilterEddystoneTlmVersion());
-            LoRaLW008MTEMokoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
         });
         dialog.show(getSupportFragmentManager());
     }
@@ -180,10 +188,6 @@ public class FilterTLMActivity extends BaseActivity {
         if (isWindowLocked())
             return;
         mTLMEnable = !mTLMEnable;
-        showSyncingProgressDialog();
-        List<OrderTask> orderTasks = new ArrayList<>();
-        orderTasks.add(OrderTaskAssembler.setFilterEddystoneTlmEnable(mTLMEnable ? 1 : 0));
-        orderTasks.add(OrderTaskAssembler.getFilterEddystoneTlmEnable());
-        LoRaLW008MTEMokoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
+        mBind.ivTlmEnable.setImageResource(mTLMEnable ? R.drawable.lw008_ic_checked : R.drawable.lw008_ic_unchecked);
     }
 }

@@ -192,7 +192,7 @@ public class FilterMKTOFActivity extends BaseActivity {
         if (c > 0) {
             for (int i = 0; i < c; i++) {
                 View v = mBind.llMfgCode.getChildAt(i);
-                EditText etTagId = v.findViewById(R.id.et_tag_id);
+                EditText etTagId = v.findViewById(R.id.et_mfg_code);
                 final String macAddress = etTagId.getText().toString();
                 if (TextUtils.isEmpty(macAddress)) {
                     return false;

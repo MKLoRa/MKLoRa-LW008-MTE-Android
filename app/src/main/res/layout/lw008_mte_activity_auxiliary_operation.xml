@@ -95,7 +95,7 @@
                 android:drawableRight="@drawable/lw008_ic_arrow_right"
                 android:gravity="center_vertical"
                 android:onClick="onVibrationDetection"
-                android:text="@string/vibration_detection"
+                android:text="@string/shock_detection"
                 android:textColor="@color/lw008_black_333333"
                 android:textSize="15sp"
                 android:textStyle="bold"

@@ -119,27 +119,17 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/cl_time_zone">
 
-
-            <TextView
+            <CheckBox
+                android:id="@+id/cb_low_power_payload"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
+                android:layout_height="50dp"
+                android:button="@null"
+                android:drawableRight="@drawable/lw008_selector_cb_btn"
                 android:text="Low-power Payload"
                 android:textColor="@color/lw008_black_333333"
                 android:textSize="15sp"
                 android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="@id/iv_low_power_payload"
                 app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toTopOf="@id/iv_low_power_payload" />
-
-            <ImageView
-                android:id="@+id/iv_low_power_payload"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:clickable="true"
-                android:onClick="onLowPowerPayload"
-                android:padding="6dp"
-                android:src="@drawable/lw008_ic_unchecked"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -150,7 +140,7 @@
                 android:layout_marginTop="10dp"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/iv_low_power_payload" />
+                app:layout_constraintTop_toBottomOf="@id/cb_low_power_payload" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -176,16 +166,16 @@
                 android:textColor="@color/lw008_black_333333"
                 android:textColorHint="@color/lw008_grey_ebebeb"
                 android:textSize="15sp"
-                app:layout_constraintHorizontal_bias="0.75"
+                app:layout_constraintHorizontal_bias="0.72"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/iv_low_power_payload"
+                app:layout_constraintTop_toBottomOf="@id/cb_low_power_payload"
                 app:layout_constraintWidth_percent="0.2" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
+                android:layout_marginLeft="5dp"
                 android:text="x30mins"
                 android:textColor="@color/lw008_black_333333"
                 android:textSize="15sp"

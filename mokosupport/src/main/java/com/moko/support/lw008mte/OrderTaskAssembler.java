@@ -1273,19 +1273,17 @@ public class OrderTaskAssembler {
         return task;
     }
 
-    public static OrderTask setFilterIBeaconMajorRange(@IntRange(from = 0, to = 1) int enable,
-                                                       @IntRange(from = 0, to = 65535) int min,
+    public static OrderTask setFilterIBeaconMajorRange(@IntRange(from = 0, to = 65535) int min,
                                                        @IntRange(from = 0, to = 65535) int max) {
         ParamsWriteTask task = new ParamsWriteTask();
-        task.setFilterIBeaconMajorRange(enable, min, max);
+        task.setFilterIBeaconMajorRange(min, max);
         return task;
     }
 
-    public static OrderTask setFilterIBeaconMinorRange(@IntRange(from = 0, to = 1) int enable,
-                                                       @IntRange(from = 0, to = 65535) int min,
+    public static OrderTask setFilterIBeaconMinorRange(@IntRange(from = 0, to = 65535) int min,
                                                        @IntRange(from = 0, to = 65535) int max) {
         ParamsWriteTask task = new ParamsWriteTask();
-        task.setFilterIBeaconMinorRange(enable, min, max);
+        task.setFilterIBeaconMinorRange(min, max);
         return task;
     }
 
@@ -1301,19 +1299,17 @@ public class OrderTaskAssembler {
         return task;
     }
 
-    public static OrderTask setFilterMKIBeaconMajorRange(@IntRange(from = 0, to = 1) int enable,
-                                                         @IntRange(from = 0, to = 65535) int min,
+    public static OrderTask setFilterMKIBeaconMajorRange(@IntRange(from = 0, to = 65535) int min,
                                                          @IntRange(from = 0, to = 65535) int max) {
         ParamsWriteTask task = new ParamsWriteTask();
-        task.setFilterBXPIBeaconMajorRange(enable, min, max);
+        task.setFilterBXPIBeaconMajorRange(min, max);
         return task;
     }
 
-    public static OrderTask setFilterMKIBeaconMinorRange(@IntRange(from = 0, to = 1) int enable,
-                                                         @IntRange(from = 0, to = 65535) int min,
+    public static OrderTask setFilterMKIBeaconMinorRange(@IntRange(from = 0, to = 65535) int min,
                                                          @IntRange(from = 0, to = 65535) int max) {
         ParamsWriteTask task = new ParamsWriteTask();
-        task.setFilterBXPIBeaconMinorRange(enable, min, max);
+        task.setFilterBXPIBeaconMinorRange(min, max);
         return task;
     }
 
