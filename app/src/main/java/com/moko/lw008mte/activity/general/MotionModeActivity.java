@@ -308,7 +308,7 @@ public class MotionModeActivity extends BaseActivity {
         if (TextUtils.isEmpty(startNumberStr))
             return false;
         final int startNumber = Integer.parseInt(startNumberStr);
-        if (startNumber < 1 || startNumber > 255)
+        if (startNumber < 1 || startNumber > 10)
             return false;
         final String intervalTripStr = mBind.etReportIntervalInTrip.getText().toString();
         if (TextUtils.isEmpty(intervalTripStr))
@@ -320,13 +320,13 @@ public class MotionModeActivity extends BaseActivity {
         if (TextUtils.isEmpty(endTimeoutStr))
             return false;
         final int endTimeout = Integer.parseInt(endTimeoutStr);
-        if (endTimeout < 3 || endTimeout > 180)
+        if (endTimeout < 1 || endTimeout > 180)
             return false;
         final String endNumberStr = mBind.etFixOnEndNumber.getText().toString();
         if (TextUtils.isEmpty(endNumberStr))
             return false;
         final int endNumber = Integer.parseInt(endNumberStr);
-        if (endNumber < 1 || endNumber > 255)
+        if (endNumber < 1 || endNumber > 10)
             return false;
         final String endIntervalStr = mBind.etReportIntervalOnEnd.getText().toString();
         if (TextUtils.isEmpty(endIntervalStr))
@@ -356,7 +356,7 @@ public class MotionModeActivity extends BaseActivity {
         final String endIntervalStr = mBind.etReportIntervalOnEnd.getText().toString();
         final int endInterval = Integer.parseInt(endIntervalStr);
         final String stationaryIntervalStr = mBind.etReportIntervalOnStationary.getText().toString();
-        final int stationaryInterval = Integer.parseInt(endIntervalStr);
+        final int stationaryInterval = Integer.parseInt(stationaryIntervalStr);
 
         savedParamsError = false;
         List<OrderTask> orderTasks = new ArrayList<>();

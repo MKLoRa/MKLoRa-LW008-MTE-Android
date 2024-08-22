@@ -124,6 +124,7 @@ public class IndicatorSettingsActivity extends BaseActivity {
                                             mBind.cbFix.setChecked((indicator & 4) == 4);
                                             mBind.cbFixSuccess.setChecked((indicator & 8) == 8);
                                             mBind.cbFixFail.setChecked((indicator & 16) == 16);
+                                            mBind.cbBleAdvCheck.setChecked((indicator & 32) == 32);
                                         }
                                         break;
                                 }
@@ -189,7 +190,8 @@ public class IndicatorSettingsActivity extends BaseActivity {
                 | (mBind.cbNetworkCheck.isChecked() ? 2 : 0)
                 | (mBind.cbFix.isChecked() ? 4 : 0)
                 | (mBind.cbFixSuccess.isChecked() ? 8 : 0)
-                | (mBind.cbFixFail.isChecked() ? 16 : 0);
+                | (mBind.cbFixFail.isChecked() ? 16 : 0)
+                | (mBind.cbBleAdvCheck.isChecked() ? 32 : 0);
         savedParamsError = false;
         showSyncingProgressDialog();
         LoRaLW008MTEMokoSupport.getInstance().sendOrder(OrderTaskAssembler.setIndicatorStatus(indicator));

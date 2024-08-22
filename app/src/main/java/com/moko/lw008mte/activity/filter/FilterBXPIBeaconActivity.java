@@ -124,16 +124,16 @@ public class FilterBXPIBeaconActivity extends BaseActivity {
                                         break;
                                     case KEY_FILTER_BXP_IBEACON_MAJOR_RANGE:
                                         if (length > 0) {
-                                            int majorMin = MokoUtils.toInt(Arrays.copyOfRange(value, 5, 7));
-                                            int majorMax = MokoUtils.toInt(Arrays.copyOfRange(value, 7, 9));
+                                            int majorMin = MokoUtils.toInt(Arrays.copyOfRange(value, 4, 6));
+                                            int majorMax = MokoUtils.toInt(Arrays.copyOfRange(value, 6, 8));
                                             mBind.etIbeaconMajorMin.setText(String.valueOf(majorMin));
                                             mBind.etIbeaconMajorMax.setText(String.valueOf(majorMax));
                                         }
                                         break;
                                     case KEY_FILTER_BXP_IBEACON_MINOR_RANGE:
                                         if (length > 0) {
-                                            int minorMin = MokoUtils.toInt(Arrays.copyOfRange(value, 5, 7));
-                                            int minorMax = MokoUtils.toInt(Arrays.copyOfRange(value, 7, 9));
+                                            int minorMin = MokoUtils.toInt(Arrays.copyOfRange(value, 4, 6));
+                                            int minorMax = MokoUtils.toInt(Arrays.copyOfRange(value, 6, 8));
                                             mBind.etIbeaconMinorMin.setText(String.valueOf(minorMin));
                                             mBind.etIbeaconMinorMax.setText(String.valueOf(minorMax));
                                         }

@@ -190,6 +190,7 @@ public class ParamsWriteTask extends OrderTask {
         };
         response.responseValue = data;
     }
+
     public void setOffByMagneticEnable(@IntRange(from = 0, to = 1) int enable) {
         data = new byte[]{
                 (byte) 0xED,
@@ -1346,12 +1347,14 @@ public class ParamsWriteTask extends OrderTask {
     }
 
     public void setOutdoorGpsReportInterval(@IntRange(from = 1, to = 14400) int interval) {
+        byte[] intervalBytes = MokoUtils.toByteArray(interval, 2);
         data = new byte[]{
                 (byte) 0xED,
                 (byte) 0x01,
                 (byte) ParamsKeyEnum.KEY_OUTDOOR_GPS_REPORT_INTERVAL.getParamsKey(),
-                (byte) 0x01,
-                (byte) interval,
+                (byte) 0x02,
+                intervalBytes[0],
+                intervalBytes[1],
         };
         response.responseValue = data;
     }
