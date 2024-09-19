@@ -43,8 +43,8 @@ public class DeviceModeActivity extends BaseActivity {
         setContentView(mBind.getRoot());
         mValues = new ArrayList<>();
         mValues.add("Standby Mode");
-        mValues.add("Timing Mode");
         mValues.add("Periodic Mode");
+        mValues.add("Timing Mode");
         mValues.add("Motion Mode");
         EventBus.getDefault().register(this);
         // 注册广播接收器

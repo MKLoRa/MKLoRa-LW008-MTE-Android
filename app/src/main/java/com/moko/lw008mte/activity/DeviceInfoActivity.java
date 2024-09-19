@@ -96,15 +96,10 @@ public class DeviceInfoActivity extends BaseActivity implements RadioGroup.OnChe
         mRegions = new ArrayList<>();
         mRegions.add("AS923");
         mRegions.add("AU915");
-        mRegions.add("CN470");
-        mRegions.add("CN779");
-        mRegions.add("EU433");
         mRegions.add("EU868");
         mRegions.add("KR920");
         mRegions.add("IN865");
         mRegions.add("US915");
-        mRegions.add("RU864");
-        mRegions.add("RU864");
         mRegions.add("RU864");
         mRegions.add("AS923-1");
         mRegions.add("AS923-2");
@@ -270,7 +265,7 @@ public class DeviceInfoActivity extends BaseActivity implements RadioGroup.OnChe
                                             mSelectUploadMode = mode;
                                             String loraInfo = String.format("%s/%s/ClassA",
                                                     mUploadMode.get(mSelectUploadMode - 1),
-                                                    mRegions.get(mSelectedRegion));
+                                                    mSelectedRegion < 2 ? mRegions.get(mSelectedRegion) : mRegions.get(mSelectedRegion - 3));
                                             loraFragment.setLoRaInfo(loraInfo);
                                         }
                                         break;

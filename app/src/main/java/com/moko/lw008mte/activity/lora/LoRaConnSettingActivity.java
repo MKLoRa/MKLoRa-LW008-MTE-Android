@@ -46,7 +46,7 @@ public class LoRaConnSettingActivity extends BaseActivity implements CompoundBut
     private ArrayList<String> mMaxRetransmissionTimesList;
     private int mSelectedMode;
     private int mSelectedRegion;
-    private int mSelectedMessageType;
+    //    private int mSelectedMessageType;
     private int mSelectedCh1;
     private int mSelectedCh2;
     private int mSelectedDr;
@@ -67,9 +67,6 @@ public class LoRaConnSettingActivity extends BaseActivity implements CompoundBut
         mRegionsList = new ArrayList<>();
         mRegionsList.add("AS923");
         mRegionsList.add("AU915");
-        mRegionsList.add("CN470");
-        mRegionsList.add("CN779");
-        mRegionsList.add("EU433");
         mRegionsList.add("EU868");
         mRegionsList.add("KR920");
         mRegionsList.add("IN865");
@@ -108,7 +105,7 @@ public class LoRaConnSettingActivity extends BaseActivity implements CompoundBut
                 orderTasks.add(OrderTaskAssembler.getLoraAppSKey());
                 orderTasks.add(OrderTaskAssembler.getLoraNwkSKey());
                 orderTasks.add(OrderTaskAssembler.getLoraRegion());
-                orderTasks.add(OrderTaskAssembler.getLoraMessageType());
+//                orderTasks.add(OrderTaskAssembler.getLoraMessageType());
                 orderTasks.add(OrderTaskAssembler.getLoraCH());
                 orderTasks.add(OrderTaskAssembler.getLoraDutyCycleEnable());
                 orderTasks.add(OrderTaskAssembler.getLoraDR());
@@ -259,18 +256,18 @@ public class LoRaConnSettingActivity extends BaseActivity implements CompoundBut
                                         if (length > 0) {
                                             final int region = value[4] & 0xFF;
                                             mSelectedRegion = region;
-                                            mBind.tvRegion.setText(mRegionsList.get(region));
+                                            mBind.tvRegion.setText(mSelectedRegion < 2 ? mRegionsList.get(mSelectedRegion) : mRegionsList.get(mSelectedRegion - 3));
                                             initCHDRRange();
                                             initDutyCycle();
                                         }
                                         break;
-                                    case KEY_LORA_MESSAGE_TYPE:
-                                        if (length > 0) {
-                                            final int messageType = value[4] & 0xFF;
-                                            mSelectedMessageType = messageType;
-                                            mBind.tvMessageType.setText(mMessageTypeList.get(messageType));
-                                        }
-                                        break;
+//                                    case KEY_LORA_MESSAGE_TYPE:
+//                                        if (length > 0) {
+//                                            final int messageType = value[4] & 0xFF;
+//                                            mSelectedMessageType = messageType;
+//                                            mBind.tvMessageType.setText(mMessageTypeList.get(messageType));
+//                                        }
+//                                        break;
                                     case KEY_LORA_CH:
                                         if (length > 1) {
                                             final int ch1 = value[4] & 0xFF;
@@ -394,12 +391,13 @@ public class LoRaConnSettingActivity extends BaseActivity implements CompoundBut
         if (isWindowLocked())
             return;
         BottomDialog bottomDialog = new BottomDialog();
-        bottomDialog.setDatas(mRegionsList, mSelectedRegion);
+        bottomDialog.setDatas(mRegionsList, mSelectedRegion < 2 ? mSelectedRegion : mSelectedRegion - 3);
         bottomDialog.setListener(value -> {
+            if (value > 1) value = value + 3;
             if (mSelectedRegion != value) {
                 mBind.cbAdr.setChecked(true);
                 mSelectedRegion = value;
-                mBind.tvRegion.setText(mRegionsList.get(value));
+                mBind.tvRegion.setText(mSelectedRegion < 2 ? mRegionsList.get(mSelectedRegion) : mRegionsList.get(mSelectedRegion - 3));
                 initCHDRRange();
                 updateCHDR();
                 initDutyCycle();
@@ -408,17 +406,17 @@ public class LoRaConnSettingActivity extends BaseActivity implements CompoundBut
         bottomDialog.show(getSupportFragmentManager());
     }
 
-    public void selectMessageType(View view) {
-        if (isWindowLocked())
-            return;
-        BottomDialog bottomDialog = new BottomDialog();
-        bottomDialog.setDatas(mMessageTypeList, mSelectedMessageType);
-        bottomDialog.setListener(value -> {
-            mBind.tvMessageType.setText(mMessageTypeList.get(value));
-            mSelectedMessageType = value;
-        });
-        bottomDialog.show(getSupportFragmentManager());
-    }
+//    public void selectMessageType(View view) {
+//        if (isWindowLocked())
+//            return;
+//        BottomDialog bottomDialog = new BottomDialog();
+//        bottomDialog.setDatas(mMessageTypeList, mSelectedMessageType);
+//        bottomDialog.setListener(value -> {
+//            mBind.tvMessageType.setText(mMessageTypeList.get(value));
+//            mSelectedMessageType = value;
+//        });
+//        bottomDialog.show(getSupportFragmentManager());
+//    }
 
     private void updateCHDR() {
         switch (mSelectedRegion) {
@@ -457,7 +455,8 @@ public class LoRaConnSettingActivity extends BaseActivity implements CompoundBut
                 mSelectedDr = 0;
                 break;
         }
-        if (mSelectedRegion == 0 || mSelectedRegion == 1) {
+        if (mSelectedRegion == 0 || mSelectedRegion == 1 || mSelectedRegion == 10 ||
+                mSelectedRegion == 11 || mSelectedRegion == 12 || mSelectedRegion == 13) {
             mSelectedDr1 = 2;
             mSelectedDr2 = 2;
         } else {
@@ -517,8 +516,8 @@ public class LoRaConnSettingActivity extends BaseActivity implements CompoundBut
             mCHList.add(String.valueOf(i));
         }
         int minDR = 0;
-        if (mSelectedRegion == 0 || mSelectedRegion == 1
-                || mSelectedRegion == 10 || mSelectedRegion == 11 || mSelectedRegion == 12 || mSelectedRegion == 13) {
+        if (mSelectedRegion == 0 || mSelectedRegion == 1 || mSelectedRegion == 10 ||
+                mSelectedRegion == 11 || mSelectedRegion == 12 || mSelectedRegion == 13) {
             // AS923,AU915
             minDR = 2;
         }
@@ -531,8 +530,8 @@ public class LoRaConnSettingActivity extends BaseActivity implements CompoundBut
         } else {
             mBind.rlCh.setVisibility(View.GONE);
         }
-        if (mSelectedRegion == 0 || mSelectedRegion == 1 || mSelectedRegion == 8
-                || mSelectedRegion == 10 || mSelectedRegion == 11 || mSelectedRegion == 12 || mSelectedRegion == 13) {
+        if (mSelectedRegion == 0 || mSelectedRegion == 1 || mSelectedRegion == 8 ||
+                mSelectedRegion == 10 || mSelectedRegion == 11 || mSelectedRegion == 12 || mSelectedRegion == 13) {
             // AS923,US915,AU915
             mBind.rlDr.setVisibility(View.GONE);
         } else {
@@ -585,10 +584,10 @@ public class LoRaConnSettingActivity extends BaseActivity implements CompoundBut
     }
 
     public void selectDr1(View view) {
-        if (isWindowLocked())
-            return;
-        if (mSelectedRegion == 0 || mSelectedRegion == 1) {
-            BottomDialog bottomDialog = new BottomDialog();
+        if (isWindowLocked()) return;
+        BottomDialog bottomDialog = new BottomDialog();
+        if (mSelectedRegion == 0 || mSelectedRegion == 1 || mSelectedRegion == 10 ||
+                mSelectedRegion == 11 || mSelectedRegion == 12 || mSelectedRegion == 13) {
             bottomDialog.setDatas(mDRList, mSelectedDr1 - 2);
             bottomDialog.setListener(value -> {
                 mSelectedDr1 = value + 2;
@@ -598,9 +597,7 @@ public class LoRaConnSettingActivity extends BaseActivity implements CompoundBut
                     mBind.tvDr2.setText(mDRList.get(value));
                 }
             });
-            bottomDialog.show(getSupportFragmentManager());
         } else {
-            BottomDialog bottomDialog = new BottomDialog();
             bottomDialog.setDatas(mDRList, mSelectedDr1);
             bottomDialog.setListener(value -> {
                 mSelectedDr1 = value;
@@ -610,8 +607,8 @@ public class LoRaConnSettingActivity extends BaseActivity implements CompoundBut
                     mBind.tvDr2.setText(mDRList.get(value));
                 }
             });
-            bottomDialog.show(getSupportFragmentManager());
         }
+        bottomDialog.show(getSupportFragmentManager());
     }
 
     public void selectDr2(View view) {
@@ -718,7 +715,7 @@ public class LoRaConnSettingActivity extends BaseActivity implements CompoundBut
             orderTasks.add(OrderTaskAssembler.setLoraAppKey(appKey));
         }
         orderTasks.add(OrderTaskAssembler.setLoraUploadMode(mSelectedMode + 1));
-        orderTasks.add(OrderTaskAssembler.setLoraMessageType(mSelectedMessageType));
+//        orderTasks.add(OrderTaskAssembler.setLoraMessageType(mSelectedMessageType));
         savedParamsError = false;
         // 保存并连接
         orderTasks.add(OrderTaskAssembler.setLoraRegion(mSelectedRegion));
@@ -731,8 +728,8 @@ public class LoRaConnSettingActivity extends BaseActivity implements CompoundBut
             // CN779,EU433,EU868 and RU864
             orderTasks.add(OrderTaskAssembler.setLoraDutyCycleEnable(mBind.cbDutyCycle.isChecked() ? 1 : 0));
         }
-        if (mSelectedRegion != 0 && mSelectedRegion != 1 && mSelectedRegion != 8
-                && mSelectedRegion != 10 && mSelectedRegion != 11 && mSelectedRegion != 12 && mSelectedRegion != 13) {
+        if (mSelectedRegion == 2 || mSelectedRegion == 3 || mSelectedRegion == 4 || mSelectedRegion == 5
+                || mSelectedRegion == 6 || mSelectedRegion == 7 || mSelectedRegion == 9) {
             // AS923,US915,AU915
             orderTasks.add(OrderTaskAssembler.setLoraDR(mSelectedDr));
         }

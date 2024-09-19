@@ -1607,7 +1607,7 @@ public class OrderTaskAssembler {
         return task;
     }
 
-    public static OrderTask setLoraRegion(@IntRange(from = 0, to = 9) int region) {
+    public static OrderTask setLoraRegion(@IntRange(from = 0, to = 13) int region) {
         ParamsWriteTask task = new ParamsWriteTask();
         task.setLoraRegion(region);
         return task;
