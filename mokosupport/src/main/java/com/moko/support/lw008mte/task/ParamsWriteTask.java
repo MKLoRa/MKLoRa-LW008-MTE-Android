@@ -533,7 +533,7 @@ public class ParamsWriteTask extends OrderTask {
         response.responseValue = data;
     }
 
-    public void setBlePosNumber(@IntRange(from = 1, to = 5) int number) {
+    public void setBlePosNumber(@IntRange(from = 1, to = 15) int number) {
         data = new byte[]{
                 (byte) 0xED,
                 (byte) 0x01,
@@ -993,73 +993,6 @@ public class ParamsWriteTask extends OrderTask {
             int index = 0;
             for (int i = 0, size = filterMkTofRules.size(); i < size; i++) {
                 String mac = filterMkTofRules.get(i);
-                byte[] macBytes = MokoUtils.hex2bytes(mac);
-                int l = macBytes.length;
-                data[4 + index] = (byte) l;
-                index++;
-                for (int j = 0; j < l; j++, index++) {
-                    data[4 + index] = macBytes[j];
-                }
-            }
-        }
-        response.responseValue = data;
-    }
-
-    public void setFilterBXPSensorInfoEnable(@IntRange(from = 0, to = 1) int enable) {
-        data = new byte[]{
-                (byte) 0xED,
-                (byte) 0x01,
-                (byte) ParamsKeyEnum.KEY_FILTER_BXP_SENSOR_INFO_ENABLE.getParamsKey(),
-                (byte) 0x01,
-                (byte) enable
-        };
-        response.responseValue = data;
-    }
-
-    public void setFilterBXPSensorInfoPrecise(@IntRange(from = 0, to = 1) int enable) {
-        data = new byte[]{
-                (byte) 0xED,
-                (byte) 0x01,
-                (byte) ParamsKeyEnum.KEY_FILTER_BXP_SENSOR_INFO_PRECISE.getParamsKey(),
-                (byte) 0x01,
-                (byte) enable
-        };
-        response.responseValue = data;
-    }
-
-    public void setFilterBXPSensorInfoReverse(@IntRange(from = 0, to = 1) int enable) {
-        data = new byte[]{
-                (byte) 0xED,
-                (byte) 0x01,
-                (byte) ParamsKeyEnum.KEY_FILTER_BXP_SENSOR_INFO_REVERSE.getParamsKey(),
-                (byte) 0x01,
-                (byte) enable
-        };
-        response.responseValue = data;
-    }
-
-    public void setFilterBXPSensorInfoRules(ArrayList<String> filterBXPTagRules) {
-        if (filterBXPTagRules == null || filterBXPTagRules.size() == 0) {
-            data = new byte[]{
-                    (byte) 0xED,
-                    (byte) 0x01,
-                    (byte) ParamsKeyEnum.KEY_FILTER_BXP_SENSOR_INFO_RULES.getParamsKey(),
-                    (byte) 0x00
-            };
-        } else {
-            int length = 0;
-            for (String mac : filterBXPTagRules) {
-                length += 1;
-                length += mac.length() / 2;
-            }
-            data = new byte[4 + length];
-            data[0] = (byte) 0xED;
-            data[1] = (byte) 0x01;
-            data[2] = (byte) ParamsKeyEnum.KEY_FILTER_BXP_SENSOR_INFO_RULES.getParamsKey();
-            data[3] = (byte) length;
-            int index = 0;
-            for (int i = 0, size = filterBXPTagRules.size(); i < size; i++) {
-                String mac = filterBXPTagRules.get(i);
                 byte[] macBytes = MokoUtils.hex2bytes(mac);
                 int l = macBytes.length;
                 data[4 + index] = (byte) l;

@@ -198,11 +198,6 @@ public enum ParamsKeyEnum implements Serializable {
     // BXP-TOF
     KEY_FILTER_MK_TOF_ENABLE(0x79),
     KEY_FILTER_MK_TOF_MFG_CODE(0x7A),
-    // BXP-Sensor Info
-    KEY_FILTER_BXP_SENSOR_INFO_ENABLE(0x7B),
-    KEY_FILTER_BXP_SENSOR_INFO_PRECISE(0x7C),
-    KEY_FILTER_BXP_SENSOR_INFO_REVERSE(0x7D),
-    KEY_FILTER_BXP_SENSOR_INFO_RULES(0x7E),
     // Unknown设备过滤开关
     KEY_FILTER_OTHER_ENABLE(0x8B),
     // 3组unknown过滤规则逻辑

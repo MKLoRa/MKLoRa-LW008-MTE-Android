@@ -116,23 +116,22 @@ public class FilterRawDataSwitchActivity extends BaseActivity {
                                     case KEY_FILTER_RAW_DATA:
                                         if (length == 14) {
                                             dismissSyncProgressDialog();
-                                            mBind.tvFilterByIbeacon.setText(value[4] == 1 ? "ON" : "OFF");
-                                            mBind.tvFilterByUid.setText(value[5] == 1 ? "ON" : "OFF");
-                                            mBind.tvFilterByUrl.setText(value[6] == 1 ? "ON" : "OFF");
-                                            mBind.tvFilterByTlm.setText(value[7] == 1 ? "ON" : "OFF");
-                                            mBind.tvFilterByBxpIbeacon.setText(value[8] == 1 ? "ON" : "OFF");
-                                            mBind.ivFilterByBxpDevice.setImageResource(value[9] == 1 ? R.drawable.lw008_ic_checked : R.drawable.lw008_ic_unchecked);
-                                            mBind.ivFilterByBxpAcc.setImageResource(value[10] == 1 ? R.drawable.lw008_ic_checked : R.drawable.lw008_ic_unchecked);
-                                            mBind.ivFilterByBxpTh.setImageResource(value[11] == 1 ? R.drawable.lw008_ic_checked : R.drawable.lw008_ic_unchecked);
+                                            mBind.tvFilterByOther.setText(value[4] == 1 ? "ON" : "OFF");
+                                            mBind.tvFilterByIbeacon.setText(value[5] == 1 ? "ON" : "OFF");
+                                            mBind.tvFilterByUid.setText(value[6] == 1 ? "ON" : "OFF");
+                                            mBind.tvFilterByUrl.setText(value[7] == 1 ? "ON" : "OFF");
+                                            mBind.tvFilterByTlm.setText(value[8] == 1 ? "ON" : "OFF");
+                                            mBind.ivFilterByBxpAcc.setImageResource(value[9] == 1 ? R.drawable.lw008_ic_checked : R.drawable.lw008_ic_unchecked);
+                                            mBind.ivFilterByBxpTh.setImageResource(value[10] == 1 ? R.drawable.lw008_ic_checked : R.drawable.lw008_ic_unchecked);
+                                            mBind.ivFilterByBxpDevice.setImageResource(value[11] == 1 ? R.drawable.lw008_ic_checked : R.drawable.lw008_ic_unchecked);
                                             mBind.tvFilterByBxpButton.setText(value[12] == 1 ? "ON" : "OFF");
                                             mBind.tvFilterByBxpTag.setText(value[13] == 1 ? "ON" : "OFF");
                                             mBind.tvFilterByPir.setText(value[14] == 1 ? "ON" : "OFF");
                                             mBind.tvFilterByTof.setText(value[15] == 1 ? "ON" : "OFF");
-                                            mBind.tvFilterBySensorInfo.setText(value[16] == 1 ? "ON" : "OFF");
-                                            mBind.tvFilterByOther.setText(value[17] == 1 ? "ON" : "OFF");
-                                            isBXPDeviceOpen = value[9] == 1;
-                                            isBXPAccOpen = value[10] == 1;
-                                            isBXPTHOpen = value[11] == 1;
+                                            mBind.tvFilterByBxpIbeacon.setText(value[16] == 1 ? "ON" : "OFF");
+                                            isBXPAccOpen = value[9] == 1;
+                                            isBXPTHOpen = value[10] == 1;
+                                            isBXPDeviceOpen = value[11] == 1;
                                         }
                                         break;
 
@@ -265,13 +264,6 @@ public class FilterRawDataSwitchActivity extends BaseActivity {
         if (isWindowLocked())
             return;
         Intent i = new Intent(this, FilterMKTOFActivity.class);
-        startActivityForResult(i, AppConstants.REQUEST_CODE_FILTER_RAW_DATA);
-    }
-
-    public void onFilterBySensorInfo(View view) {
-        if (isWindowLocked())
-            return;
-        Intent i = new Intent(this, FilterBXPSensorInfoActivity.class);
         startActivityForResult(i, AppConstants.REQUEST_CODE_FILTER_RAW_DATA);
     }
 

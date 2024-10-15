@@ -214,7 +214,7 @@ public class PosBleFixActivity extends BaseActivity implements SeekBar.OnSeekBar
         if (TextUtils.isEmpty(numberStr))
             return false;
         final int number = Integer.parseInt(numberStr);
-        if (number < 1 || number > 5) {
+        if (number < 1 || number > 15) {
             return false;
         }
         return true;

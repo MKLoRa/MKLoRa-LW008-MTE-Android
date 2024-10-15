@@ -525,30 +525,6 @@ public class OrderTaskAssembler {
         return task;
     }
 
-    public static OrderTask getFilterBXPSensorInfoEnable() {
-        ParamsReadTask task = new ParamsReadTask();
-        task.setData(ParamsKeyEnum.KEY_FILTER_BXP_SENSOR_INFO_ENABLE);
-        return task;
-    }
-
-    public static OrderTask getFilterBXPSensorInfoPrecise() {
-        ParamsReadTask task = new ParamsReadTask();
-        task.setData(ParamsKeyEnum.KEY_FILTER_BXP_SENSOR_INFO_PRECISE);
-        return task;
-    }
-
-    public static OrderTask getFilterBXPSensorInfoReverse() {
-        ParamsReadTask task = new ParamsReadTask();
-        task.setData(ParamsKeyEnum.KEY_FILTER_BXP_SENSOR_INFO_REVERSE);
-        return task;
-    }
-
-    public static OrderTask getFilterBXPSensorInfoRules() {
-        ParamsReadTask task = new ParamsReadTask();
-        task.setData(ParamsKeyEnum.KEY_FILTER_BXP_SENSOR_INFO_RULES);
-        return task;
-    }
-
     public static OrderTask getFilterBXPButtonEnable() {
         ParamsReadTask task = new ParamsReadTask();
         task.setData(ParamsKeyEnum.KEY_FILTER_BXP_BUTTON_ENABLE);
@@ -1201,7 +1177,7 @@ public class OrderTaskAssembler {
         return task;
     }
 
-    public static OrderTask setBlePosNumber(@IntRange(from = 1, to = 5) int number) {
+    public static OrderTask setBlePosNumber(@IntRange(from = 1, to = 15) int number) {
         ParamsWriteTask task = new ParamsWriteTask();
         task.setBlePosNumber(number);
         return task;
@@ -1396,30 +1372,6 @@ public class OrderTaskAssembler {
     public static OrderTask setFilterMkTofRules(ArrayList<String> filterMkTofRules) {
         ParamsWriteTask task = new ParamsWriteTask();
         task.setFilterMkTofRules(filterMkTofRules);
-        return task;
-    }
-
-    public static OrderTask setFilterBXPSensorInfoEnable(@IntRange(from = 0, to = 1) int enable) {
-        ParamsWriteTask task = new ParamsWriteTask();
-        task.setFilterBXPSensorInfoEnable(enable);
-        return task;
-    }
-
-    public static OrderTask setFilterBXPSensorInfoPrecise(@IntRange(from = 0, to = 1) int enable) {
-        ParamsWriteTask task = new ParamsWriteTask();
-        task.setFilterBXPSensorInfoPrecise(enable);
-        return task;
-    }
-
-    public static OrderTask setFilterBXPSensorInfoReverse(@IntRange(from = 0, to = 1) int enable) {
-        ParamsWriteTask task = new ParamsWriteTask();
-        task.setFilterBXPSensorInfoReverse(enable);
-        return task;
-    }
-
-    public static OrderTask setFilterBXPSensorInfoRules(ArrayList<String> filterBXPTagRules) {
-        ParamsWriteTask task = new ParamsWriteTask();
-        task.setFilterBXPSensorInfoRules(filterBXPTagRules);
         return task;
     }
 
