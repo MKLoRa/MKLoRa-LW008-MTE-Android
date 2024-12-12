@@ -90,20 +90,20 @@ public class FilterOtherActivity extends BaseActivity {
                 byte[] value = response.responseValue;
                 switch (orderCHAR) {
                     case CHAR_PARAMS:
-                        if (value.length >= 4) {
+                        if (value.length >= 5) {
                             int header = value[0] & 0xFF;// 0xED
                             int flag = value[1] & 0xFF;// read or write
-                            int cmd = value[2] & 0xFF;
+                            int cmd = MokoUtils.toInt(Arrays.copyOfRange(value, 2, 4));
                             if (header != 0xED)
                                 return;
                             ParamsKeyEnum configKeyEnum = ParamsKeyEnum.fromParamKey(cmd);
                             if (configKeyEnum == null) {
                                 return;
                             }
-                            int length = value[3] & 0xFF;
+                            int length = value[4] & 0xFF;
                             if (flag == 0x01) {
                                 // write
-                                int result = value[4] & 0xFF;
+                                int result = value[5] & 0xFF;
                                 switch (configKeyEnum) {
                                     case KEY_FILTER_OTHER_RELATIONSHIP:
                                     case KEY_FILTER_OTHER_RULES:
@@ -128,7 +128,7 @@ public class FilterOtherActivity extends BaseActivity {
                                 switch (configKeyEnum) {
                                     case KEY_FILTER_OTHER_RELATIONSHIP:
                                         if (length > 0) {
-                                            int relationship = value[4] & 0xFF;
+                                            int relationship = value[5] & 0xFF;
                                             if (relationship < 1) {
                                                 mValues = new ArrayList<>();
                                                 mValues.add("A");
@@ -151,7 +151,7 @@ public class FilterOtherActivity extends BaseActivity {
                                     case KEY_FILTER_OTHER_RULES:
                                         if (length > 0) {
                                             filterOther.clear();
-                                            byte[] otherBytes = Arrays.copyOfRange(value, 4, 4 + length);
+                                            byte[] otherBytes = Arrays.copyOfRange(value, 5, 5 + length);
                                             for (int i = 0, l = otherBytes.length; i < l; ) {
                                                 int otherLength = otherBytes[i] & 0xFF;
                                                 i++;
@@ -190,7 +190,7 @@ public class FilterOtherActivity extends BaseActivity {
 
                                     case KEY_FILTER_OTHER_ENABLE:
                                         if (length > 0) {
-                                            int enable = value[4] & 0xFF;
+                                            int enable = value[5] & 0xFF;
                                             mBind.cbOther.setChecked(enable == 1);
                                         }
                                         break;

@@ -70,15 +70,21 @@ public class MotionModeActivity extends BaseActivity {
         showSyncingProgressDialog();
         mBind.cbFixOnStart.postDelayed(() -> {
             List<OrderTask> orderTasks = new ArrayList<>();
-            orderTasks.add(OrderTaskAssembler.getMotionModeEvent());
-            orderTasks.add(OrderTaskAssembler.getMotionModeStartNumber());
+            orderTasks.add(OrderTaskAssembler.getMotionStartEnable());
+            orderTasks.add(OrderTaskAssembler.getMotionStartFixEnable());
+            orderTasks.add(OrderTaskAssembler.getMotionStartNumber());
             orderTasks.add(OrderTaskAssembler.getMotionStartPosStrategy());
+            orderTasks.add(OrderTaskAssembler.getMotionTripEnable());
+            orderTasks.add(OrderTaskAssembler.getMotionTripFixEnable());
             orderTasks.add(OrderTaskAssembler.getMotionTripInterval());
             orderTasks.add(OrderTaskAssembler.getMotionTripPosStrategy());
+            orderTasks.add(OrderTaskAssembler.getMotionEndEnable());
+            orderTasks.add(OrderTaskAssembler.getMotionEndFixEnable());
             orderTasks.add(OrderTaskAssembler.getMotionEndTimeout());
             orderTasks.add(OrderTaskAssembler.getMotionEndNumber());
             orderTasks.add(OrderTaskAssembler.getMotionEndInterval());
             orderTasks.add(OrderTaskAssembler.getMotionEndPosStrategy());
+            orderTasks.add(OrderTaskAssembler.getMotionStationaryFixEnable());
             orderTasks.add(OrderTaskAssembler.getMotionStationaryInterval());
             orderTasks.add(OrderTaskAssembler.getMotionStationaryPosStrategy());
             LoRaLW008MTEMokoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
@@ -113,36 +119,42 @@ public class MotionModeActivity extends BaseActivity {
                 byte[] value = response.responseValue;
                 switch (orderCHAR) {
                     case CHAR_PARAMS:
-                        if (value.length >= 4) {
+                        if (value.length >= 5) {
                             int header = value[0] & 0xFF;// 0xED
                             int flag = value[1] & 0xFF;// read or write
-                            int cmd = value[2] & 0xFF;
+                            int cmd = MokoUtils.toInt(Arrays.copyOfRange(value, 2, 4));
                             if (header != 0xED)
                                 return;
                             ParamsKeyEnum configKeyEnum = ParamsKeyEnum.fromParamKey(cmd);
                             if (configKeyEnum == null) {
                                 return;
                             }
-                            int length = value[3] & 0xFF;
+                            int length = value[4] & 0xFF;
                             if (flag == 0x01) {
                                 // write
-                                int result = value[4] & 0xFF;
+                                int result = value[5] & 0xFF;
                                 switch (configKeyEnum) {
+                                    case KEY_MOTION_MODE_START_ENABLE:
+                                    case KEY_MOTION_MODE_START_FIX_ENABLE:
                                     case KEY_MOTION_MODE_START_NUMBER:
                                     case KEY_MOTION_MODE_START_POS_STRATEGY:
+                                    case KEY_MOTION_MODE_TRIP_ENABLE:
+                                    case KEY_MOTION_MODE_TRIP_FIX_ENABLE:
                                     case KEY_MOTION_MODE_TRIP_REPORT_INTERVAL:
                                     case KEY_MOTION_MODE_TRIP_POS_STRATEGY:
+                                    case KEY_MOTION_MODE_END_ENABLE:
+                                    case KEY_MOTION_MODE_END_FIX_ENABLE:
                                     case KEY_MOTION_MODE_END_TIMEOUT:
                                     case KEY_MOTION_MODE_END_NUMBER:
                                     case KEY_MOTION_MODE_END_REPORT_INTERVAL:
                                     case KEY_MOTION_MODE_END_POS_STRATEGY:
+                                    case KEY_MOTION_MODE_STATIONARY_FIX_ENABLE:
                                     case KEY_MOTION_MODE_STATIONARY_REPORT_INTERVAL:
-                                    case KEY_MOTION_MODE_STATIONARY_POS_STRATEGY:
                                         if (result != 1) {
                                             savedParamsError = true;
                                         }
                                         break;
-                                    case KEY_MOTION_MODE_EVENT:
+                                    case KEY_MOTION_MODE_STATIONARY_POS_STRATEGY:
                                         if (result != 1) {
                                             savedParamsError = true;
                                         }
@@ -157,81 +169,111 @@ public class MotionModeActivity extends BaseActivity {
                             if (flag == 0x00) {
                                 // read
                                 switch (configKeyEnum) {
-                                    case KEY_MOTION_MODE_EVENT:
+                                    case KEY_MOTION_MODE_START_FIX_ENABLE:
                                         if (length > 0) {
-                                            int modeEvent = value[4] & 0xFF;
-                                            mBind.cbNotifyOnStart.setChecked((modeEvent & 1) == 1);
-                                            mBind.cbFixOnStart.setChecked((modeEvent & 2) == 2);
-                                            mBind.cbNotifyInTrip.setChecked((modeEvent & 4) == 4);
-                                            mBind.cbFixInTrip.setChecked((modeEvent & 8) == 8);
-                                            mBind.cbNotifyOnEnd.setChecked((modeEvent & 16) == 16);
-                                            mBind.cbFixOnEnd.setChecked((modeEvent & 32) == 32);
-                                            mBind.cbFixOnStationary.setChecked((modeEvent & 64) == 64);
+                                            int enable = value[5] & 0xFF;
+                                            mBind.cbFixOnStart.setChecked(enable == 1);
+                                        }
+                                        break;
+                                    case KEY_MOTION_MODE_START_ENABLE:
+                                        if (length > 0) {
+                                            int enable = value[5] & 0xFF;
+                                            mBind.cbNotifyOnStart.setChecked(enable == 1);
                                         }
                                         break;
                                     case KEY_MOTION_MODE_START_NUMBER:
                                         if (length > 0) {
-                                            int number = value[4] & 0xFF;
+                                            int number = value[5] & 0xFF;
                                             mBind.etFixOnStartNumber.setText(String.valueOf(number));
                                         }
                                         break;
                                     case KEY_MOTION_MODE_START_POS_STRATEGY:
                                         if (length > 0) {
-                                            int strategy = value[4] & 0xFF;
+                                            int strategy = value[5] & 0xFF;
                                             mStartSelected = strategy;
                                             mBind.tvPosStrategyOnStart.setText(mValues.get(mStartSelected));
                                         }
                                         break;
+                                    case KEY_MOTION_MODE_TRIP_FIX_ENABLE:
+                                        if (length > 0) {
+                                            int enable = value[5] & 0xFF;
+                                            mBind.cbFixInTrip.setChecked(enable == 1);
+                                        }
+                                        break;
+                                    case KEY_MOTION_MODE_TRIP_ENABLE:
+                                        if (length > 0) {
+                                            int enable = value[5] & 0xFF;
+                                            mBind.cbNotifyInTrip.setChecked(enable == 1);
+                                        }
+                                        break;
                                     case KEY_MOTION_MODE_TRIP_REPORT_INTERVAL:
                                         if (length > 0) {
-                                            byte[] intervalBytes = Arrays.copyOfRange(value, 4, 4 + length);
+                                            byte[] intervalBytes = Arrays.copyOfRange(value, 5, 5 + length);
                                             int interval = MokoUtils.toInt(intervalBytes);
                                             mBind.etReportIntervalInTrip.setText(String.valueOf(interval));
                                         }
                                         break;
                                     case KEY_MOTION_MODE_TRIP_POS_STRATEGY:
                                         if (length > 0) {
-                                            int strategy = value[4] & 0xFF;
+                                            int strategy = value[5] & 0xFF;
                                             mTripSelected = strategy;
                                             mBind.tvPosStrategyInTrip.setText(mTripValues.get(mTripSelected));
                                         }
                                         break;
+                                    case KEY_MOTION_MODE_END_FIX_ENABLE:
+                                        if (length > 0) {
+                                            int enable = value[5] & 0xFF;
+                                            mBind.cbFixOnEnd.setChecked(enable == 1);
+                                        }
+                                        break;
+                                    case KEY_MOTION_MODE_END_ENABLE:
+                                        if (length > 0) {
+                                            int enable = value[5] & 0xFF;
+                                            mBind.cbNotifyOnEnd.setChecked(enable == 1);
+                                        }
+                                        break;
                                     case KEY_MOTION_MODE_END_TIMEOUT:
                                         if (length > 0) {
-                                            int timeout = value[4] & 0xFF;
+                                            int timeout = value[5] & 0xFF;
                                             mBind.etTripEndTimeout.setText(String.valueOf(timeout));
                                         }
                                         break;
                                     case KEY_MOTION_MODE_END_NUMBER:
                                         if (length > 0) {
-                                            int number = value[4] & 0xFF;
+                                            int number = value[5] & 0xFF;
                                             mBind.etFixOnEndNumber.setText(String.valueOf(number));
                                         }
                                         break;
                                     case KEY_MOTION_MODE_END_REPORT_INTERVAL:
                                         if (length > 0) {
-                                            byte[] intervalBytes = Arrays.copyOfRange(value, 4, 4 + length);
+                                            byte[] intervalBytes = Arrays.copyOfRange(value, 5, 5 + length);
                                             int interval = MokoUtils.toInt(intervalBytes);
                                             mBind.etReportIntervalOnEnd.setText(String.valueOf(interval));
                                         }
                                         break;
                                     case KEY_MOTION_MODE_END_POS_STRATEGY:
                                         if (length > 0) {
-                                            int strategy = value[4] & 0xFF;
+                                            int strategy = value[5] & 0xFF;
                                             mEndSelected = strategy;
                                             mBind.tvPosStrategyOnEnd.setText(mValues.get(mEndSelected));
                                         }
                                         break;
+                                    case KEY_MOTION_MODE_STATIONARY_FIX_ENABLE:
+                                        if (length > 0) {
+                                            int enable = value[5] & 0xFF;
+                                            mBind.cbFixOnStationary.setChecked(enable == 1);
+                                        }
+                                        break;
                                     case KEY_MOTION_MODE_STATIONARY_REPORT_INTERVAL:
                                         if (length > 0) {
-                                            byte[] intervalBytes = Arrays.copyOfRange(value, 4, 4 + length);
+                                            byte[] intervalBytes = Arrays.copyOfRange(value, 5, 5 + length);
                                             int interval = MokoUtils.toInt(intervalBytes);
                                             mBind.etReportIntervalOnStationary.setText(String.valueOf(interval));
                                         }
                                         break;
                                     case KEY_MOTION_MODE_STATIONARY_POS_STRATEGY:
                                         if (length > 0) {
-                                            int strategy = value[4] & 0xFF;
+                                            int strategy = value[5] & 0xFF;
                                             mStationarySelected = strategy;
                                             mBind.tvPosStrategyOnStationary.setText(mValues.get(mEndSelected));
                                         }
@@ -360,24 +402,26 @@ public class MotionModeActivity extends BaseActivity {
 
         savedParamsError = false;
         List<OrderTask> orderTasks = new ArrayList<>();
-        orderTasks.add(OrderTaskAssembler.setMotionModeStartNumber(startNumber));
+        orderTasks.add(OrderTaskAssembler.setMotionStartEnable(mBind.cbNotifyOnStart.isChecked() ? 1 : 0));
+        orderTasks.add(OrderTaskAssembler.setMotionStartFixEnable(mBind.cbFixOnStart.isChecked() ? 1 : 0));
+        orderTasks.add(OrderTaskAssembler.setMotionStartNumber(startNumber));
         orderTasks.add(OrderTaskAssembler.setMotionStartPosStrategy(mStartSelected));
+
+        orderTasks.add(OrderTaskAssembler.setMotionTripEnable(mBind.cbNotifyInTrip.isChecked() ? 1 : 0));
+        orderTasks.add(OrderTaskAssembler.setMotionTripFixEnable(mBind.cbFixInTrip.isChecked() ? 1 : 0));
         orderTasks.add(OrderTaskAssembler.setMotionTripInterval(intervalTrip));
         orderTasks.add(OrderTaskAssembler.setMotionTripPosStrategy(mTripSelected));
+
+        orderTasks.add(OrderTaskAssembler.setMotionEndEnable(mBind.cbNotifyOnEnd.isChecked() ? 1 : 0));
+        orderTasks.add(OrderTaskAssembler.setMotionEndFixEnable(mBind.cbFixOnEnd.isChecked() ? 1 : 0));
         orderTasks.add(OrderTaskAssembler.setMotionEndTimeout(endTimeout));
         orderTasks.add(OrderTaskAssembler.setMotionEndNumber(endNumber));
         orderTasks.add(OrderTaskAssembler.setMotionEndInterval(endInterval));
         orderTasks.add(OrderTaskAssembler.setMotionEndPosStrategy(mEndSelected));
+
+        orderTasks.add(OrderTaskAssembler.setMotionStationaryFixEnable(mBind.cbFixOnStationary.isChecked() ? 1 : 0));
         orderTasks.add(OrderTaskAssembler.setMotionStationaryInterval(stationaryInterval));
         orderTasks.add(OrderTaskAssembler.setMotionStationaryPosStrategy(mStationarySelected));
-        int motionMode = (mBind.cbNotifyOnStart.isChecked() ? 1 : 0)
-                | (mBind.cbFixOnStart.isChecked() ? 2 : 0)
-                | (mBind.cbNotifyInTrip.isChecked() ? 4 : 0)
-                | (mBind.cbFixInTrip.isChecked() ? 8 : 0)
-                | (mBind.cbNotifyOnEnd.isChecked() ? 16 : 0)
-                | (mBind.cbFixOnEnd.isChecked() ? 32 : 0)
-                | (mBind.cbFixOnStationary.isChecked() ? 64 : 0);
-        orderTasks.add(OrderTaskAssembler.setMotionModeEvent(motionMode));
         LoRaLW008MTEMokoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
     }
 

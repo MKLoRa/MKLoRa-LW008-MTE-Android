@@ -138,10 +138,10 @@ public class LoRaLW008MTEMokoSupport extends MokoBleLib {
             final int flag = value[1] & 0xFF;
             if (header == 0xEE && flag == 0x00) {
                 // 分包读取时特殊处理
-                final int cmd = value[2] & 0xFF;
-                packetCount = value[3] & 0xFF;
-                packetIndex = value[4] & 0xFF;
-                final int length = value[5] & 0xFF;
+                final int cmd = MokoUtils.toInt(Arrays.copyOfRange(value, 2, 4));
+                packetCount = value[4] & 0xFF;
+                packetIndex = value[5] & 0xFF;
+                final int length = value[6] & 0xFF;
                 if (packetIndex == 0) {
                     // 第一包
                     dataLength = 0;
@@ -152,19 +152,20 @@ public class LoRaLW008MTEMokoSupport extends MokoBleLib {
                     case KEY_FILTER_NAME_RULES:
                         if (length > 0) {
                             dataLength += length;
-                            byte[] responseData = Arrays.copyOfRange(value, 6, 6 + length);
+                            byte[] responseData = Arrays.copyOfRange(value, 7, 7 + length);
                             dataSb.append(MokoUtils.bytesToHexString(responseData));
                         }
                         if (packetIndex == (packetCount - 1)) {
                             if (!TextUtils.isEmpty(dataSb.toString()))
                                 dataBytes = MokoUtils.hex2bytes(dataSb.toString());
-                            byte[] responseValue = new byte[4 + dataLength];
+                            byte[] responseValue = new byte[5 + dataLength];
                             responseValue[0] = (byte) 0xED;
                             responseValue[1] = (byte) 0x00;
-                            responseValue[2] = (byte) cmd;
-                            responseValue[3] = (byte) dataLength;
+                            responseValue[2] = (byte) value[2];
+                            responseValue[3] = (byte) value[3];
+                            responseValue[4] = (byte) dataLength;
                             for (int i = 0; i < dataLength; i++) {
-                                responseValue[4 + i] = dataBytes[i];
+                                responseValue[5 + i] = dataBytes[i];
                             }
                             dataSb = null;
                             dataBytes = null;

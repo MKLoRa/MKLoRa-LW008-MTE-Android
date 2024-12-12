@@ -73,20 +73,20 @@ public class SelfTestActivity extends BaseActivity {
                 byte[] value = response.responseValue;
                 switch (orderCHAR) {
                     case CHAR_PARAMS:
-                        if (value.length >= 4) {
+                        if (value.length >= 5) {
                             int header = value[0] & 0xFF;// 0xED
                             int flag = value[1] & 0xFF;// read or write
-                            int cmd = value[2] & 0xFF;
+                            int cmd = MokoUtils.toInt(Arrays.copyOfRange(value, 2, 4));
                             if (header != 0xED)
                                 return;
                             ParamsKeyEnum configKeyEnum = ParamsKeyEnum.fromParamKey(cmd);
                             if (configKeyEnum == null) {
                                 return;
                             }
-                            int length = value[3] & 0xFF;
+                            int length = value[4] & 0xFF;
                             if (flag == 0x01) {
                                 // write
-                                int result = value[4] & 0xFF;
+                                int result = value[5] & 0xFF;
                                 switch (configKeyEnum) {
                                     case KEY_BATTERY_RESET:
                                         if (result == 1) {
@@ -104,7 +104,7 @@ public class SelfTestActivity extends BaseActivity {
                                 switch (configKeyEnum) {
                                     case KEY_SELFTEST_STATUS:
                                         if (length > 0) {
-                                            int status = value[4] & 0xFF;
+                                            int status = value[5] & 0xFF;
                                             mBind.tvSelftestStatus.setVisibility(status == 0 ? View.VISIBLE : View.GONE);
                                             if ((status & 0x01) == 0x01)
                                                 mBind.tvGpsStatus.setVisibility(View.VISIBLE);
@@ -116,7 +116,7 @@ public class SelfTestActivity extends BaseActivity {
                                         break;
                                     case KEY_PCBA_STATUS:
                                         if (length > 0) {
-                                            mBind.tvPcbaStatus.setText(String.valueOf(value[4] & 0xFF));
+                                            mBind.tvPcbaStatus.setText(String.valueOf(value[5] & 0xFF));
                                         }
                                         break;
                                 }

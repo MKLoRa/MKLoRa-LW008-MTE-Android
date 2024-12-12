@@ -9,6 +9,7 @@ import com.moko.ble.lib.event.ConnectStatusEvent;
 import com.moko.ble.lib.event.OrderTaskResponseEvent;
 import com.moko.ble.lib.task.OrderTask;
 import com.moko.ble.lib.task.OrderTaskResponse;
+import com.moko.ble.lib.utils.MokoUtils;
 import com.moko.lw008mte.activity.BaseActivity;
 import com.moko.lw008mte.databinding.Lw008MteActivityFilterBxpButtonBinding;
 import com.moko.lw008mte.utils.ToastUtils;
@@ -22,6 +23,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class FilterBXPButtonActivity extends BaseActivity {
@@ -74,20 +76,20 @@ public class FilterBXPButtonActivity extends BaseActivity {
                 byte[] value = response.responseValue;
                 switch (orderCHAR) {
                     case CHAR_PARAMS:
-                        if (value.length >= 4) {
+                        if (value.length >= 5) {
                             int header = value[0] & 0xFF;// 0xED
                             int flag = value[1] & 0xFF;// read or write
-                            int cmd = value[2] & 0xFF;
+                            int cmd = MokoUtils.toInt(Arrays.copyOfRange(value, 2, 4));
                             if (header != 0xED)
                                 return;
                             ParamsKeyEnum configKeyEnum = ParamsKeyEnum.fromParamKey(cmd);
                             if (configKeyEnum == null) {
                                 return;
                             }
-                            int length = value[3] & 0xFF;
+                            int length = value[4] & 0xFF;
                             if (flag == 0x01) {
                                 // write
-                                int result = value[4] & 0xFF;
+                                int result = value[5] & 0xFF;
                                 switch (configKeyEnum) {
                                     case KEY_FILTER_BXP_BUTTON_RULES:
                                         if (result != 1) {
@@ -111,15 +113,15 @@ public class FilterBXPButtonActivity extends BaseActivity {
                                 switch (configKeyEnum) {
                                     case KEY_FILTER_BXP_BUTTON_RULES:
                                         if (length > 0) {
-                                            mBind.cbSinglePress.setChecked(value[4] == 1);
-                                            mBind.cbDoublePress.setChecked(value[5] == 1);
-                                            mBind.cbLongPress.setChecked(value[6] == 1);
-                                            mBind.cbAbnormalInactivity.setChecked(value[7] == 1);
+                                            mBind.cbSinglePress.setChecked(value[5] == 1);
+                                            mBind.cbDoublePress.setChecked(value[6] == 1);
+                                            mBind.cbLongPress.setChecked(value[7] == 1);
+                                            mBind.cbAbnormalInactivity.setChecked(value[8] == 1);
                                         }
                                         break;
                                     case KEY_FILTER_BXP_BUTTON_ENABLE:
                                         if (length > 0) {
-                                            int enable = value[4] & 0xFF;
+                                            int enable = value[5] & 0xFF;
                                             mBind.cbEnable.setChecked(enable == 1);
                                         }
                                         break;

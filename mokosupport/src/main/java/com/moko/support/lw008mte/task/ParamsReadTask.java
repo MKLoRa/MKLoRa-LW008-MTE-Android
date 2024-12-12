@@ -1,6 +1,7 @@
 package com.moko.support.lw008mte.task;
 
 import com.moko.ble.lib.task.OrderTask;
+import com.moko.ble.lib.utils.MokoUtils;
 import com.moko.support.lw008mte.entity.OrderCHAR;
 import com.moko.support.lw008mte.entity.ParamsKeyEnum;
 
@@ -23,20 +24,24 @@ public class ParamsReadTask extends OrderTask {
     }
 
     private void createGetConfigData(int configKey) {
+        byte[] cmdBytes = MokoUtils.toByteArray(configKey, 2);
         data = new byte[]{
                 (byte) 0xED,
                 (byte) 0x00,
-                (byte) configKey,
+                (byte) cmdBytes[0],
+                (byte) cmdBytes[1],
                 (byte) 0x00
         };
         response.responseValue = data;
     }
 
     public void getFilterName() {
+        byte[] cmdBytes = MokoUtils.toByteArray(ParamsKeyEnum.KEY_FILTER_NAME_RULES.getParamsKey(), 2);
         data = new byte[]{
                 (byte) 0xEE,
                 (byte) 0x00,
-                (byte) ParamsKeyEnum.KEY_FILTER_NAME_RULES.getParamsKey(),
+                (byte) cmdBytes[0],
+                (byte) cmdBytes[1],
                 (byte) 0x00
         };
         response.responseValue = data;

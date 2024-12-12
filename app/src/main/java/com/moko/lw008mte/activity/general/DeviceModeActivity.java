@@ -13,6 +13,7 @@ import com.moko.ble.lib.MokoConstants;
 import com.moko.ble.lib.event.ConnectStatusEvent;
 import com.moko.ble.lib.event.OrderTaskResponseEvent;
 import com.moko.ble.lib.task.OrderTaskResponse;
+import com.moko.ble.lib.utils.MokoUtils;
 import com.moko.lw008mte.activity.BaseActivity;
 import com.moko.lw008mte.databinding.Lw008MteActivityDeviceModeBinding;
 import com.moko.lw008mte.dialog.BottomDialog;
@@ -27,6 +28,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class DeviceModeActivity extends BaseActivity {
 
@@ -46,6 +48,7 @@ public class DeviceModeActivity extends BaseActivity {
         mValues.add("Periodic Mode");
         mValues.add("Timing Mode");
         mValues.add("Motion Mode");
+        mValues.add("Timing & Periodic Mode");
         EventBus.getDefault().register(this);
         // 注册广播接收器
         IntentFilter filter = new IntentFilter();
@@ -86,20 +89,20 @@ public class DeviceModeActivity extends BaseActivity {
                 byte[] value = response.responseValue;
                 switch (orderCHAR) {
                     case CHAR_PARAMS:
-                        if (value.length >= 4) {
+                        if (value.length >= 5) {
                             int header = value[0] & 0xFF;// 0xED
                             int flag = value[1] & 0xFF;// read or write
-                            int cmd = value[2] & 0xFF;
+                            int cmd = MokoUtils.toInt(Arrays.copyOfRange(value, 2, 4));
                             if (header != 0xED)
                                 return;
                             ParamsKeyEnum configKeyEnum = ParamsKeyEnum.fromParamKey(cmd);
                             if (configKeyEnum == null) {
                                 return;
                             }
-                            int length = value[3] & 0xFF;
+                            int length = value[4] & 0xFF;
                             if (flag == 0x01) {
                                 // write
-                                int result = value[4] & 0xFF;
+                                int result = value[5] & 0xFF;
                                 switch (configKeyEnum) {
                                     case KEY_DEVICE_MODE:
                                         if (result != 1) {
@@ -118,8 +121,8 @@ public class DeviceModeActivity extends BaseActivity {
                                 switch (configKeyEnum) {
                                     case KEY_DEVICE_MODE:
                                         if (length > 0) {
-                                            int mode = value[4] & 0xFF;
-                                            mSelected = mode - 1;
+                                            int mode = value[5] & 0xFF;
+                                            mSelected = mode;
                                             mBind.tvDeviceMode.setText(mValues.get(mSelected));
                                         }
                                         break;
@@ -188,7 +191,7 @@ public class DeviceModeActivity extends BaseActivity {
             mBind.tvDeviceMode.setText(mValues.get(value));
             savedParamsError = false;
             showSyncingProgressDialog();
-            LoRaLW008MTEMokoSupport.getInstance().sendOrder(OrderTaskAssembler.setDeviceMode(value + 1));
+            LoRaLW008MTEMokoSupport.getInstance().sendOrder(OrderTaskAssembler.setDeviceMode(value));
         });
         dialog.show(getSupportFragmentManager());
     }
@@ -215,5 +218,11 @@ public class DeviceModeActivity extends BaseActivity {
         if (isWindowLocked())
             return;
         startActivity(new Intent(this, MotionModeActivity.class));
+    }
+
+    public void onTimingPeriodicMode(View view) {
+        if (isWindowLocked())
+            return;
+        startActivity(new Intent(this, TimeSegmentedModeActivity.class));
     }
 }

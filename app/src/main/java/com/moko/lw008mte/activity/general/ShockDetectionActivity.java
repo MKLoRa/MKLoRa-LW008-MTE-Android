@@ -15,6 +15,7 @@ import com.moko.ble.lib.event.ConnectStatusEvent;
 import com.moko.ble.lib.event.OrderTaskResponseEvent;
 import com.moko.ble.lib.task.OrderTask;
 import com.moko.ble.lib.task.OrderTaskResponse;
+import com.moko.ble.lib.utils.MokoUtils;
 import com.moko.lw008mte.activity.BaseActivity;
 import com.moko.lw008mte.databinding.Lw008MteActivityShockDetectionBinding;
 import com.moko.lw008mte.utils.ToastUtils;
@@ -28,6 +29,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class ShockDetectionActivity extends BaseActivity {
@@ -51,6 +53,7 @@ public class ShockDetectionActivity extends BaseActivity {
         mBind.cbShockDetection.postDelayed(() -> {
             List<OrderTask> orderTasks = new ArrayList<>();
             orderTasks.add(OrderTaskAssembler.getShockDetectionEnable());
+            orderTasks.add(OrderTaskAssembler.getShockThreshold());
             orderTasks.add(OrderTaskAssembler.getShockReportInterval());
             orderTasks.add(OrderTaskAssembler.getShockReportTimeout());
             LoRaLW008MTEMokoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
@@ -85,22 +88,23 @@ public class ShockDetectionActivity extends BaseActivity {
                 byte[] value = response.responseValue;
                 switch (orderCHAR) {
                     case CHAR_PARAMS:
-                        if (value.length >= 4) {
+                        if (value.length >= 5) {
                             int header = value[0] & 0xFF;// 0xED
                             int flag = value[1] & 0xFF;// read or write
-                            int cmd = value[2] & 0xFF;
+                            int cmd = MokoUtils.toInt(Arrays.copyOfRange(value, 2, 4));
                             if (header != 0xED)
                                 return;
                             ParamsKeyEnum configKeyEnum = ParamsKeyEnum.fromParamKey(cmd);
                             if (configKeyEnum == null) {
                                 return;
                             }
-                            int length = value[3] & 0xFF;
+                            int length = value[4] & 0xFF;
                             if (flag == 0x01) {
                                 // write
-                                int result = value[4] & 0xFF;
+                                int result = value[5] & 0xFF;
                                 switch (configKeyEnum) {
                                     case KEY_SHOCK_DETECTION_ENABLE:
+                                    case KEY_SHOCK_THRESHOLD:
                                     case KEY_SHOCK_REPORT_INTERVAL:
                                         if (result != 1) {
                                             savedParamsError = true;
@@ -123,19 +127,26 @@ public class ShockDetectionActivity extends BaseActivity {
                                 switch (configKeyEnum) {
                                     case KEY_SHOCK_DETECTION_ENABLE:
                                         if (length > 0) {
-                                            int enable = value[4] & 0xFF;
+                                            int enable = value[5] & 0xFF;
                                             mBind.cbShockDetection.setChecked(enable == 1);
+                                        }
+                                        break;
+
+                                    case KEY_SHOCK_THRESHOLD:
+                                        if (length > 0) {
+                                            int threshold = value[5] & 0xFF;
+                                            mBind.etShockThresholds.setText(String.valueOf(threshold));
                                         }
                                         break;
                                     case KEY_SHOCK_REPORT_INTERVAL:
                                         if (length > 0) {
-                                            int interval = value[4] & 0xFF;
+                                            int interval = value[5] & 0xFF;
                                             mBind.etShockReportInterval.setText(String.valueOf(interval));
                                         }
                                         break;
                                     case KEY_SHOCK_TIMEOUT:
                                         if (length > 0) {
-                                            int timeout = value[4] & 0xFF;
+                                            int timeout = value[5] & 0xFF;
                                             mBind.etShockTimeout.setText(String.valueOf(timeout));
                                         }
                                         break;
@@ -219,6 +230,12 @@ public class ShockDetectionActivity extends BaseActivity {
         final int timeout = Integer.parseInt(timeoutStr);
         if (timeout < 1 || timeout > 20)
             return false;
+        final String shockThresholdStr = mBind.etShockThresholds.getText().toString();
+        if (TextUtils.isEmpty(shockThresholdStr))
+            return false;
+        final int shockThreshold = Integer.parseInt(shockThresholdStr);
+        if (shockThreshold < 10 || shockThreshold > 255)
+            return false;
         return true;
 
     }
@@ -228,9 +245,12 @@ public class ShockDetectionActivity extends BaseActivity {
         final int interval = Integer.parseInt(intervalStr);
         final String timeoutStr = mBind.etShockTimeout.getText().toString();
         final int timeout = Integer.parseInt(timeoutStr);
+        final String shockThresholdStr = mBind.etShockThresholds.getText().toString();
+        final int shockThreshold = Integer.parseInt(shockThresholdStr);
         savedParamsError = false;
         List<OrderTask> orderTasks = new ArrayList<>();
         orderTasks.add(OrderTaskAssembler.setShockDetectionEnable(mBind.cbShockDetection.isChecked() ? 1 : 0));
+        orderTasks.add(OrderTaskAssembler.setShockThreshold(shockThreshold));
         orderTasks.add(OrderTaskAssembler.setShockReportInterval(interval));
         orderTasks.add(OrderTaskAssembler.setShockTimeout(timeout));
         LoRaLW008MTEMokoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));

@@ -143,20 +143,20 @@ public class LoRaConnSettingActivity extends BaseActivity implements CompoundBut
                 byte[] value = response.responseValue;
                 switch (orderCHAR) {
                     case CHAR_PARAMS:
-                        if (value.length >= 4) {
+                        if (value.length >= 5) {
                             int header = value[0] & 0xFF;// 0xED
                             int flag = value[1] & 0xFF;// read or write
-                            int cmd = value[2] & 0xFF;
+                            int cmd = MokoUtils.toInt(Arrays.copyOfRange(value, 2, 4));
                             if (header != 0xED)
                                 return;
                             ParamsKeyEnum configKeyEnum = ParamsKeyEnum.fromParamKey(cmd);
                             if (configKeyEnum == null) {
                                 return;
                             }
-                            int length = value[3] & 0xFF;
+                            int length = value[4] & 0xFF;
                             if (flag == 0x01) {
                                 // write
-                                int result = value[4] & 0xFF;
+                                int result = value[5] & 0xFF;
                                 switch (configKeyEnum) {
                                     case KEY_LORA_MODE:
                                     case KEY_LORA_DEV_EUI:
@@ -166,7 +166,7 @@ public class LoRaConnSettingActivity extends BaseActivity implements CompoundBut
                                     case KEY_LORA_APP_SKEY:
                                     case KEY_LORA_NWK_SKEY:
                                     case KEY_LORA_REGION:
-                                    case KEY_LORA_MESSAGE_TYPE:
+//                                    case KEY_LORA_MESSAGE_TYPE:
                                     case KEY_LORA_CH:
                                     case KEY_LORA_DR:
                                     case KEY_LORA_DUTYCYCLE:
@@ -204,7 +204,7 @@ public class LoRaConnSettingActivity extends BaseActivity implements CompoundBut
                                 switch (configKeyEnum) {
                                     case KEY_LORA_MODE:
                                         if (length > 0) {
-                                            final int mode = value[4];
+                                            final int mode = value[5];
                                             mBind.tvUploadMode.setText(mModeList.get(mode - 1));
                                             mSelectedMode = mode - 1;
                                             if (mode == 1) {
@@ -218,43 +218,43 @@ public class LoRaConnSettingActivity extends BaseActivity implements CompoundBut
                                         break;
                                     case KEY_LORA_DEV_EUI:
                                         if (length > 0) {
-                                            byte[] rawDataBytes = Arrays.copyOfRange(value, 4, 4 + length);
+                                            byte[] rawDataBytes = Arrays.copyOfRange(value, 5, 5 + length);
                                             mBind.etDevEui.setText(MokoUtils.bytesToHexString(rawDataBytes));
                                         }
                                         break;
                                     case KEY_LORA_APP_EUI:
                                         if (length > 0) {
-                                            byte[] rawDataBytes = Arrays.copyOfRange(value, 4, 4 + length);
+                                            byte[] rawDataBytes = Arrays.copyOfRange(value, 5, 5 + length);
                                             mBind.etAppEui.setText(MokoUtils.bytesToHexString(rawDataBytes));
                                         }
                                         break;
                                     case KEY_LORA_APP_KEY:
                                         if (length > 0) {
-                                            byte[] rawDataBytes = Arrays.copyOfRange(value, 4, 4 + length);
+                                            byte[] rawDataBytes = Arrays.copyOfRange(value, 5, 5 + length);
                                             mBind.etAppKey.setText(MokoUtils.bytesToHexString(rawDataBytes));
                                         }
                                         break;
                                     case KEY_LORA_DEV_ADDR:
                                         if (length > 0) {
-                                            byte[] rawDataBytes = Arrays.copyOfRange(value, 4, 4 + length);
+                                            byte[] rawDataBytes = Arrays.copyOfRange(value, 5, 5 + length);
                                             mBind.etDevAddr.setText(MokoUtils.bytesToHexString(rawDataBytes));
                                         }
                                         break;
                                     case KEY_LORA_APP_SKEY:
                                         if (length > 0) {
-                                            byte[] rawDataBytes = Arrays.copyOfRange(value, 4, 4 + length);
+                                            byte[] rawDataBytes = Arrays.copyOfRange(value, 5, 5 + length);
                                             mBind.etAppSkey.setText(MokoUtils.bytesToHexString(rawDataBytes));
                                         }
                                         break;
                                     case KEY_LORA_NWK_SKEY:
                                         if (length > 0) {
-                                            byte[] rawDataBytes = Arrays.copyOfRange(value, 4, 4 + length);
+                                            byte[] rawDataBytes = Arrays.copyOfRange(value, 5, 5 + length);
                                             mBind.etNwkSkey.setText(MokoUtils.bytesToHexString(rawDataBytes));
                                         }
                                         break;
                                     case KEY_LORA_REGION:
                                         if (length > 0) {
-                                            final int region = value[4] & 0xFF;
+                                            final int region = value[5] & 0xFF;
                                             mSelectedRegion = region;
                                             mBind.tvRegion.setText(mSelectedRegion < 2 ? mRegionsList.get(mSelectedRegion) : mRegionsList.get(mSelectedRegion - 3));
                                             initCHDRRange();
@@ -270,8 +270,8 @@ public class LoRaConnSettingActivity extends BaseActivity implements CompoundBut
 //                                        break;
                                     case KEY_LORA_CH:
                                         if (length > 1) {
-                                            final int ch1 = value[4] & 0xFF;
-                                            final int ch2 = value[5] & 0xFF;
+                                            final int ch1 = value[5] & 0xFF;
+                                            final int ch2 = value[6] & 0xFF;
                                             mSelectedCh1 = ch1;
                                             mSelectedCh2 = ch2;
                                             mBind.tvCh1.setText(String.valueOf(ch1));
@@ -280,35 +280,35 @@ public class LoRaConnSettingActivity extends BaseActivity implements CompoundBut
                                         break;
                                     case KEY_LORA_DUTYCYCLE:
                                         if (length > 0) {
-                                            final int dutyCycleEnable = value[4] & 0xFF;
+                                            final int dutyCycleEnable = value[5] & 0xFF;
                                             mBind.cbDutyCycle.setChecked(dutyCycleEnable == 1);
                                         }
                                         break;
                                     case KEY_LORA_DR:
                                         if (length > 0) {
-                                            final int dr = value[4] & 0xFF;
+                                            final int dr = value[5] & 0xFF;
                                             mSelectedDr = dr;
                                             mBind.tvDr.setText(String.valueOf(dr));
                                         }
                                         break;
                                     case KEY_LORA_ADR_ACK_LIMIT:
                                         if (length > 0) {
-                                            mBind.etAdrAckLimit.setText(String.valueOf(value[4] & 0xFF));
+                                            mBind.etAdrAckLimit.setText(String.valueOf(value[5] & 0xFF));
                                         }
                                         break;
                                     case KEY_LORA_ADR_ACK_DELAY:
                                         if (length > 0) {
-                                            mBind.etAdrAckDelay.setText(String.valueOf(value[4] & 0xFF));
+                                            mBind.etAdrAckDelay.setText(String.valueOf(value[5] & 0xFF));
                                         }
                                         break;
                                     case KEY_LORA_UPLINK_STRATEGY:
                                         if (length > 0) {
-                                            final int adr = value[4] & 0xFF;
+                                            final int adr = value[5] & 0xFF;
                                             mBind.cbAdr.setChecked(adr == 1);
                                             mBind.llAdrOptions.setVisibility(mBind.cbAdr.isChecked() ? View.GONE : View.VISIBLE);
-                                            final int dr1 = value[6] & 0xFF;
+                                            final int dr1 = value[7] & 0xFF;
                                             mSelectedDr1 = dr1;
-                                            final int dr2 = value[7] & 0xFF;
+                                            final int dr2 = value[8] & 0xFF;
                                             mSelectedDr2 = dr2;
                                             mBind.tvDr1.setText(String.valueOf(dr1));
                                             mBind.tvDr2.setText(String.valueOf(dr2));

@@ -22,6 +22,7 @@ import com.moko.ble.lib.event.ConnectStatusEvent;
 import com.moko.ble.lib.event.OrderTaskResponseEvent;
 import com.moko.ble.lib.task.OrderTask;
 import com.moko.ble.lib.task.OrderTaskResponse;
+import com.moko.ble.lib.utils.MokoUtils;
 import com.moko.lw008mte.AppConstants;
 import com.moko.lw008mte.BuildConfig;
 import com.moko.lw008mte.R;
@@ -50,6 +51,7 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -462,15 +464,15 @@ public class LoRaLW008MTEMainActivity extends BaseActivity implements MokoScanDe
             switch (orderCHAR) {
                 case CHAR_PASSWORD:
                     dismissLoadingMessageDialog();
-                    if (value.length == 5) {
+                    if (value.length == 6) {
                         int header = value[0] & 0xFF;// 0xED
                         int flag = value[1] & 0xFF;// read or write
-                        int cmd = value[2] & 0xFF;
+                        int cmd = MokoUtils.toInt(Arrays.copyOfRange(value, 2, 4));
                         if (header != 0xED)
                             return;
-                        int length = value[3] & 0xFF;
-                        if (flag == 0x01 && cmd == 0x01 && length == 0x01) {
-                            int result = value[4] & 0xFF;
+                        int length = value[4] & 0xFF;
+                        if (flag == 0x01 && cmd == 0x0001 && length == 0x01) {
+                            int result = value[5] & 0xFF;
                             if (1 == result) {
                                 mSavedPassword = mPassword;
                                 SPUtiles.setStringValue(LoRaLW008MTEMainActivity.this, AppConstants.SP_KEY_SAVED_PASSWORD_LW008_MTE, mSavedPassword);

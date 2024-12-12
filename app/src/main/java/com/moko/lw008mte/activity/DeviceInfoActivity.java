@@ -181,10 +181,10 @@ public class DeviceInfoActivity extends BaseActivity implements RadioGroup.OnChe
                             return;
                         int header = value[0] & 0xFF;
                         int flag = value[1] & 0xFF;
-                        int cmd = value[2] & 0xFF;
-                        int len = value[3] & 0xFF;
-                        int type = value[4] & 0xFF;
-                        if (header == 0xED && flag == 0x02 && cmd == 0x01 && len == 0x01) {
+                        int cmd = MokoUtils.toInt(Arrays.copyOfRange(value, 2, 4));
+                        int len = value[4] & 0xFF;
+                        int type = value[5] & 0xFF;
+                        if (header == 0xED && flag == 0x02 && cmd == 0x0001 && len == 0x01) {
                             disConnectType = type;
                             if (type == 1) {
                                 // valid password timeout
@@ -211,32 +211,35 @@ public class DeviceInfoActivity extends BaseActivity implements RadioGroup.OnChe
                 byte[] value = response.responseValue;
                 switch (orderCHAR) {
                     case CHAR_PARAMS:
-                        if (value.length >= 4) {
+                        if (value.length >= 5) {
                             int header = value[0] & 0xFF;// 0xED
                             int flag = value[1] & 0xFF;// read or write
-                            int cmd = value[2] & 0xFF;
+                            int cmd = MokoUtils.toInt(Arrays.copyOfRange(value, 2, 4));
                             if (header != 0xED)
                                 return;
                             ParamsKeyEnum configKeyEnum = ParamsKeyEnum.fromParamKey(cmd);
                             if (configKeyEnum == null) {
                                 return;
                             }
-                            int length = value[3] & 0xFF;
+                            int length = value[4] & 0xFF;
                             if (flag == 0x01) {
                                 // write
-                                int result = value[4] & 0xFF;
+                                int result = value[5] & 0xFF;
                                 switch (configKeyEnum) {
                                     case KEY_TIME_UTC:
                                         if (result == 1)
                                             ToastUtils.showToast(DeviceInfoActivity.this, "Time sync completed!");
                                         break;
                                     case KEY_TIME_ZONE:
+                                    case KEY_LOW_POWER_PERCENT:
                                     case KEY_LOW_POWER_PAYLOAD_ENABLE:
                                         if (result != 1) {
                                             savedParamsError = true;
                                         }
                                         break;
                                     case KEY_OFFLINE_LOCATION_ENABLE:
+                                    case KEY_GPS_EXTREME_MODE_L76C:
+                                    case KEY_VOLTAGE_REPORT_ENABLE:
                                     case KEY_HEARTBEAT_INTERVAL:
                                     case KEY_LOW_POWER_REPORT_INTERVAL:
                                         if (result != 1) {
@@ -255,13 +258,13 @@ public class DeviceInfoActivity extends BaseActivity implements RadioGroup.OnChe
                                 switch (configKeyEnum) {
                                     case KEY_LORA_REGION:
                                         if (length > 0) {
-                                            final int region = value[4] & 0xFF;
+                                            final int region = value[5] & 0xFF;
                                             mSelectedRegion = region;
                                         }
                                         break;
                                     case KEY_LORA_MODE:
                                         if (length > 0) {
-                                            final int mode = value[4];
+                                            final int mode = value[5];
                                             mSelectUploadMode = mode;
                                             String loraInfo = String.format("%s/%s/ClassA",
                                                     mUploadMode.get(mSelectUploadMode - 1),
@@ -271,46 +274,58 @@ public class DeviceInfoActivity extends BaseActivity implements RadioGroup.OnChe
                                         break;
                                     case KEY_LORA_NETWORK_STATUS:
                                         if (length > 0) {
-                                            int networkStatus = value[4] & 0xFF;
+                                            int networkStatus = value[5] & 0xFF;
                                             loraFragment.setLoraStatus(networkStatus);
                                         }
                                         break;
                                     case KEY_OFFLINE_LOCATION_ENABLE:
                                         if (length > 0) {
-                                            int enable = value[4] & 0xFF;
+                                            int enable = value[5] & 0xFF;
                                             posFragment.setOfflineLocationEnable(enable);
+                                        }
+                                        break;
+                                    case KEY_GPS_EXTREME_MODE_L76C:
+                                        if (length > 0) {
+                                            int enable = value[5] & 0xFF;
+                                            posFragment.setExtremeModeEnable(enable);
+                                        }
+                                        break;
+                                    case KEY_VOLTAGE_REPORT_ENABLE:
+                                        if (length > 0) {
+                                            int enable = value[5] & 0xFF;
+                                            posFragment.setVoltageReportEnable(enable);
                                         }
                                         break;
                                     case KEY_HEARTBEAT_INTERVAL:
                                         if (length > 0) {
-                                            byte[] intervalBytes = Arrays.copyOfRange(value, 4, 4 + length);
+                                            byte[] intervalBytes = Arrays.copyOfRange(value, 5, 5 + length);
                                             generalFragment.setHeartbeatInterval(MokoUtils.toInt(intervalBytes));
                                         }
                                         break;
                                     case KEY_TIME_ZONE:
                                         if (length > 0) {
-                                            int timeZone = value[4];
+                                            int timeZone = value[5];
                                             deviceFragment.setTimeZone(timeZone);
                                         }
                                         break;
                                     case KEY_LOW_POWER_REPORT_INTERVAL:
                                         if (length > 0) {
-                                            int interval = value[4] & 0xFF;
+                                            int interval = value[5] & 0xFF;
                                             deviceFragment.setLowPowerReportInterval(interval);
                                         }
                                         break;
                                     case KEY_LOW_POWER_PAYLOAD_ENABLE:
                                         if (length > 0) {
-                                            int enable = value[4] & 0xFF;
+                                            int enable = value[5] & 0xFF;
                                             deviceFragment.setLowPowerPayload(enable);
                                         }
                                         break;
-//                                    case KEY_LOW_POWER_PERCENT:
-//                                        if (length > 0) {
-//                                            int lowPower = value[4] & 0xFF;
-//                                            deviceFragment.setLowPower(lowPower);
-//                                        }
-//                                        break;
+                                    case KEY_LOW_POWER_PERCENT:
+                                        if (length > 0) {
+                                            int lowPower = value[5] & 0xFF;
+                                            deviceFragment.setLowPower(lowPower);
+                                        }
+                                        break;
                                 }
                             }
 
@@ -541,6 +556,7 @@ public class DeviceInfoActivity extends BaseActivity implements RadioGroup.OnChe
         List<OrderTask> orderTasks = new ArrayList<>();
         // device
         orderTasks.add(OrderTaskAssembler.getTimeZone());
+        orderTasks.add(OrderTaskAssembler.getLowPowerPercent());
         orderTasks.add(OrderTaskAssembler.getLowPowerPayloadEnable());
         orderTasks.add(OrderTaskAssembler.getLowPowerReportInterval());
         LoRaLW008MTEMokoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
@@ -569,7 +585,11 @@ public class DeviceInfoActivity extends BaseActivity implements RadioGroup.OnChe
                 .hide(deviceFragment)
                 .commit();
         showSyncingProgressDialog();
-        LoRaLW008MTEMokoSupport.getInstance().sendOrder(OrderTaskAssembler.getOfflineLocationEnable());
+        List<OrderTask> orderTasks = new ArrayList<>();
+        orderTasks.add(OrderTaskAssembler.getOfflineLocationEnable());
+        orderTasks.add(OrderTaskAssembler.getGPSExtremeModeL76());
+        orderTasks.add(OrderTaskAssembler.getVoltageReportEnable());
+        LoRaLW008MTEMokoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
     }
 
     private void showLoRaAndGetData() {
@@ -654,6 +674,18 @@ public class DeviceInfoActivity extends BaseActivity implements RadioGroup.OnChe
         posFragment.changeOfflineFix();
     }
 
+    public void onExtremeMode(View view) {
+        if (isWindowLocked())
+            return;
+        posFragment.changeExtremeMode();
+    }
+
+    public void onVoltageReport(View view) {
+        if (isWindowLocked())
+            return;
+        posFragment.changeVoltageReport();
+    }
+
     public void onBleAndGPS(View view) {
         if (isWindowLocked())
             return;
@@ -708,11 +740,11 @@ public class DeviceInfoActivity extends BaseActivity implements RadioGroup.OnChe
     }
 
 
-//    public void selectLowPowerPrompt(View view) {
-//        if (isWindowLocked())
-//            return;
-//        deviceFragment.showLowPowerDialog();
-//    }
+    public void selectLowPowerPrompt(View view) {
+        if (isWindowLocked())
+            return;
+        deviceFragment.showLowPowerDialog();
+    }
 
     public void onOffSetting(View view) {
         if (isWindowLocked())

@@ -101,17 +101,17 @@ public class FilterMkPirActivity extends BaseActivity {
                 OrderCHAR orderCHAR = (OrderCHAR) response.orderCHAR;
                 byte[] value = response.responseValue;
                 if (orderCHAR == OrderCHAR.CHAR_PARAMS) {
-                    if (value.length >= 4) {
+                    if (value.length >= 5) {
                         int header = value[0] & 0xFF;// 0xED
                         int flag = value[1] & 0xFF;// read or write
-                        int cmd = value[2] & 0xFF;
+                        int cmd = MokoUtils.toInt(Arrays.copyOfRange(value, 2, 4));
                         if (header != 0xED) return;
                         ParamsKeyEnum configKeyEnum = ParamsKeyEnum.fromParamKey(cmd);
                         if (configKeyEnum == null) return;
-                        int length = value[3] & 0xFF;
+                        int length = value[4] & 0xFF;
                         if (flag == 0x01) {
                             // write
-                            int result = value[4] & 0xFF;
+                            int result = value[5] & 0xFF;
                             switch (configKeyEnum) {
                                 case KEY_FILTER_MK_PIR_ENABLE:
                                     mkPirEnableFlag = result;
@@ -152,43 +152,43 @@ public class FilterMkPirActivity extends BaseActivity {
                             switch (configKeyEnum) {
                                 case KEY_FILTER_MK_PIR_ENABLE:
                                     if (length == 1) {
-                                        int enable = value[4] & 0xFF;
+                                        int enable = value[5] & 0xFF;
                                         mBind.cbMkPir.setChecked(enable == 1);
                                     }
                                     break;
 
                                 case KEY_FILTER_MK_PIR_DETECTION_STATUS:
                                     if (length == 1) {
-                                        detectionStatusIndex = value[4] & 0xff;
+                                        detectionStatusIndex = value[5] & 0xff;
                                         mBind.tvDetectionStatus.setText(detectionStatusArray[detectionStatusIndex]);
                                     }
                                     break;
 
                                 case KEY_FILTER_MK_PIR_SENSOR_SENSITIVITY:
                                     if (length == 1) {
-                                        sensorSensitivityIndex = value[4] & 0xff;
+                                        sensorSensitivityIndex = value[5] & 0xff;
                                         mBind.tvSensorSensitivity.setText(sensorSensitivityArray[sensorSensitivityIndex]);
                                     }
                                     break;
 
                                 case KEY_FILTER_MK_PIR_DOOR_STATUS:
                                     if (length == 1) {
-                                        doorStatusIndex = value[4] & 0xff;
+                                        doorStatusIndex = value[5] & 0xff;
                                         mBind.tvDoorStatus.setText(doorStatusArray[doorStatusIndex]);
                                     }
                                     break;
 
                                 case KEY_FILTER_MK_PIR_DELAY_RES_STATUS:
                                     if (length == 1) {
-                                        delayResStatusIndex = value[4] & 0xff;
+                                        delayResStatusIndex = value[5] & 0xff;
                                         mBind.tvDelayResStatus.setText(delayResStatusArray[delayResStatusIndex]);
                                     }
                                     break;
 
                                 case KEY_FILTER_MK_PIR_MAJOR:
                                     if (length == 4) {
-                                        int majorMin = MokoUtils.toInt(Arrays.copyOfRange(value, 4, 6));
-                                        int majorMax = MokoUtils.toInt(Arrays.copyOfRange(value, 6, 8));
+                                        int majorMin = MokoUtils.toInt(Arrays.copyOfRange(value, 5, 7));
+                                        int majorMax = MokoUtils.toInt(Arrays.copyOfRange(value, 7, 9));
                                         mBind.etMajorMin.setText(String.valueOf(majorMin));
                                         mBind.etMajorMax.setText(String.valueOf(majorMax));
                                         mBind.etMajorMin.setSelection(mBind.etMajorMin.getText().length());
@@ -198,8 +198,8 @@ public class FilterMkPirActivity extends BaseActivity {
 
                                 case KEY_FILTER_MK_PIR_MINOR:
                                     if (length == 4) {
-                                        int minorMin = MokoUtils.toInt(Arrays.copyOfRange(value, 4, 6));
-                                        int minorMax = MokoUtils.toInt(Arrays.copyOfRange(value, 6, 8));
+                                        int minorMin = MokoUtils.toInt(Arrays.copyOfRange(value, 5, 7));
+                                        int minorMax = MokoUtils.toInt(Arrays.copyOfRange(value, 7, 9));
                                         mBind.etMinorMin.setText(String.valueOf(minorMin));
                                         mBind.etMinorMax.setText(String.valueOf(minorMax));
                                         mBind.etMinorMin.setSelection(mBind.etMinorMin.getText().length());

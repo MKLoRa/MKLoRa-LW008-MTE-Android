@@ -79,20 +79,20 @@ public class FilterBXPIBeaconActivity extends BaseActivity {
                 byte[] value = response.responseValue;
                 switch (orderCHAR) {
                     case CHAR_PARAMS:
-                        if (value.length >= 4) {
+                        if (value.length >= 5) {
                             int header = value[0] & 0xFF;// 0xED
                             int flag = value[1] & 0xFF;// read or write
-                            int cmd = value[2] & 0xFF;
+                            int cmd = MokoUtils.toInt(Arrays.copyOfRange(value, 2, 4));
                             if (header != 0xED)
                                 return;
                             ParamsKeyEnum configKeyEnum = ParamsKeyEnum.fromParamKey(cmd);
                             if (configKeyEnum == null) {
                                 return;
                             }
-                            int length = value[3] & 0xFF;
+                            int length = value[4] & 0xFF;
                             if (flag == 0x01) {
                                 // write
-                                int result = value[4] & 0xFF;
+                                int result = value[5] & 0xFF;
                                 switch (configKeyEnum) {
                                     case KEY_FILTER_BXP_IBEACON_UUID:
                                     case KEY_FILTER_BXP_IBEACON_MAJOR_RANGE:
@@ -118,29 +118,29 @@ public class FilterBXPIBeaconActivity extends BaseActivity {
                                 switch (configKeyEnum) {
                                     case KEY_FILTER_BXP_IBEACON_UUID:
                                         if (length > 0) {
-                                            String uuid = MokoUtils.bytesToHexString(Arrays.copyOfRange(value, 4, 4 + length));
+                                            String uuid = MokoUtils.bytesToHexString(Arrays.copyOfRange(value, 5, 5 + length));
                                             mBind.etIbeaconUuid.setText(String.valueOf(uuid));
                                         }
                                         break;
                                     case KEY_FILTER_BXP_IBEACON_MAJOR_RANGE:
                                         if (length > 0) {
-                                            int majorMin = MokoUtils.toInt(Arrays.copyOfRange(value, 4, 6));
-                                            int majorMax = MokoUtils.toInt(Arrays.copyOfRange(value, 6, 8));
+                                            int majorMin = MokoUtils.toInt(Arrays.copyOfRange(value, 5, 7));
+                                            int majorMax = MokoUtils.toInt(Arrays.copyOfRange(value, 7, 9));
                                             mBind.etIbeaconMajorMin.setText(String.valueOf(majorMin));
                                             mBind.etIbeaconMajorMax.setText(String.valueOf(majorMax));
                                         }
                                         break;
                                     case KEY_FILTER_BXP_IBEACON_MINOR_RANGE:
                                         if (length > 0) {
-                                            int minorMin = MokoUtils.toInt(Arrays.copyOfRange(value, 4, 6));
-                                            int minorMax = MokoUtils.toInt(Arrays.copyOfRange(value, 6, 8));
+                                            int minorMin = MokoUtils.toInt(Arrays.copyOfRange(value, 5, 7));
+                                            int minorMax = MokoUtils.toInt(Arrays.copyOfRange(value, 7, 9));
                                             mBind.etIbeaconMinorMin.setText(String.valueOf(minorMin));
                                             mBind.etIbeaconMinorMax.setText(String.valueOf(minorMax));
                                         }
                                         break;
                                     case KEY_FILTER_BXP_IBEACON_ENABLE:
                                         if (length > 0) {
-                                            int enable = value[4] & 0xFF;
+                                            int enable = value[5] & 0xFF;
                                             mBind.cbIbeacon.setChecked(enable == 1);
                                         }
                                         break;
@@ -220,14 +220,14 @@ public class FilterBXPIBeaconActivity extends BaseActivity {
         List<OrderTask> orderTasks = new ArrayList<>();
         orderTasks.add(OrderTaskAssembler.setFilterMKIBeaconUUID(uuid));
         if (TextUtils.isEmpty(majorMinStr) && TextUtils.isEmpty(majorMaxStr))
-            orderTasks.add(OrderTaskAssembler.setFilterMKIBeaconMajorRange(0, 0));
+            orderTasks.add(OrderTaskAssembler.setFilterMKIBeaconMajorRange(0, 65535));
         else {
             final int majorMin = Integer.parseInt(majorMinStr);
             final int majorMax = Integer.parseInt(majorMaxStr);
             orderTasks.add(OrderTaskAssembler.setFilterMKIBeaconMajorRange(majorMin, majorMax));
         }
         if (TextUtils.isEmpty(minorMinStr) && TextUtils.isEmpty(minorMaxStr))
-            orderTasks.add(OrderTaskAssembler.setFilterMKIBeaconMinorRange(0, 0));
+            orderTasks.add(OrderTaskAssembler.setFilterMKIBeaconMinorRange(0, 65535));
         else {
             final int minorMin = Integer.parseInt(minorMinStr);
             final int minorMax = Integer.parseInt(minorMaxStr);

@@ -95,20 +95,20 @@ public class PeriodicModeActivity extends BaseActivity {
                 byte[] value = response.responseValue;
                 switch (orderCHAR) {
                     case CHAR_PARAMS:
-                        if (value.length >= 4) {
+                        if (value.length >= 5) {
                             int header = value[0] & 0xFF;// 0xED
                             int flag = value[1] & 0xFF;// read or write
-                            int cmd = value[2] & 0xFF;
+                            int cmd = MokoUtils.toInt(Arrays.copyOfRange(value, 2, 4));
                             if (header != 0xED)
                                 return;
                             ParamsKeyEnum configKeyEnum = ParamsKeyEnum.fromParamKey(cmd);
                             if (configKeyEnum == null) {
                                 return;
                             }
-                            int length = value[3] & 0xFF;
+                            int length = value[4] & 0xFF;
                             if (flag == 0x01) {
                                 // write
-                                int result = value[4] & 0xFF;
+                                int result = value[5] & 0xFF;
                                 switch (configKeyEnum) {
                                     case KEY_PERIODIC_MODE_POS_STRATEGY:
                                         if (result != 1) {
@@ -132,14 +132,14 @@ public class PeriodicModeActivity extends BaseActivity {
                                 switch (configKeyEnum) {
                                     case KEY_PERIODIC_MODE_POS_STRATEGY:
                                         if (length > 0) {
-                                            int strategy = value[4] & 0xFF;
+                                            int strategy = value[5] & 0xFF;
                                             mSelected = strategy;
                                             mBind.tvPeriodicPosStrategy.setText(mValues.get(mSelected));
                                         }
                                         break;
                                     case KEY_PERIODIC_MODE_REPORT_INTERVAL:
                                         if (length > 0) {
-                                            byte[] intervalBytes = Arrays.copyOfRange(value, 4, 4 + length);
+                                            byte[] intervalBytes = Arrays.copyOfRange(value, 5, 5 + length);
                                             int interval = MokoUtils.toInt(intervalBytes);
                                             mBind.etReportInterval.setText(String.valueOf(interval));
                                         }

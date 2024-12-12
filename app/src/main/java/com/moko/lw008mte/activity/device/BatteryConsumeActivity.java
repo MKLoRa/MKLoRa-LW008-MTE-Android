@@ -75,20 +75,20 @@ public class BatteryConsumeActivity extends BaseActivity {
                 byte[] value = response.responseValue;
                 switch (orderCHAR) {
                     case CHAR_PARAMS:
-                        if (value.length >= 4) {
+                        if (value.length >= 5) {
                             int header = value[0] & 0xFF;// 0xED
                             int flag = value[1] & 0xFF;// read or write
-                            int cmd = value[2] & 0xFF;
+                            int cmd = MokoUtils.toInt(Arrays.copyOfRange(value, 2, 4));
                             if (header != 0xED)
                                 return;
                             ParamsKeyEnum configKeyEnum = ParamsKeyEnum.fromParamKey(cmd);
                             if (configKeyEnum == null) {
                                 return;
                             }
-                            int length = value[3] & 0xFF;
+                            int length = value[4] & 0xFF;
                             if (flag == 0x01) {
                                 // write
-                                int result = value[4] & 0xFF;
+                                int result = value[5] & 0xFF;
                                 switch (configKeyEnum) {
                                     case KEY_BATTERY_RESET:
                                         if (result == 1) {
@@ -106,61 +106,61 @@ public class BatteryConsumeActivity extends BaseActivity {
                                 switch (configKeyEnum) {
                                     case KEY_BATTERY_INFO:
                                         if (length == 32) {
-                                            int runtime = MokoUtils.toInt(Arrays.copyOfRange(value, 4, 8));
+                                            int runtime = MokoUtils.toInt(Arrays.copyOfRange(value, 5, 9));
                                             mBind.tvRuntime.setText(String.format("%d s", runtime));
-                                            int advTimes = MokoUtils.toInt(Arrays.copyOfRange(value, 8, 12));
+                                            int advTimes = MokoUtils.toInt(Arrays.copyOfRange(value, 9, 13));
                                             mBind.tvAdvTimes.setText(String.format("%d times", advTimes));
-                                            int axisDuration = MokoUtils.toInt(Arrays.copyOfRange(value, 12, 16));
+                                            int axisDuration = MokoUtils.toInt(Arrays.copyOfRange(value, 13, 17));
                                             mBind.tvAxisDuration.setText(String.format("%d ms", axisDuration));
-                                            int bleFixDuration = MokoUtils.toInt(Arrays.copyOfRange(value, 16, 20));
+                                            int bleFixDuration = MokoUtils.toInt(Arrays.copyOfRange(value, 17, 21));
                                             mBind.tvBleFixDuration.setText(String.format("%d ms", bleFixDuration));
-                                            int gpsFixDuration = MokoUtils.toInt(Arrays.copyOfRange(value, 20, 24));
+                                            int gpsFixDuration = MokoUtils.toInt(Arrays.copyOfRange(value, 21, 25));
                                             mBind.tvGpsFixDuration.setText(String.format("%d s", gpsFixDuration));
-                                            int loraTransmissionTimes = MokoUtils.toInt(Arrays.copyOfRange(value, 24, 28));
+                                            int loraTransmissionTimes = MokoUtils.toInt(Arrays.copyOfRange(value, 25, 29));
                                             mBind.tvLoraTransmissionTimes.setText(String.format("%d times", loraTransmissionTimes));
-                                            int loraPower = MokoUtils.toInt(Arrays.copyOfRange(value, 28, 32));
+                                            int loraPower = MokoUtils.toInt(Arrays.copyOfRange(value, 29, 33));
                                             mBind.tvLoraPower.setText(String.format("%d mAS", loraPower));
-                                            String batteryConsumeStr = MokoUtils.getDecimalFormat("0.###").format(MokoUtils.toInt(Arrays.copyOfRange(value, 32, 36)) * 0.001f);
+                                            String batteryConsumeStr = MokoUtils.getDecimalFormat("0.###").format(MokoUtils.toInt(Arrays.copyOfRange(value, 33, 37)) * 0.001f);
                                             mBind.tvBatteryConsume.setText(String.format("%s mAH", batteryConsumeStr));
                                         }
                                         break;
                                     case KEY_BATTERY_INFO_ALL:
                                         if (length == 32) {
-                                            int runtime = MokoUtils.toInt(Arrays.copyOfRange(value, 4, 8));
+                                            int runtime = MokoUtils.toInt(Arrays.copyOfRange(value, 5, 9));
                                             mBind.tvRuntimeAll.setText(String.format("%d s", runtime));
-                                            int advTimes = MokoUtils.toInt(Arrays.copyOfRange(value, 8, 12));
+                                            int advTimes = MokoUtils.toInt(Arrays.copyOfRange(value, 9, 13));
                                             mBind.tvAdvTimesAll.setText(String.format("%d times", advTimes));
-                                            int axisDuration = MokoUtils.toInt(Arrays.copyOfRange(value, 12, 16));
+                                            int axisDuration = MokoUtils.toInt(Arrays.copyOfRange(value, 13, 17));
                                             mBind.tvAxisDurationAll.setText(String.format("%d ms", axisDuration));
-                                            int bleFixDuration = MokoUtils.toInt(Arrays.copyOfRange(value, 16, 20));
+                                            int bleFixDuration = MokoUtils.toInt(Arrays.copyOfRange(value, 17, 21));
                                             mBind.tvBleFixDurationAll.setText(String.format("%d ms", bleFixDuration));
-                                            int gpsFixDuration = MokoUtils.toInt(Arrays.copyOfRange(value, 20, 24));
+                                            int gpsFixDuration = MokoUtils.toInt(Arrays.copyOfRange(value, 21, 25));
                                             mBind.tvGpsFixDurationAll.setText(String.format("%d s", gpsFixDuration));
-                                            int loraTransmissionTimes = MokoUtils.toInt(Arrays.copyOfRange(value, 24, 28));
+                                            int loraTransmissionTimes = MokoUtils.toInt(Arrays.copyOfRange(value, 25, 29));
                                             mBind.tvLoraTransmissionTimesAll.setText(String.format("%d times", loraTransmissionTimes));
-                                            int loraPower = MokoUtils.toInt(Arrays.copyOfRange(value, 28, 32));
+                                            int loraPower = MokoUtils.toInt(Arrays.copyOfRange(value, 29, 33));
                                             mBind.tvLoraPowerAll.setText(String.format("%d mAS", loraPower));
-                                            String batteryConsumeStr = MokoUtils.getDecimalFormat("0.###").format(MokoUtils.toInt(Arrays.copyOfRange(value, 32, 36)) * 0.001f);
+                                            String batteryConsumeStr = MokoUtils.getDecimalFormat("0.###").format(MokoUtils.toInt(Arrays.copyOfRange(value, 33, 37)) * 0.001f);
                                             mBind.tvBatteryConsumeAll.setText(String.format("%s mAH", batteryConsumeStr));
                                         }
                                         break;
                                     case KEY_BATTERY_INFO_LAST:
                                         if (length == 32) {
-                                            int runtime = MokoUtils.toInt(Arrays.copyOfRange(value, 4, 8));
+                                            int runtime = MokoUtils.toInt(Arrays.copyOfRange(value, 5, 9));
                                             mBind.tvRuntimeLast.setText(String.format("%d s", runtime));
-                                            int advTimes = MokoUtils.toInt(Arrays.copyOfRange(value, 8, 12));
+                                            int advTimes = MokoUtils.toInt(Arrays.copyOfRange(value, 9, 13));
                                             mBind.tvAdvTimesLast.setText(String.format("%d times", advTimes));
-                                            int axisDuration = MokoUtils.toInt(Arrays.copyOfRange(value, 12, 16));
+                                            int axisDuration = MokoUtils.toInt(Arrays.copyOfRange(value, 13, 17));
                                             mBind.tvAxisDurationLast.setText(String.format("%d ms", axisDuration));
-                                            int bleFixDuration = MokoUtils.toInt(Arrays.copyOfRange(value, 16, 20));
+                                            int bleFixDuration = MokoUtils.toInt(Arrays.copyOfRange(value, 17, 21));
                                             mBind.tvBleFixDurationLast.setText(String.format("%d ms", bleFixDuration));
-                                            int gpsFixDuration = MokoUtils.toInt(Arrays.copyOfRange(value, 20, 24));
+                                            int gpsFixDuration = MokoUtils.toInt(Arrays.copyOfRange(value, 21, 25));
                                             mBind.tvGpsFixDurationLast.setText(String.format("%d s", gpsFixDuration));
-                                            int loraTransmissionTimes = MokoUtils.toInt(Arrays.copyOfRange(value, 24, 28));
+                                            int loraTransmissionTimes = MokoUtils.toInt(Arrays.copyOfRange(value, 25, 29));
                                             mBind.tvLoraTransmissionTimesLast.setText(String.format("%d times", loraTransmissionTimes));
-                                            int loraPower = MokoUtils.toInt(Arrays.copyOfRange(value, 28, 32));
+                                            int loraPower = MokoUtils.toInt(Arrays.copyOfRange(value, 29, 33));
                                             mBind.tvLoraPowerLast.setText(String.format("%d mAS", loraPower));
-                                            String batteryConsumeStr = MokoUtils.getDecimalFormat("0.###").format(MokoUtils.toInt(Arrays.copyOfRange(value, 32, 36)) * 0.001f);
+                                            String batteryConsumeStr = MokoUtils.getDecimalFormat("0.###").format(MokoUtils.toInt(Arrays.copyOfRange(value, 33, 37)) * 0.001f);
                                             mBind.tvBatteryConsumeLast.setText(String.format("%s mAH", batteryConsumeStr));
                                         }
                                         break;

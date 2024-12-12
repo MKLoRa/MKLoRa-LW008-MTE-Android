@@ -10,6 +10,7 @@ import com.moko.ble.lib.event.ConnectStatusEvent;
 import com.moko.ble.lib.event.OrderTaskResponseEvent;
 import com.moko.ble.lib.task.OrderTask;
 import com.moko.ble.lib.task.OrderTaskResponse;
+import com.moko.ble.lib.utils.MokoUtils;
 import com.moko.lw008mte.AppConstants;
 import com.moko.lw008mte.R;
 import com.moko.lw008mte.activity.BaseActivity;
@@ -25,6 +26,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import androidx.annotation.Nullable;
@@ -81,20 +83,20 @@ public class FilterRawDataSwitchActivity extends BaseActivity {
                 byte[] value = response.responseValue;
                 switch (orderCHAR) {
                     case CHAR_PARAMS:
-                        if (value.length >= 4) {
+                        if (value.length >= 5) {
                             int header = value[0] & 0xFF;// 0xED
                             int flag = value[1] & 0xFF;// read or write
-                            int cmd = value[2] & 0xFF;
+                            int cmd = MokoUtils.toInt(Arrays.copyOfRange(value, 2, 4));
                             if (header != 0xED)
                                 return;
                             ParamsKeyEnum configKeyEnum = ParamsKeyEnum.fromParamKey(cmd);
                             if (configKeyEnum == null) {
                                 return;
                             }
-                            int length = value[3] & 0xFF;
+                            int length = value[4] & 0xFF;
                             if (flag == 0x01) {
                                 // write
-                                int result = value[4] & 0xFF;
+                                int result = value[5] & 0xFF;
                                 switch (configKeyEnum) {
                                     case KEY_FILTER_BXP_ACC:
                                     case KEY_FILTER_BXP_TH:
@@ -114,24 +116,24 @@ public class FilterRawDataSwitchActivity extends BaseActivity {
                                 // read
                                 switch (configKeyEnum) {
                                     case KEY_FILTER_RAW_DATA:
-                                        if (length == 14) {
+                                        if (length == 13) {
                                             dismissSyncProgressDialog();
-                                            mBind.tvFilterByOther.setText(value[4] == 1 ? "ON" : "OFF");
-                                            mBind.tvFilterByIbeacon.setText(value[5] == 1 ? "ON" : "OFF");
-                                            mBind.tvFilterByUid.setText(value[6] == 1 ? "ON" : "OFF");
-                                            mBind.tvFilterByUrl.setText(value[7] == 1 ? "ON" : "OFF");
-                                            mBind.tvFilterByTlm.setText(value[8] == 1 ? "ON" : "OFF");
-                                            mBind.ivFilterByBxpAcc.setImageResource(value[9] == 1 ? R.drawable.lw008_ic_checked : R.drawable.lw008_ic_unchecked);
-                                            mBind.ivFilterByBxpTh.setImageResource(value[10] == 1 ? R.drawable.lw008_ic_checked : R.drawable.lw008_ic_unchecked);
-                                            mBind.ivFilterByBxpDevice.setImageResource(value[11] == 1 ? R.drawable.lw008_ic_checked : R.drawable.lw008_ic_unchecked);
-                                            mBind.tvFilterByBxpButton.setText(value[12] == 1 ? "ON" : "OFF");
-                                            mBind.tvFilterByBxpTag.setText(value[13] == 1 ? "ON" : "OFF");
-                                            mBind.tvFilterByPir.setText(value[14] == 1 ? "ON" : "OFF");
-                                            mBind.tvFilterByTof.setText(value[15] == 1 ? "ON" : "OFF");
-                                            mBind.tvFilterByBxpIbeacon.setText(value[16] == 1 ? "ON" : "OFF");
-                                            isBXPAccOpen = value[9] == 1;
-                                            isBXPTHOpen = value[10] == 1;
-                                            isBXPDeviceOpen = value[11] == 1;
+                                            mBind.tvFilterByOther.setText(value[5] == 1 ? "ON" : "OFF");
+                                            mBind.tvFilterByIbeacon.setText(value[6] == 1 ? "ON" : "OFF");
+                                            mBind.tvFilterByUid.setText(value[7] == 1 ? "ON" : "OFF");
+                                            mBind.tvFilterByUrl.setText(value[8] == 1 ? "ON" : "OFF");
+                                            mBind.tvFilterByTlm.setText(value[9] == 1 ? "ON" : "OFF");
+                                            mBind.ivFilterByBxpAcc.setImageResource(value[10] == 1 ? R.drawable.lw008_ic_checked : R.drawable.lw008_ic_unchecked);
+                                            mBind.ivFilterByBxpTh.setImageResource(value[11] == 1 ? R.drawable.lw008_ic_checked : R.drawable.lw008_ic_unchecked);
+                                            mBind.tvFilterByBxpTag.setText(value[12] == 1 ? "ON" : "OFF");
+                                            mBind.ivFilterByBxpDevice.setImageResource(value[13] == 1 ? R.drawable.lw008_ic_checked : R.drawable.lw008_ic_unchecked);
+                                            mBind.tvFilterByBxpButton.setText(value[14] == 1 ? "ON" : "OFF");
+                                            mBind.tvFilterByPir.setText(value[15] == 1 ? "ON" : "OFF");
+                                            mBind.tvFilterByTof.setText(value[16] == 1 ? "ON" : "OFF");
+                                            mBind.tvFilterByBxpIbeacon.setText(value[17] == 1 ? "ON" : "OFF");
+                                            isBXPAccOpen = value[10] == 1;
+                                            isBXPTHOpen = value[11] == 1;
+                                            isBXPDeviceOpen = value[13] == 1;
                                         }
                                         break;
 

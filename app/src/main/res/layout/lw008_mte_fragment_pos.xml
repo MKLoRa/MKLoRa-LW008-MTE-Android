@@ -132,5 +132,63 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tvBleAndGPS" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:text="GPS Extreme Mode"
+            android:textColor="@color/lw008_black_333333"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@id/ivGPSExtremeMode"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="@id/ivGPSExtremeMode" />
+
+        <ImageView
+            android:id="@+id/ivGPSExtremeMode"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:clickable="true"
+            android:onClick="onExtremeMode"
+            android:padding="6dp"
+            android:src="@drawable/lw008_ic_unchecked"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvBleAndGPS" />
+
+
+        <View
+            style="@style/lw008_divider_line"
+            android:layout_width="0dp"
+            android:layout_marginTop="10dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/ivGPSExtremeMode" />
+
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:text="Beacon Voltage Report in Bluetooth Fix"
+            android:textColor="@color/lw008_black_333333"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@id/ivVoltageReport"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="@id/ivVoltageReport" />
+
+        <ImageView
+            android:id="@+id/ivVoltageReport"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:clickable="true"
+            android:onClick="onVoltageReport"
+            android:padding="6dp"
+            android:src="@drawable/lw008_ic_unchecked"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/ivGPSExtremeMode" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

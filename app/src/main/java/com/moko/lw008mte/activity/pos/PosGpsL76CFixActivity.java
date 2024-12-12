@@ -46,7 +46,6 @@ public class PosGpsL76CFixActivity extends BaseActivity {
             List<OrderTask> orderTasks = new ArrayList<>();
             orderTasks.add(OrderTaskAssembler.getGPSPosTimeoutL76());
             orderTasks.add(OrderTaskAssembler.getGPSPDOPLimitL76());
-            orderTasks.add(OrderTaskAssembler.getGPSExtremeModeL76());
             LoRaLW008MTEMokoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
         }, 500);
     }
@@ -79,28 +78,27 @@ public class PosGpsL76CFixActivity extends BaseActivity {
                 byte[] value = response.responseValue;
                 switch (orderCHAR) {
                     case CHAR_PARAMS:
-                        if (value.length >= 4) {
+                        if (value.length >= 5) {
                             int header = value[0] & 0xFF;// 0xED
                             int flag = value[1] & 0xFF;// read or write
-                            int cmd = value[2] & 0xFF;
+                            int cmd = MokoUtils.toInt(Arrays.copyOfRange(value, 2, 4));
                             if (header != 0xED)
                                 return;
                             ParamsKeyEnum configKeyEnum = ParamsKeyEnum.fromParamKey(cmd);
                             if (configKeyEnum == null) {
                                 return;
                             }
-                            int length = value[3] & 0xFF;
+                            int length = value[4] & 0xFF;
                             if (flag == 0x01) {
                                 // write
-                                int result = value[4] & 0xFF;
+                                int result = value[5] & 0xFF;
                                 switch (configKeyEnum) {
                                     case KEY_GPS_POS_TIMEOUT_L76C:
-                                    case KEY_GPS_PDOP_LIMIT_L76C:
                                         if (result != 1) {
                                             savedParamsError = true;
                                         }
                                         break;
-                                    case KEY_GPS_EXTREME_MODE_L76C:
+                                    case KEY_GPS_PDOP_LIMIT_L76C:
                                         if (result != 1) {
                                             savedParamsError = true;
                                         }
@@ -117,21 +115,15 @@ public class PosGpsL76CFixActivity extends BaseActivity {
                                 switch (configKeyEnum) {
                                     case KEY_GPS_POS_TIMEOUT_L76C:
                                         if (length > 0) {
-                                            byte[] timeoutBytes = Arrays.copyOfRange(value, 4, 4 + length);
+                                            byte[] timeoutBytes = Arrays.copyOfRange(value, 5, 5 + length);
                                             int timeout = MokoUtils.toInt(timeoutBytes);
                                             mBind.etPositionTimeout.setText(String.valueOf(timeout));
                                         }
                                         break;
                                     case KEY_GPS_PDOP_LIMIT_L76C:
                                         if (length > 0) {
-                                            int limit = value[4] & 0xFF;
+                                            int limit = value[5] & 0xFF;
                                             mBind.etPdopLimit.setText(String.valueOf(limit));
-                                        }
-                                        break;
-                                    case KEY_GPS_EXTREME_MODE_L76C:
-                                        if (length > 0) {
-                                            int enable = value[4] & 0xFF;
-                                            mBind.cbExtremeMode.setChecked(enable == 1);
                                         }
                                         break;
                                 }
@@ -183,7 +175,6 @@ public class PosGpsL76CFixActivity extends BaseActivity {
         List<OrderTask> orderTasks = new ArrayList<>();
         orderTasks.add(OrderTaskAssembler.setGPSPosTimeoutL76C(posTimeout));
         orderTasks.add(OrderTaskAssembler.setGPSPDOPLimitL76C(pdopLimit));
-        orderTasks.add(OrderTaskAssembler.setGPSExtremeModeL76C(mBind.cbExtremeMode.isChecked() ? 1 : 0));
         LoRaLW008MTEMokoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
     }
 

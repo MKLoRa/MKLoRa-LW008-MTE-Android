@@ -14,6 +14,7 @@ import com.moko.ble.lib.event.ConnectStatusEvent;
 import com.moko.ble.lib.event.OrderTaskResponseEvent;
 import com.moko.ble.lib.task.OrderTask;
 import com.moko.ble.lib.task.OrderTaskResponse;
+import com.moko.ble.lib.utils.MokoUtils;
 import com.moko.lw008mte.activity.BaseActivity;
 import com.moko.lw008mte.databinding.Lw008MteActivityStandbyModeBinding;
 import com.moko.lw008mte.dialog.BottomDialog;
@@ -28,6 +29,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class StandbyModeActivity extends BaseActivity {
@@ -90,20 +92,20 @@ public class StandbyModeActivity extends BaseActivity {
                 byte[] value = response.responseValue;
                 switch (orderCHAR) {
                     case CHAR_PARAMS:
-                        if (value.length >= 4) {
+                        if (value.length >= 5) {
                             int header = value[0] & 0xFF;// 0xED
                             int flag = value[1] & 0xFF;// read or write
-                            int cmd = value[2] & 0xFF;
+                            int cmd = MokoUtils.toInt(Arrays.copyOfRange(value, 2, 4));
                             if (header != 0xED)
                                 return;
                             ParamsKeyEnum configKeyEnum = ParamsKeyEnum.fromParamKey(cmd);
                             if (configKeyEnum == null) {
                                 return;
                             }
-                            int length = value[3] & 0xFF;
+                            int length = value[4] & 0xFF;
                             if (flag == 0x01) {
                                 // write
-                                int result = value[4] & 0xFF;
+                                int result = value[5] & 0xFF;
                                 switch (configKeyEnum) {
                                     case KEY_STANDBY_MODE_POS_STRATEGY:
                                         if (result != 1) {
@@ -122,7 +124,7 @@ public class StandbyModeActivity extends BaseActivity {
                                 switch (configKeyEnum) {
                                     case KEY_STANDBY_MODE_POS_STRATEGY:
                                         if (length > 0) {
-                                            int strategy = value[4] & 0xFF;
+                                            int strategy = value[5] & 0xFF;
                                             mSelected = strategy;
                                             mBind.tvStandbyPosStrategy.setText(mValues.get(mSelected));
                                         }

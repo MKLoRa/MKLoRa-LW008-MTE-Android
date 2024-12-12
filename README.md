@@ -267,14 +267,14 @@ public void onOrderTaskResponseEvent(OrderTaskResponseEvent event) {
 		        if (value.length >= 4) {
 		            int header = value[0] & 0xFF;// 0xED
 		            int flag = value[1] & 0xFF;// read or write
-		            int cmd = value[2] & 0xFF;
+		            int cmd = MokoUtils.toInt(Arrays.copyOfRange(value, 2, 4));
 		            if (header != 0xED)
 		                return;
 		            ParamsKeyEnum configKeyEnum = ParamsKeyEnum.fromParamKey(cmd);
 		            if (configKeyEnum == null) {
 		                return;
 		            }
-		            int length = value[3] & 0xFF;
+		            int length = value[4] & 0xFF;
 		            if (flag == 0x00) {
 	                    // read
 	                    switch (configKeyEnum) {

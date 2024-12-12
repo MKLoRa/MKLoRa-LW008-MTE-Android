@@ -77,17 +77,17 @@ public class FilterMKTOFActivity extends BaseActivity {
                 OrderCHAR orderCHAR = (OrderCHAR) response.orderCHAR;
                 byte[] value = response.responseValue;
                 if (orderCHAR == OrderCHAR.CHAR_PARAMS) {
-                    if (value.length >= 4) {
+                    if (value.length >= 5) {
                         int header = value[0] & 0xFF;// 0xED
                         int flag = value[1] & 0xFF;// read or write
-                        int cmd = value[2] & 0xFF;
+                        int cmd = MokoUtils.toInt(Arrays.copyOfRange(value, 2, 4));
                         if (header != 0xED) return;
                         ParamsKeyEnum configKeyEnum = ParamsKeyEnum.fromParamKey(cmd);
                         if (configKeyEnum == null) return;
-                        int length = value[3] & 0xFF;
+                        int length = value[4] & 0xFF;
                         if (flag == 0x01) {
                             // write
-                            int result = value[4] & 0xFF;
+                            int result = value[5] & 0xFF;
                             switch (configKeyEnum) {
                                 case KEY_FILTER_MK_TOF_ENABLE:
                                     mkTofEnableFlag = result;
@@ -106,14 +106,14 @@ public class FilterMKTOFActivity extends BaseActivity {
                             switch (configKeyEnum) {
                                 case KEY_FILTER_MK_TOF_ENABLE:
                                     if (length == 1) {
-                                        int enable = value[4] & 0xFF;
+                                        int enable = value[5] & 0xFF;
                                         mBind.cbMkTof.setChecked(enable == 1);
                                     }
                                     break;
                                 case KEY_FILTER_MK_TOF_MFG_CODE:
                                     if (length > 0) {
                                         filterMfgCode.clear();
-                                        byte[] mfgCodeBytes = Arrays.copyOfRange(value, 4, 4 + length);
+                                        byte[] mfgCodeBytes = Arrays.copyOfRange(value, 5, 5 + length);
                                         for (int i = 0, l = mfgCodeBytes.length; i < l; ) {
                                             int idLength = mfgCodeBytes[i] & 0xFF;
                                             i++;

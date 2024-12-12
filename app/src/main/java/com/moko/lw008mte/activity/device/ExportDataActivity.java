@@ -133,14 +133,14 @@ public class ExportDataActivity extends BaseActivity {
                         final int length = value.length;
                         int header = value[0] & 0xFF;
                         int flag = value[1] & 0xFF;// notify
-                        int cmd = value[2] & 0xFF;
-                        int len = value[3] & 0xFF;
-                        if (header == 0xED && flag == 0x02 && cmd == 0x01) {
-                            int dataCount = value[4] & 0xFF;
+                        int cmd = MokoUtils.toInt(Arrays.copyOfRange(value, 2, 4));
+                        int len = value[4] & 0xFF;
+                        if (header == 0xED && flag == 0x02 && cmd == 0x0001) {
+                            int dataCount = value[5] & 0xFF;
                             if (dataCount > 0) {
                                 Calendar calendar = Calendar.getInstance();
                                 String time = Utils.calendar2strDate(calendar, AppConstants.PATTERN_YYYY_MM_DD_HH_MM_SS);
-                                int index = 5;
+                                int index = 6;
                                 while (index < length) {
                                     int dataLength = value[index];
                                     String rawData = "";
@@ -170,7 +170,7 @@ public class ExportDataActivity extends BaseActivity {
                                 }
                                 adapter.replaceData(exportDatas);
                             } else {
-                                byte[] sumBytes = Arrays.copyOfRange(value, 5, length);
+                                byte[] sumBytes = Arrays.copyOfRange(value, 6, length);
                                 int sum = MokoUtils.toInt(sumBytes);
                                 mBind.tvSum.setText(String.format("Sum:%d", sum));
                                 LoRaLW008MTEMokoSupport.getInstance().sum = sum;
@@ -206,20 +206,20 @@ public class ExportDataActivity extends BaseActivity {
                 byte[] value = response.responseValue;
                 switch (orderCHAR) {
                     case CHAR_PARAMS:
-                        if (value.length >= 4) {
+                        if (value.length >= 5) {
                             int header = value[0] & 0xFF;// 0xED
                             int flag = value[1] & 0xFF;// read or write
-                            int cmd = value[2] & 0xFF;
+                            int cmd = MokoUtils.toInt(Arrays.copyOfRange(value, 2, 4));
                             if (header != 0xED)
                                 return;
                             ParamsKeyEnum configKeyEnum = ParamsKeyEnum.fromParamKey(cmd);
                             if (configKeyEnum == null) {
                                 return;
                             }
-                            int length = value[3] & 0xFF;
+                            int length = value[4] & 0xFF;
                             if (flag == 0x01) {
                                 // write
-                                int result = value[4] & 0xFF;
+                                int result = value[5] & 0xFF;
                                 switch (configKeyEnum) {
                                     case KEY_CLEAR_STORAGE_DATA:
                                         if (result != 1) {

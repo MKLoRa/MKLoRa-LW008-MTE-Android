@@ -15,6 +15,7 @@ import com.moko.ble.lib.event.ConnectStatusEvent;
 import com.moko.ble.lib.event.OrderTaskResponseEvent;
 import com.moko.ble.lib.task.OrderTask;
 import com.moko.ble.lib.task.OrderTaskResponse;
+import com.moko.ble.lib.utils.MokoUtils;
 import com.moko.lw008mte.activity.BaseActivity;
 import com.moko.lw008mte.databinding.Lw008MteActivityAxisSettingBinding;
 import com.moko.lw008mte.utils.ToastUtils;
@@ -28,6 +29,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class AxisSettingActivity extends BaseActivity {
@@ -53,7 +55,6 @@ public class AxisSettingActivity extends BaseActivity {
             ArrayList<OrderTask> orderTasks = new ArrayList<>();
             orderTasks.add(OrderTaskAssembler.getAccWakeupCondition());
             orderTasks.add(OrderTaskAssembler.getAccMotionCondition());
-            orderTasks.add(OrderTaskAssembler.getAccShockThreshold());
             LoRaLW008MTEMokoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
         }, 500);
     }
@@ -89,25 +90,24 @@ public class AxisSettingActivity extends BaseActivity {
                         if (value.length >= 4) {
                             int header = value[0] & 0xFF;// 0xED
                             int flag = value[1] & 0xFF;// read or write
-                            int cmd = value[2] & 0xFF;
+                            int cmd = MokoUtils.toInt(Arrays.copyOfRange(value, 2, 4));
                             if (header != 0xED)
                                 return;
                             ParamsKeyEnum configKeyEnum = ParamsKeyEnum.fromParamKey(cmd);
                             if (configKeyEnum == null) {
                                 return;
                             }
-                            int length = value[3] & 0xFF;
+                            int length = value[4] & 0xFF;
                             if (flag == 0x01) {
                                 // write
-                                int result = value[4] & 0xFF;
+                                int result = value[5] & 0xFF;
                                 switch (configKeyEnum) {
                                     case KEY_ACC_WAKEUP_CONDITION:
-                                    case KEY_ACC_MOTION_CONDITION:
                                         if (result != 1) {
                                             savedParamsError = true;
                                         }
                                         break;
-                                    case KEY_ACC_SHOCK_THRESHOLD:
+                                    case KEY_ACC_MOTION_CONDITION:
                                         if (result != 1) {
                                             savedParamsError = true;
                                         }
@@ -124,8 +124,8 @@ public class AxisSettingActivity extends BaseActivity {
                                 switch (configKeyEnum) {
                                     case KEY_ACC_WAKEUP_CONDITION:
                                         if (length == 2) {
-                                            int threshold = value[4] & 0xFF;
-                                            int duration = value[5] & 0xFF;
+                                            int threshold = value[5] & 0xFF;
+                                            int duration = value[6] & 0xFF;
                                             mBind.etWakeupThreshold.setText(String.valueOf(threshold));
                                             mBind.etWakeupDuration.setText(String.valueOf(duration));
 
@@ -133,16 +133,10 @@ public class AxisSettingActivity extends BaseActivity {
                                         break;
                                     case KEY_ACC_MOTION_CONDITION:
                                         if (length == 2) {
-                                            int threshold = value[4] & 0xFF;
-                                            int duration = value[5] & 0xFF;
+                                            int threshold = value[5] & 0xFF;
+                                            int duration = value[6] & 0xFF;
                                             mBind.etMotionThreshold.setText(String.valueOf(threshold));
                                             mBind.etMotionDuration.setText(String.valueOf(duration));
-                                        }
-                                        break;
-                                    case KEY_ACC_SHOCK_THRESHOLD:
-                                        if (length > 0) {
-                                            int threshold = value[4] & 0xFF;
-                                            mBind.etVibrationThresholds.setText(String.valueOf(threshold));
                                         }
                                         break;
 
@@ -238,12 +232,6 @@ public class AxisSettingActivity extends BaseActivity {
         final int motionDuration = Integer.parseInt(motionDurationStr);
         if (motionDuration < 1 || motionDuration > 50)
             return false;
-        final String vibrationThresholdStr = mBind.etVibrationThresholds.getText().toString();
-        if (TextUtils.isEmpty(vibrationThresholdStr))
-            return false;
-        final int vibrationThreshold = Integer.parseInt(vibrationThresholdStr);
-        if (vibrationThreshold < 10 || vibrationThreshold > 255)
-            return false;
         return true;
 
     }
@@ -257,13 +245,10 @@ public class AxisSettingActivity extends BaseActivity {
         final int motionThreshold = Integer.parseInt(motionThresholdStr);
         final String motionDurationStr = mBind.etMotionDuration.getText().toString();
         final int motionDuration = Integer.parseInt(motionDurationStr);
-        final String vibrationThresholdStr = mBind.etVibrationThresholds.getText().toString();
-        final int vibrationThreshold = Integer.parseInt(vibrationThresholdStr);
         savedParamsError = false;
         List<OrderTask> orderTasks = new ArrayList<>();
         orderTasks.add(OrderTaskAssembler.setAccWakeupCondition(wakeUpThreshold, wakeUpDuration));
         orderTasks.add(OrderTaskAssembler.setAccMotionCondition(motionThreshold, motionDuration));
-        orderTasks.add(OrderTaskAssembler.setAccShockThreshold(vibrationThreshold));
         LoRaLW008MTEMokoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
     }
 }

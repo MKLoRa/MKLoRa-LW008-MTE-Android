@@ -84,20 +84,20 @@ public class FilterMacAddressActivity extends BaseActivity {
                 byte[] value = response.responseValue;
                 switch (orderCHAR) {
                     case CHAR_PARAMS:
-                        if (value.length >= 4) {
+                        if (value.length >= 5) {
                             int header = value[0] & 0xFF;// 0xED
                             int flag = value[1] & 0xFF;// read or write
-                            int cmd = value[2] & 0xFF;
+                            int cmd = MokoUtils.toInt(Arrays.copyOfRange(value, 2, 4));
                             if (header != 0xED)
                                 return;
                             ParamsKeyEnum configKeyEnum = ParamsKeyEnum.fromParamKey(cmd);
                             if (configKeyEnum == null) {
                                 return;
                             }
-                            int length = value[3] & 0xFF;
+                            int length = value[4] & 0xFF;
                             if (flag == 0x01) {
                                 // write
-                                int result = value[4] & 0xFF;
+                                int result = value[5] & 0xFF;
                                 switch (configKeyEnum) {
                                     case KEY_FILTER_MAC_PRECISE:
                                     case KEY_FILTER_MAC_REVERSE:
@@ -122,20 +122,20 @@ public class FilterMacAddressActivity extends BaseActivity {
                                 switch (configKeyEnum) {
                                     case KEY_FILTER_MAC_PRECISE:
                                         if (length > 0) {
-                                            int enable = value[4] & 0xFF;
+                                            int enable = value[5] & 0xFF;
                                             mBind.cbPreciseMatch.setChecked(enable == 1);
                                         }
                                         break;
                                     case KEY_FILTER_MAC_REVERSE:
                                         if (length > 0) {
-                                            int enable = value[4] & 0xFF;
+                                            int enable = value[5] & 0xFF;
                                             mBind.cbReverseFilter.setChecked(enable == 1);
                                         }
                                         break;
                                     case KEY_FILTER_MAC_RULES:
                                         if (length > 0) {
                                             filterMacAddress.clear();
-                                            byte[] macBytes = Arrays.copyOfRange(value, 4, 4 + length);
+                                            byte[] macBytes = Arrays.copyOfRange(value, 5, 5 + length);
                                             for (int i = 0, l = macBytes.length; i < l; ) {
                                                 int macLength = macBytes[i] & 0xFF;
                                                 i++;

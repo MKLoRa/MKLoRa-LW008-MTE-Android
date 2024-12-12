@@ -16,6 +16,7 @@ import com.moko.ble.lib.event.ConnectStatusEvent;
 import com.moko.ble.lib.event.OrderTaskResponseEvent;
 import com.moko.ble.lib.task.OrderTask;
 import com.moko.ble.lib.task.OrderTaskResponse;
+import com.moko.ble.lib.utils.MokoUtils;
 import com.moko.lw008mte.R;
 import com.moko.lw008mte.activity.BaseActivity;
 import com.moko.lw008mte.activity.filter.FilterAdvNameActivity;
@@ -34,6 +35,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class PosBleFixActivity extends BaseActivity implements SeekBar.OnSeekBarChangeListener {
@@ -114,17 +116,17 @@ public class PosBleFixActivity extends BaseActivity implements SeekBar.OnSeekBar
                         if (value.length >= 4) {
                             int header = value[0] & 0xFF;// 0xED
                             int flag = value[1] & 0xFF;// read or write
-                            int cmd = value[2] & 0xFF;
+                            int cmd = MokoUtils.toInt(Arrays.copyOfRange(value, 2, 4));
                             if (header != 0xED)
                                 return;
                             ParamsKeyEnum configKeyEnum = ParamsKeyEnum.fromParamKey(cmd);
                             if (configKeyEnum == null) {
                                 return;
                             }
-                            int length = value[3] & 0xFF;
+                            int length = value[4] & 0xFF;
                             if (flag == 0x01) {
                                 // write
-                                int result = value[4] & 0xFF;
+                                int result = value[5] & 0xFF;
                                 switch (configKeyEnum) {
                                     case KEY_BLE_POS_TIMEOUT:
                                     case KEY_BLE_POS_MAC_NUMBER:
@@ -150,26 +152,26 @@ public class PosBleFixActivity extends BaseActivity implements SeekBar.OnSeekBar
                                 switch (configKeyEnum) {
                                     case KEY_BLE_POS_TIMEOUT:
                                         if (length > 0) {
-                                            int number = value[4] & 0xFF;
+                                            int number = value[5] & 0xFF;
                                             mBind.etPosTimeout.setText(String.valueOf(number));
                                         }
                                         break;
                                     case KEY_BLE_POS_MAC_NUMBER:
                                         if (length > 0) {
-                                            int number = value[4] & 0xFF;
+                                            int number = value[5] & 0xFF;
                                             mBind.etMacNumber.setText(String.valueOf(number));
                                         }
                                         break;
                                     case KEY_BLE_POS_MECHANISM:
                                         if (length > 0) {
-                                            int mechanism = value[4] & 0xFF;
+                                            int mechanism = value[5] & 0xFF;
                                             mBleFixMechanismSelected = mechanism;
                                             mBind.tvBleFixMechanism.setText(mBleFixMechanismValues.get(mechanism));
                                         }
                                         break;
                                     case KEY_FILTER_RSSI:
                                         if (length > 0) {
-                                            final int rssi = value[4];
+                                            final int rssi = value[5];
                                             int progress = rssi + 127;
                                             mBind.sbRssiFilter.setProgress(progress);
                                             mBind.tvRssiFilterTips.setText(getString(R.string.rssi_filter, rssi));
@@ -177,7 +179,7 @@ public class PosBleFixActivity extends BaseActivity implements SeekBar.OnSeekBar
                                         break;
                                     case KEY_FILTER_RELATIONSHIP:
                                         if (length > 0) {
-                                            int relationship = value[4] & 0xFF;
+                                            int relationship = value[5] & 0xFF;
                                             mRelationshipSelected = relationship;
                                             mBind.tvFilterRelationship.setText(mRelationshipValues.get(relationship));
                                         }

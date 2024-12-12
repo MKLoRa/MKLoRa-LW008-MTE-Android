@@ -15,6 +15,7 @@ import com.moko.ble.lib.event.ConnectStatusEvent;
 import com.moko.ble.lib.event.OrderTaskResponseEvent;
 import com.moko.ble.lib.task.OrderTask;
 import com.moko.ble.lib.task.OrderTaskResponse;
+import com.moko.ble.lib.utils.MokoUtils;
 import com.moko.lw008mte.activity.BaseActivity;
 import com.moko.lw008mte.databinding.Lw008MteActivityMsgTypeSettingsBinding;
 import com.moko.lw008mte.dialog.BottomDialog;
@@ -29,6 +30,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -166,19 +168,19 @@ public class MessageTypeSettingsActivity extends BaseActivity {
                 OrderCHAR orderCHAR = (OrderCHAR) response.orderCHAR;
                 byte[] value = response.responseValue;
                 if (orderCHAR == OrderCHAR.CHAR_PARAMS) {
-                    if (null != value && value.length >= 4) {
+                    if (null != value && value.length >= 5) {
                         int header = value[0] & 0xFF;// 0xED
                         int flag = value[1] & 0xFF;// read or write
-                        int cmd = value[2] & 0xFF;
+                        int cmd = MokoUtils.toInt(Arrays.copyOfRange(value, 2, 4));
                         ParamsKeyEnum configKeyEnum = ParamsKeyEnum.fromParamKey(cmd);
                         if (header != 0xED || configKeyEnum == null) return;
-                        int length = value[3] & 0xFF;
+                        int length = value[4] & 0xFF;
                         if (flag == 0) {
                             switch (configKeyEnum) {
                                 case KEY_HEARTBEAT_PAYLOAD:
                                     if (length == 2) {
-                                        int enable = value[4] & 0xff;
-                                        int times = (value[5] & 0xff) - 1;
+                                        int enable = value[5] & 0xff;
+                                        int times = (value[6] & 0xff) - 1;
                                         mBind.tvHeartbeatPayloadType.setText(enable == 1 ? confirmed : unconfirmed);
                                         mBind.tvHeartbeatTimes.setText(String.valueOf(times));
                                         setMaxTimes(enable, mBind.lineHeartbeatTime, mBind.layoutHeartbeatTime);
@@ -186,8 +188,8 @@ public class MessageTypeSettingsActivity extends BaseActivity {
                                     break;
                                 case KEY_POSITIONING_PAYLOAD:
                                     if (length == 2) {
-                                        int enable = value[4] & 0xff;
-                                        int times = (value[5] & 0xff) - 1;
+                                        int enable = value[5] & 0xff;
+                                        int times = (value[6] & 0xff) - 1;
                                         mBind.tvPositioningPayloadType.setText(enable == 1 ? confirmed : unconfirmed);
                                         mBind.tvPositioningTimes.setText(String.valueOf(times));
                                         setMaxTimes(enable, mBind.linePosTimes, mBind.layoutPosTimes);
@@ -195,8 +197,8 @@ public class MessageTypeSettingsActivity extends BaseActivity {
                                     break;
                                 case KEY_LOW_POWER_PAYLOAD:
                                     if (length == 2) {
-                                        int enable = value[4] & 0xff;
-                                        int times = (value[5] & 0xff) - 1;
+                                        int enable = value[5] & 0xff;
+                                        int times = (value[6] & 0xff) - 1;
                                         mBind.tvLowPowerPayloadType.setText(enable == 1 ? confirmed : unconfirmed);
                                         mBind.tvLowPowerTimes.setText(String.valueOf(times));
                                         setMaxTimes(enable, mBind.lineLowPowerTime, mBind.layoutLowPowerTime);
@@ -204,8 +206,8 @@ public class MessageTypeSettingsActivity extends BaseActivity {
                                     break;
                                 case KEY_SHOCK_PAYLOAD:
                                     if (length == 2) {
-                                        int enable = value[4] & 0xff;
-                                        int times = (value[5] & 0xff) - 1;
+                                        int enable = value[5] & 0xff;
+                                        int times = (value[6] & 0xff) - 1;
                                         mBind.tvShockPayloadType.setText(enable == 1 ? confirmed : unconfirmed);
                                         mBind.tvShockTimes.setText(String.valueOf(times));
                                         setMaxTimes(enable, mBind.lineShockTimes, mBind.layoutShockTimes);
@@ -213,8 +215,8 @@ public class MessageTypeSettingsActivity extends BaseActivity {
                                     break;
                                 case KEY_MAN_DOWN_PAYLOAD:
                                     if (length == 2) {
-                                        int enable = value[4] & 0xff;
-                                        int times = (value[5] & 0xff) - 1;
+                                        int enable = value[5] & 0xff;
+                                        int times = (value[6] & 0xff) - 1;
                                         mBind.tvManDownPayloadType.setText(enable == 1 ? confirmed : unconfirmed);
                                         mBind.tvManDownTimes.setText(String.valueOf(times));
                                         setMaxTimes(enable, mBind.lineManDownTimes, mBind.layoutManDownTimes);
@@ -222,8 +224,8 @@ public class MessageTypeSettingsActivity extends BaseActivity {
                                     break;
                                 case KEY_EVENT_PAYLOAD:
                                     if (length == 2) {
-                                        int enable = value[4] & 0xff;
-                                        int times = (value[5] & 0xff) - 1;
+                                        int enable = value[5] & 0xff;
+                                        int times = (value[6] & 0xff) - 1;
                                         mBind.tvEventPayloadType.setText(enable == 1 ? confirmed : unconfirmed);
                                         mBind.tvEventTimes.setText(String.valueOf(times));
                                         setMaxTimes(enable, mBind.lineEventTimes, mBind.layoutEventTimes);
@@ -231,8 +233,8 @@ public class MessageTypeSettingsActivity extends BaseActivity {
                                     break;
                                 case KEY_GPS_LIMIT_PAYLOAD:
                                     if (length == 2) {
-                                        int enable = value[4] & 0xff;
-                                        int times = (value[5] & 0xff) - 1;
+                                        int enable = value[5] & 0xff;
+                                        int times = (value[6] & 0xff) - 1;
                                         mBind.tvGPSLimitPayloadType.setText(enable == 1 ? confirmed : unconfirmed);
                                         mBind.tvGPSLimitTimes.setText(String.valueOf(times));
                                         setMaxTimes(enable, mBind.lineGpsLimitTimes, mBind.layoutGpsLimitTimes);
@@ -242,25 +244,25 @@ public class MessageTypeSettingsActivity extends BaseActivity {
                         } else if (flag == 1) {
                             switch (configKeyEnum) {
                                 case KEY_HEARTBEAT_PAYLOAD:
-                                    heartbeatFlag = value[4] & 0xff;
+                                    heartbeatFlag = value[5] & 0xff;
                                     break;
                                 case KEY_POSITIONING_PAYLOAD:
-                                    positioningFlag = value[4] & 0xff;
+                                    positioningFlag = value[5] & 0xff;
                                     break;
                                 case KEY_LOW_POWER_PAYLOAD:
-                                    lowPowerFlag = value[4] & 0xff;
+                                    lowPowerFlag = value[5] & 0xff;
                                     break;
                                 case KEY_SHOCK_PAYLOAD:
-                                    shockFlag = value[4] & 0xff;
+                                    shockFlag = value[5] & 0xff;
                                     break;
                                 case KEY_MAN_DOWN_PAYLOAD:
-                                    manDownFlag = value[4] & 0xff;
+                                    manDownFlag = value[5] & 0xff;
                                     break;
                                 case KEY_EVENT_PAYLOAD:
-                                    eventFlag = value[4] & 0xff;
+                                    eventFlag = value[5] & 0xff;
                                     break;
                                 case KEY_GPS_LIMIT_PAYLOAD:
-                                    gpsLimitFlag = value[4] & 0xff;
+                                    gpsLimitFlag = value[5] & 0xff;
                                     if (shockFlag == 1 && heartbeatFlag == 1 && lowPowerFlag == 1 && eventFlag == 1 && manDownFlag == 1 && shockFlag == 1
                                             && gpsLimitFlag == 1 && positioningFlag == 1) {
                                         ToastUtils.showToast(this, "Save Successfully！");

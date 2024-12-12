@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.text.InputFilter;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.SeekBar;
 
 import com.moko.ble.lib.MokoConstants;
@@ -12,6 +13,7 @@ import com.moko.ble.lib.event.ConnectStatusEvent;
 import com.moko.ble.lib.event.OrderTaskResponseEvent;
 import com.moko.ble.lib.task.OrderTask;
 import com.moko.ble.lib.task.OrderTaskResponse;
+import com.moko.ble.lib.utils.MokoUtils;
 import com.moko.lw008mte.R;
 import com.moko.lw008mte.activity.BaseActivity;
 import com.moko.lw008mte.databinding.Lw008MteActivityBleSettingsBinding;
@@ -56,10 +58,14 @@ public class BleSettingsActivity extends BaseActivity implements SeekBar.OnSeekB
         };
         mBind.etAdvName.setFilters(new InputFilter[]{new InputFilter.LengthFilter(16), inputFilter});
         mBind.sbTxPower.setOnSeekBarChangeListener(this);
+        mBind.cbBeaconMode.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            mBind.clAdvTimeout.setVisibility(isChecked ? View.GONE : View.VISIBLE);
+        });
         showSyncingProgressDialog();
         mBind.etAdvName.postDelayed(() -> {
             List<OrderTask> orderTasks = new ArrayList<>();
             orderTasks.add(OrderTaskAssembler.getAdvName());
+            orderTasks.add(OrderTaskAssembler.getAdvInterval());
             orderTasks.add(OrderTaskAssembler.getAdvTxPower());
             orderTasks.add(OrderTaskAssembler.getAdvTimeout());
             orderTasks.add(OrderTaskAssembler.getBeaconMode());
@@ -96,22 +102,23 @@ public class BleSettingsActivity extends BaseActivity implements SeekBar.OnSeekB
                 byte[] value = response.responseValue;
                 switch (orderCHAR) {
                     case CHAR_PARAMS:
-                        if (value.length >= 4) {
+                        if (value.length >= 5) {
                             int header = value[0] & 0xFF;// 0xED
                             int flag = value[1] & 0xFF;// read or write
-                            int cmd = value[2] & 0xFF;
+                            int cmd = MokoUtils.toInt(Arrays.copyOfRange(value, 2, 4));
                             if (header != 0xED)
                                 return;
                             ParamsKeyEnum configKeyEnum = ParamsKeyEnum.fromParamKey(cmd);
                             if (configKeyEnum == null) {
                                 return;
                             }
-                            int length = value[3] & 0xFF;
+                            int length = value[4] & 0xFF;
                             if (flag == 0x01) {
                                 // write
-                                int result = value[4] & 0xFF;
+                                int result = value[5] & 0xFF;
                                 switch (configKeyEnum) {
                                     case KEY_ADV_NAME:
+                                    case KEY_ADV_INTERVAL:
                                     case KEY_ADV_TIMEOUT:
                                     case KEY_ADV_TX_POWER:
                                     case KEY_BEACON_MODE:
@@ -136,24 +143,30 @@ public class BleSettingsActivity extends BaseActivity implements SeekBar.OnSeekB
                                 switch (configKeyEnum) {
                                     case KEY_ADV_NAME:
                                         if (length > 0) {
-                                            mBind.etAdvName.setText(new String(Arrays.copyOfRange(value, 4, 4 + length)));
+                                            mBind.etAdvName.setText(new String(Arrays.copyOfRange(value, 5, 5 + length)));
                                         }
                                         break;
                                     case KEY_ADV_TIMEOUT:
                                         if (length > 0) {
-                                            int timeout = value[4] & 0xFF;
+                                            int timeout = value[5] & 0xFF;
                                             mBind.etAdvTimeout.setText(String.valueOf(timeout));
+                                        }
+                                        break;
+                                    case KEY_ADV_INTERVAL:
+                                        if (length > 0) {
+                                            int interval = value[5] & 0xFF;
+                                            mBind.etAdvInterval.setText(String.valueOf(interval));
                                         }
                                         break;
                                     case KEY_BEACON_MODE:
                                         if (length > 0) {
-                                            int enable = value[4] & 0xFF;
+                                            int enable = value[5] & 0xFF;
                                             mBind.cbBeaconMode.setChecked(enable == 1);
                                         }
                                         break;
                                     case KEY_PASSWORD_VERIFY_ENABLE:
                                         if (length > 0) {
-                                            int enable = value[4] & 0xFF;
+                                            int enable = value[5] & 0xFF;
                                             mPasswordVerifyEnable = enable == 1;
                                             mPasswordVerifyDisable = enable == 0;
                                             mBind.ivLoginMode.setImageResource(mPasswordVerifyEnable ? R.drawable.lw008_ic_checked : R.drawable.lw008_ic_unchecked);
@@ -162,7 +175,7 @@ public class BleSettingsActivity extends BaseActivity implements SeekBar.OnSeekB
                                         break;
                                     case KEY_ADV_TX_POWER:
                                         if (length > 0) {
-                                            int txPower = value[4];
+                                            int txPower = value[5];
                                             int progress = TxPowerEnum.fromTxPower(txPower).ordinal();
                                             mBind.sbTxPower.setProgress(progress);
                                             mBind.tvTxPowerValue.setText(String.format("%ddBm", txPower));
@@ -210,6 +223,15 @@ public class BleSettingsActivity extends BaseActivity implements SeekBar.OnSeekB
     }
 
     private boolean isValid() {
+        final String advIntervalStr = mBind.etAdvInterval.getText().toString();
+        if (TextUtils.isEmpty(advIntervalStr))
+            return false;
+        final int interval = Integer.parseInt(advIntervalStr);
+        if (interval < 1 || interval > 100) {
+            return false;
+        }
+        if (mBind.cbBeaconMode.isChecked())
+            return true;
         final String advTimeoutStr = mBind.etAdvTimeout.getText().toString();
         if (TextUtils.isEmpty(advTimeoutStr))
             return false;
@@ -224,13 +246,17 @@ public class BleSettingsActivity extends BaseActivity implements SeekBar.OnSeekB
     private void saveParams() {
         final String advName = mBind.etAdvName.getText().toString();
         final String timeoutStr = mBind.etAdvTimeout.getText().toString();
+        final String advIntervalStr = mBind.etAdvInterval.getText().toString();
         final int timeout = Integer.parseInt(timeoutStr);
+        final int interval = Integer.parseInt(advIntervalStr);
         final int progress = mBind.sbTxPower.getProgress();
         TxPowerEnum txPowerEnum = TxPowerEnum.fromOrdinal(progress);
         savedParamsError = false;
         List<OrderTask> orderTasks = new ArrayList<>();
         orderTasks.add(OrderTaskAssembler.setAdvName(advName));
-        orderTasks.add(OrderTaskAssembler.setAdvTimeout(timeout));
+        orderTasks.add(OrderTaskAssembler.setAdvInterval(interval));
+        if (!mBind.cbBeaconMode.isChecked())
+            orderTasks.add(OrderTaskAssembler.setAdvTimeout(timeout));
         if (txPowerEnum != null) {
             orderTasks.add(OrderTaskAssembler.setAdvTxPower(txPowerEnum.getTxPower()));
         }

@@ -51,10 +51,10 @@ public class ActiveStateCountActivity extends BaseActivity {
         mReceiverTag = true;
         showSyncingProgressDialog();
         mBind.cbActiveStateCount.postDelayed(() -> {
-            List<OrderTask> orderTasks = new ArrayList<>();
-            orderTasks.add(OrderTaskAssembler.getActiveStateCountEnable());
-            orderTasks.add(OrderTaskAssembler.getActiveStateTimeout());
-            LoRaLW008MTEMokoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
+//            List<OrderTask> orderTasks = new ArrayList<>();
+//            orderTasks.add(OrderTaskAssembler.getActiveStateCountEnable());
+//            orderTasks.add(OrderTaskAssembler.getActiveStateTimeout());
+//            LoRaLW008MTEMokoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
         }, 500);
 
     }
@@ -86,59 +86,59 @@ public class ActiveStateCountActivity extends BaseActivity {
                 int responseType = response.responseType;
                 byte[] value = response.responseValue;
                 switch (orderCHAR) {
-                    case CHAR_PARAMS:
-                        if (value.length >= 4) {
-                            int header = value[0] & 0xFF;// 0xED
-                            int flag = value[1] & 0xFF;// read or write
-                            int cmd = value[2] & 0xFF;
-                            if (header != 0xED)
-                                return;
-                            ParamsKeyEnum configKeyEnum = ParamsKeyEnum.fromParamKey(cmd);
-                            if (configKeyEnum == null) {
-                                return;
-                            }
-                            int length = value[3] & 0xFF;
-                            if (flag == 0x01) {
-                                // write
-                                int result = value[4] & 0xFF;
-                                switch (configKeyEnum) {
-                                    case KEY_ACTIVE_STATE_COUNT_ENABLE:
-                                        if (result != 1) {
-                                            savedParamsError = true;
-                                        }
-                                        break;
-                                    case KEY_ACTIVE_STATE_TIMEOUT:
-                                        if (result != 1) {
-                                            savedParamsError = true;
-                                        }
-                                        if (savedParamsError) {
-                                            ToastUtils.showToast(ActiveStateCountActivity.this, "Opps！Save failed. Please check the input characters and try again.");
-                                        } else {
-                                            ToastUtils.showToast(this, "Save Successfully！");
-                                        }
-                                        break;
-                                }
-                            }
-                            if (flag == 0x00) {
-                                // read
-                                switch (configKeyEnum) {
-                                    case KEY_ACTIVE_STATE_COUNT_ENABLE:
-                                        if (length > 0) {
-                                            int enable = value[4] & 0xFF;
-                                            mBind.cbActiveStateCount.setChecked(enable == 1);
-                                        }
-                                        break;
-                                    case KEY_ACTIVE_STATE_TIMEOUT:
-                                        if (length > 0) {
-                                            byte[] timeoutBytes = Arrays.copyOfRange(value, 4, 4 + length);
-                                            int timeout = MokoUtils.toInt(timeoutBytes);
-                                            mBind.etActiveStateTimeout.setText(String.valueOf(timeout));
-                                        }
-                                        break;
-                                }
-                            }
-                        }
-                        break;
+//                    case CHAR_PARAMS:
+//                        if (value.length >= 5) {
+//                            int header = value[0] & 0xFF;// 0xED
+//                            int flag = value[1] & 0xFF;// read or write
+//                            int cmd = MokoUtils.toInt(Arrays.copyOfRange(value, 2, 4));
+//                            if (header != 0xED)
+//                                return;
+//                            ParamsKeyEnum configKeyEnum = ParamsKeyEnum.fromParamKey(cmd);
+//                            if (configKeyEnum == null) {
+//                                return;
+//                            }
+//                            int length = value[4] & 0xFF;
+//                            if (flag == 0x01) {
+//                                // write
+//                                int result = value[5] & 0xFF;
+//                                switch (configKeyEnum) {
+//                                    case KEY_ACTIVE_STATE_COUNT_ENABLE:
+//                                        if (result != 1) {
+//                                            savedParamsError = true;
+//                                        }
+//                                        break;
+//                                    case KEY_ACTIVE_STATE_TIMEOUT:
+//                                        if (result != 1) {
+//                                            savedParamsError = true;
+//                                        }
+//                                        if (savedParamsError) {
+//                                            ToastUtils.showToast(ActiveStateCountActivity.this, "Opps！Save failed. Please check the input characters and try again.");
+//                                        } else {
+//                                            ToastUtils.showToast(this, "Save Successfully！");
+//                                        }
+//                                        break;
+//                                }
+//                            }
+//                            if (flag == 0x00) {
+//                                // read
+//                                switch (configKeyEnum) {
+//                                    case KEY_ACTIVE_STATE_COUNT_ENABLE:
+//                                        if (length > 0) {
+//                                            int enable = value[5] & 0xFF;
+//                                            mBind.cbActiveStateCount.setChecked(enable == 1);
+//                                        }
+//                                        break;
+//                                    case KEY_ACTIVE_STATE_TIMEOUT:
+//                                        if (length > 0) {
+//                                            byte[] timeoutBytes = Arrays.copyOfRange(value, 5, 5 + length);
+//                                            int timeout = MokoUtils.toInt(timeoutBytes);
+//                                            mBind.etActiveStateTimeout.setText(String.valueOf(timeout));
+//                                        }
+//                                        break;
+//                                }
+//                            }
+//                        }
+//                        break;
                 }
             }
         });
@@ -203,10 +203,10 @@ public class ActiveStateCountActivity extends BaseActivity {
             return;
         }
         savedParamsError = false;
-        showSyncingProgressDialog();
-        List<OrderTask> orderTasks = new ArrayList<>();
-        orderTasks.add(OrderTaskAssembler.setActiveStateCountEnable(mBind.cbActiveStateCount.isChecked() ? 1 : 0));
-        orderTasks.add(OrderTaskAssembler.setActiveStateTimeout(timeout));
-        LoRaLW008MTEMokoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
+//        showSyncingProgressDialog();
+//        List<OrderTask> orderTasks = new ArrayList<>();
+//        orderTasks.add(OrderTaskAssembler.setActiveStateCountEnable(mBind.cbActiveStateCount.isChecked() ? 1 : 0));
+//        orderTasks.add(OrderTaskAssembler.setActiveStateTimeout(timeout));
+//        LoRaLW008MTEMokoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
     }
 }

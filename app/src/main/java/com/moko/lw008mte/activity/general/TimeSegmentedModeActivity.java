@@ -6,13 +6,12 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Canvas;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
+import android.widget.EditText;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.chad.library.adapter.base.callback.ItemDragAndSwipeCallback;
-import com.chad.library.adapter.base.listener.OnItemSwipeListener;
 import com.moko.ble.lib.MokoConstants;
 import com.moko.ble.lib.event.ConnectStatusEvent;
 import com.moko.ble.lib.event.OrderTaskResponseEvent;
@@ -21,10 +20,9 @@ import com.moko.ble.lib.task.OrderTaskResponse;
 import com.moko.ble.lib.utils.MokoUtils;
 import com.moko.lw008mte.R;
 import com.moko.lw008mte.activity.BaseActivity;
-import com.moko.lw008mte.adapter.TimePointAdapter;
-import com.moko.lw008mte.databinding.Lw008MteActivityTimingModeBinding;
+import com.moko.lw008mte.adapter.TimeSegmentedPointAdapter;
+import com.moko.lw008mte.databinding.Lw008MteActivityTimeSegmentedModeBinding;
 import com.moko.lw008mte.dialog.BottomDialog;
-import com.moko.lw008mte.entity.TimePoint;
 import com.moko.lw008mte.entity.TimeSegmentedPoint;
 import com.moko.lw008mte.utils.ToastUtils;
 import com.moko.support.lw008mte.LoRaLW008MTEMokoSupport;
@@ -44,30 +42,31 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class TimingModeActivity extends BaseActivity implements BaseQuickAdapter.OnItemChildClickListener {
+public class TimeSegmentedModeActivity extends BaseActivity implements BaseQuickAdapter.OnItemChildClickListener {
 
-    private Lw008MteActivityTimingModeBinding mBind;
+    private Lw008MteActivityTimeSegmentedModeBinding mBind;
     private boolean mReceiverTag = false;
     private boolean savedParamsError;
     private ArrayList<String> mValues;
     private int mSelected;
-    private ArrayList<TimePoint> mTimePoints;
-    private TimePointAdapter mAdapter;
+    private ArrayList<TimeSegmentedPoint> mTimePoints;
+    private TimeSegmentedPointAdapter mAdapter;
     private ArrayList<String> mHourValues;
     private ArrayList<String> mMinValues;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mBind = Lw008MteActivityTimingModeBinding.inflate(getLayoutInflater());
+        mBind = Lw008MteActivityTimeSegmentedModeBinding.inflate(getLayoutInflater());
         setContentView(mBind.getRoot());
         mValues = new ArrayList<>();
         mValues.add("BLE");
         mValues.add("GPS");
         mValues.add("BLE+GPS");
         mValues.add("BLE*GPS");
+        mValues.add("BLE&GPS");
         mHourValues = new ArrayList<>();
-        for (int i = 0; i < 24; i++) {
+        for (int i = 0; i <= 24; i++) {
             mHourValues.add(String.format("%02d", i));
         }
         mMinValues = new ArrayList<>();
@@ -75,7 +74,7 @@ public class TimingModeActivity extends BaseActivity implements BaseQuickAdapter
             mMinValues.add(String.format("%02d", i));
         }
         mTimePoints = new ArrayList<>();
-        mAdapter = new TimePointAdapter(mTimePoints);
+        mAdapter = new TimeSegmentedPointAdapter(mTimePoints);
         // 开启滑动删除
 //        mAdapter.enableSwipeItem();
 //        mAdapter.setOnItemSwipeListener(onItemSwipeListener);
@@ -84,7 +83,7 @@ public class TimingModeActivity extends BaseActivity implements BaseQuickAdapter
         mBind.rvTimePoint.setLayoutManager(new LinearLayoutManager(this));
         mBind.rvTimePoint.setAdapter(mAdapter);
 
-        TimingModeActivity.SwipeToDeleteCallback callback = new TimingModeActivity.SwipeToDeleteCallback();
+        SwipeToDeleteCallback callback = new SwipeToDeleteCallback();
         ItemTouchHelper helper = new ItemTouchHelper(callback);
         helper.attachToRecyclerView(mBind.rvTimePoint);
 
@@ -97,14 +96,14 @@ public class TimingModeActivity extends BaseActivity implements BaseQuickAdapter
         showSyncingProgressDialog();
         mBind.tvTimingPosStrategy.postDelayed(() -> {
             List<OrderTask> orderTasks = new ArrayList<>();
-            orderTasks.add(OrderTaskAssembler.getTimePosStrategy());
-            orderTasks.add(OrderTaskAssembler.getTimePosReportPoints());
+            orderTasks.add(OrderTaskAssembler.getTimePeriodicPosStrategy());
+            orderTasks.add(OrderTaskAssembler.getTimePeriodicPosReportPoints());
             LoRaLW008MTEMokoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
         }, 500);
     }
 
 
-    //    OnItemSwipeListener onItemSwipeListener = new OnItemSwipeListener() {
+//    OnItemSwipeListener onItemSwipeListener = new OnItemSwipeListener() {
 //        @Override
 //        public void onItemSwipeStart(RecyclerView.ViewHolder viewHolder, int pos) {
 //        }
@@ -151,8 +150,9 @@ public class TimingModeActivity extends BaseActivity implements BaseQuickAdapter
             mTimePoints.remove(position);
             int size = mTimePoints.size();
             for (int i = 1; i <= size; i++) {
-                TimePoint point = mTimePoints.get(i - 1);
+                TimeSegmentedPoint point = mTimePoints.get(i - 1);
                 point.name = String.format("Time Period %d", i);
+                point.intervalStr = String.format("Report Interval %d", i);
             }
             mAdapter.replaceData(mTimePoints);
         }
@@ -202,17 +202,17 @@ public class TimingModeActivity extends BaseActivity implements BaseQuickAdapter
                                 // write
                                 int result = value[5] & 0xFF;
                                 switch (configKeyEnum) {
-                                    case KEY_TIME_MODE_POS_STRATEGY:
+                                    case KEY_TIME_PERIODIC_MODE_POS_STRATEGY:
                                         if (result != 1) {
                                             savedParamsError = true;
                                         }
                                         break;
-                                    case KEY_TIME_MODE_REPORT_TIME_POINT:
+                                    case KEY_TIME_PERIODIC_MODE_REPORT_TIME_POINT:
                                         if (result != 1) {
                                             savedParamsError = true;
                                         }
                                         if (savedParamsError) {
-                                            ToastUtils.showToast(TimingModeActivity.this, "Opps！Save failed. Please check the input characters and try again.");
+                                            ToastUtils.showToast(TimeSegmentedModeActivity.this, "Opps！Save failed. Please check the input characters and try again.");
                                         } else {
                                             ToastUtils.showToast(this, "Save Successfully！");
                                         }
@@ -221,35 +221,41 @@ public class TimingModeActivity extends BaseActivity implements BaseQuickAdapter
                             }
                             if (flag == 0x00) {
                                 // read
+
                                 switch (configKeyEnum) {
-                                    case KEY_TIME_MODE_POS_STRATEGY:
+                                    case KEY_TIME_PERIODIC_MODE_POS_STRATEGY:
                                         if (length > 0) {
                                             int strategy = value[5] & 0xFF;
                                             mSelected = strategy;
                                             mBind.tvTimingPosStrategy.setText(mValues.get(mSelected));
                                         }
                                         break;
-                                    case KEY_TIME_MODE_REPORT_TIME_POINT:
+                                    case KEY_TIME_PERIODIC_MODE_REPORT_TIME_POINT:
                                         if (length > 0) {
-                                            byte[] rawBytes = Arrays.copyOfRange(value, 5, 5 + length);
-                                            for (int i = 0; i < length; i += 2) {
-                                                int index = i / 2;
-                                                int point = MokoUtils.toInt(Arrays.copyOfRange(rawBytes, i, i + 2));
-                                                int hour = point / 60;
-                                                int min = point % 60;
-                                                TimePoint timePoint = new TimePoint();
-                                                timePoint.name = String.format("Time Point %d", index + 1);
-                                                if (hour == 24) {
-                                                    timePoint.hour = String.format("%02d", 0);
-                                                } else {
-                                                    timePoint.hour = String.format("%02d", hour);
-                                                }
-                                                timePoint.min = String.format("%02d", min);
+                                            for (int i = 0; i < length; i += 8) {
+                                                int start = MokoUtils.toInt(Arrays.copyOfRange(value, 5 + i, 7 + i));
+                                                int end = MokoUtils.toInt(Arrays.copyOfRange(value, 7 + i, 9 + i));
+                                                int interval = MokoUtils.toInt(Arrays.copyOfRange(value, 9 + i, 13 + i));
+                                                TimeSegmentedPoint timePoint = new TimeSegmentedPoint();
+                                                timePoint.name = String.format("Time Period %d", i / 8 + 1);
+                                                timePoint.intervalStr = String.format("Report Interval %d", i / 8 + 1);
+                                                timePoint.start = start;
+                                                int startHour = start / 60;
+                                                int startMin = start % 60;
+                                                timePoint.startHour = mHourValues.get(startHour);
+                                                timePoint.startMin = mMinValues.get(startMin);
+                                                timePoint.end = end;
+                                                int endHour = end / 60;
+                                                int endMin = end % 60;
+                                                timePoint.endHour = mHourValues.get(endHour);
+                                                timePoint.endMin = mMinValues.get(endMin);
+                                                timePoint.interval = interval;
                                                 mTimePoints.add(timePoint);
                                                 mAdapter.replaceData(mTimePoints);
                                             }
                                         }
                                         break;
+
                                 }
                             }
                         }
@@ -310,23 +316,47 @@ public class TimingModeActivity extends BaseActivity implements BaseQuickAdapter
     public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
         if (isWindowLocked())
             return;
-        TimePoint timePoint = (TimePoint) adapter.getItem(position);
-        if (view.getId() == R.id.tv_point_hour) {
-            int select = Integer.parseInt(timePoint.hour);
+        TimeSegmentedPoint timePoint = (TimeSegmentedPoint) adapter.getItem(position);
+        if (view.getId() == R.id.tv_point_start_hour) {
+            int select = Integer.parseInt(timePoint.startHour);
             BottomDialog dialog = new BottomDialog();
             dialog.setDatas(mHourValues, select);
             dialog.setListener(value -> {
-                timePoint.hour = mHourValues.get(value);
+                timePoint.start = value * 60 + Integer.parseInt(timePoint.startMin);
+                timePoint.startHour = mHourValues.get(value);
                 adapter.notifyItemChanged(position);
             });
             dialog.show(getSupportFragmentManager());
         }
-        if (view.getId() == R.id.tv_point_min) {
-            int select = Integer.parseInt(timePoint.min);
+        if (view.getId() == R.id.tv_point_start_min) {
+            int select = Integer.parseInt(timePoint.startMin);
             BottomDialog dialog = new BottomDialog();
             dialog.setDatas(mMinValues, select);
             dialog.setListener(value -> {
-                timePoint.min = mMinValues.get(value);
+                timePoint.start = Integer.parseInt(timePoint.startHour) * 60 + value;
+                timePoint.startMin = mMinValues.get(value);
+                adapter.notifyItemChanged(position);
+            });
+            dialog.show(getSupportFragmentManager());
+        }
+        if (view.getId() == R.id.tv_point_end_hour) {
+            int select = Integer.parseInt(timePoint.endHour);
+            BottomDialog dialog = new BottomDialog();
+            dialog.setDatas(mHourValues, select);
+            dialog.setListener(value -> {
+                timePoint.end = value * 60 + Integer.parseInt(timePoint.endMin);
+                timePoint.endHour = mHourValues.get(value);
+                adapter.notifyItemChanged(position);
+            });
+            dialog.show(getSupportFragmentManager());
+        }
+        if (view.getId() == R.id.tv_point_end_min) {
+            int select = Integer.parseInt(timePoint.endMin);
+            BottomDialog dialog = new BottomDialog();
+            dialog.setDatas(mMinValues, select);
+            dialog.setListener(value -> {
+                timePoint.end = Integer.parseInt(timePoint.endHour) * 60 + value;
+                timePoint.endMin = mMinValues.get(value);
                 adapter.notifyItemChanged(position);
             });
             dialog.show(getSupportFragmentManager());
@@ -349,34 +379,87 @@ public class TimingModeActivity extends BaseActivity implements BaseQuickAdapter
         if (isWindowLocked())
             return;
         int size = mTimePoints.size();
-        if (size >= 10) {
-            ToastUtils.showToast(this, "You can set up to 10 time points!");
+        if (size >= 3) {
+            ToastUtils.showToast(this, "You can set up to 3 time points!");
             return;
         }
-        TimePoint timePoint = new TimePoint();
-        timePoint.name = String.format("Time Point %d", size + 1);
-        timePoint.hour = String.format("%02d", 0);
-        timePoint.min = String.format("%02d", 0);
+        TimeSegmentedPoint timePoint = new TimeSegmentedPoint();
+        timePoint.name = String.format("Time Period %d", size + 1);
+        timePoint.intervalStr = String.format("Report Interval %d", size + 1);
+        timePoint.start = 0;
+        timePoint.startHour = "0";
+        timePoint.startMin = "0";
+        timePoint.end = 0;
+        timePoint.endHour = "0";
+        timePoint.endMin = "0";
+        timePoint.interval = 600;
         mTimePoints.add(timePoint);
         mAdapter.replaceData(mTimePoints);
     }
 
     public void onSave(View view) {
+        int failedCode = isValid();
+        if (failedCode == 1) {
+            ToastUtils.showToast(this, "Para error!");
+            return;
+        }
+        if (failedCode == 2) {
+            ToastUtils.showToast(this, "The start time must be earlier than the end time!");
+            return;
+        }
+        if (failedCode == 3) {
+            ToastUtils.showToast(this, "Time ranges cannot overlap!");
+            return;
+        }
         savedParamsError = false;
         showSyncingProgressDialog();
         List<OrderTask> orderTasks = new ArrayList<>();
-        orderTasks.add(OrderTaskAssembler.setTimePosStrategy(mSelected));
+        orderTasks.add(OrderTaskAssembler.setTimePeriodicPosStrategy(mSelected));
         ArrayList<Integer> points = new ArrayList<>();
-        for (TimePoint point : mTimePoints) {
-            int hour = Integer.parseInt(point.hour);
-            int min = Integer.parseInt(point.min);
-            if (hour == 0 && min == 0) {
-                points.add(1440);
-                continue;
-            }
-            points.add(hour * 60 + min);
+        for (TimeSegmentedPoint point : mTimePoints) {
+            points.add(point.start);
+            points.add(point.end);
+            points.add(point.interval);
         }
-        orderTasks.add(OrderTaskAssembler.setTimePosReportPoints(points));
+        orderTasks.add(OrderTaskAssembler.setTimePeriodicPosReportPoints(points));
         LoRaLW008MTEMokoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
+    }
+
+    private int isValid() {
+        int count = mAdapter.getItemCount();
+        for (int i = 0; i < count; i++) {
+            EditText etInterval = (EditText) mAdapter.getViewByPosition(mBind.rvTimePoint, i, R.id.et_report_interval);
+            String intervalStr = etInterval.getText().toString();
+            if (TextUtils.isEmpty(intervalStr))
+                return 1;
+            int interval = Integer.parseInt(intervalStr);
+            if (interval < 30 || interval > 86400) return 1;
+            mTimePoints.get(i).interval = Integer.parseInt(intervalStr);
+        }
+        for (int i = 0; i < count; i++) {
+            int start = mTimePoints.get(i).start;
+            int end = mTimePoints.get(i).end;
+            if (start > 1440 || end > 1440)
+                return 1;
+        }
+        if (count > 0) {
+            if (mTimePoints.get(0).start >= mTimePoints.get(0).end)
+                return 2;
+        }
+        if (count > 1) {
+            if (mTimePoints.get(1).start >= mTimePoints.get(1).end)
+                return 2;
+            if (mTimePoints.get(0).start < mTimePoints.get(1).end && mTimePoints.get(1).start < mTimePoints.get(0).end)
+                return 3;
+        }
+        if (count > 2) {
+            if (mTimePoints.get(2).start >= mTimePoints.get(2).end)
+                return 2;
+            if (mTimePoints.get(0).start < mTimePoints.get(2).end && mTimePoints.get(2).start < mTimePoints.get(0).end)
+                return 3;
+            if (mTimePoints.get(1).start < mTimePoints.get(2).end && mTimePoints.get(2).start < mTimePoints.get(1).end)
+                return 3;
+        }
+        return 0;
     }
 }

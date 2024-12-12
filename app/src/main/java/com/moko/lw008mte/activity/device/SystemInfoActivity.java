@@ -41,6 +41,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 import androidx.annotation.Nullable;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
@@ -73,10 +74,10 @@ public class SystemInfoActivity extends BaseActivity {
             List<OrderTask> orderTasks = new ArrayList<>();
             orderTasks.add(OrderTaskAssembler.getAdvName());
             orderTasks.add(OrderTaskAssembler.getMacAddress());
-//            orderTasks.add(OrderTaskAssembler.getBattery());
+            orderTasks.add(OrderTaskAssembler.getBattery());
             orderTasks.add(OrderTaskAssembler.getDeviceModel());
             orderTasks.add(OrderTaskAssembler.getSoftwareVersion());
-            orderTasks.add(OrderTaskAssembler.getFirmwareVersion());
+//            orderTasks.add(OrderTaskAssembler.getFirmwareVersion());
             orderTasks.add(OrderTaskAssembler.getHardwareVersion());
             orderTasks.add(OrderTaskAssembler.getManufacturer());
             LoRaLW008MTEMokoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
@@ -138,37 +139,36 @@ public class SystemInfoActivity extends BaseActivity {
                         mBind.tvManufacture.setText(manufacture);
                         break;
                     case CHAR_PARAMS:
-                        if (value.length >= 4) {
+                        if (value.length >= 5) {
                             int header = value[0] & 0xFF;// 0xED
                             int flag = value[1] & 0xFF;// read or write
-                            int cmd = value[2] & 0xFF;
+                            int cmd = MokoUtils.toInt(Arrays.copyOfRange(value, 2, 4));
                             if (header != 0xED)
                                 return;
                             ParamsKeyEnum configKeyEnum = ParamsKeyEnum.fromParamKey(cmd);
                             if (configKeyEnum == null) {
                                 return;
                             }
-                            int length = value[3] & 0xFF;
+                            int length = value[4] & 0xFF;
                             if (flag == 0x00) {
                                 // read
                                 switch (configKeyEnum) {
                                     case KEY_ADV_NAME:
                                         if (length > 0) {
-                                            byte[] rawDataBytes = Arrays.copyOfRange(value, 4, 4 + length);
+                                            byte[] rawDataBytes = Arrays.copyOfRange(value, 5, 5 + length);
                                             mDeviceName = new String(rawDataBytes);
                                         }
                                         break;
-//                                    case KEY_BATTERY_POWER:
-//                                        if (length > 0) {
-//                                            byte[] batteryBytes = Arrays.copyOfRange(value, 4, 4 + length);
-//                                            int battery = MokoUtils.toInt(batteryBytes);
-//                                            String batteryStr = MokoUtils.getDecimalFormat("0.000").format(battery * 0.001);
-//                                            tvBatteryVoltage.setText(String.format("%sV", batteryStr));
-//                                        }
-//                                        break;
+                                    case KEY_BATTERY_POWER:
+                                        if (length > 0) {
+                                            byte[] batteryBytes = Arrays.copyOfRange(value, 5, 5 + length);
+                                            int battery = MokoUtils.toInt(batteryBytes);
+                                            mBind.tvBattery.setText(String.format(Locale.getDefault(), "%dmV", battery));
+                                        }
+                                        break;
                                     case KEY_CHIP_MAC:
                                         if (length > 0) {
-                                            byte[] macBytes = Arrays.copyOfRange(value, 4, 4 + length);
+                                            byte[] macBytes = Arrays.copyOfRange(value, 5, 5 + length);
                                             String mac = MokoUtils.bytesToHexString(macBytes);
                                             StringBuffer stringBuffer = new StringBuffer(mac);
                                             stringBuffer.insert(2, ":");
