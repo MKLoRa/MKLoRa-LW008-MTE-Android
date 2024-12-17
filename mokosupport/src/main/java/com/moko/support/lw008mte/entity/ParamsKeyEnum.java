@@ -181,7 +181,7 @@ public enum ParamsKeyEnum implements Serializable {
     // BXP-iBeacon类型Major范围
     KEY_FILTER_BXP_IBEACON_MAJOR_RANGE(0x0441),
     // BXP-iBeacon类型Minor范围
-    KEY_FILTER_BXP_IBEACON_MINOR_RANGE(0x042),
+    KEY_FILTER_BXP_IBEACON_MINOR_RANGE(0x0442),
     // BXP-iBeacon类型UUID
     KEY_FILTER_BXP_IBEACON_UUID(0x0443),
     // BXP-Device类型过滤开关
