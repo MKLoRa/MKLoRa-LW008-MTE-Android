@@ -74,7 +74,7 @@ public class DeviceInfoActivity extends BaseActivity implements RadioGroup.OnChe
     private boolean mReceiverTag = false;
     private int disConnectType;
     // 0x00:LW008-MTE,0x10:LW008-PTE,0x20:LW001-BGE,0x30:LW011-MT
-    private int mDeviceType;
+    public int mDeviceType;
 
     private boolean savedParamsError;
 
@@ -556,7 +556,10 @@ public class DeviceInfoActivity extends BaseActivity implements RadioGroup.OnChe
         List<OrderTask> orderTasks = new ArrayList<>();
         // device
         orderTasks.add(OrderTaskAssembler.getTimeZone());
-        orderTasks.add(OrderTaskAssembler.getLowPowerPercent());
+        if (mDeviceType == 0x30) {
+            // LW011MT读取低电百分比
+            orderTasks.add(OrderTaskAssembler.getLowPowerPercent());
+        }
         orderTasks.add(OrderTaskAssembler.getLowPowerPayloadEnable());
         orderTasks.add(OrderTaskAssembler.getLowPowerReportInterval());
         LoRaLW008MTEMokoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
@@ -749,7 +752,9 @@ public class DeviceInfoActivity extends BaseActivity implements RadioGroup.OnChe
     public void onOffSetting(View view) {
         if (isWindowLocked())
             return;
-        startActivity(new Intent(this, OnOffSettingsActivity.class));
+        Intent intent = new Intent(this, OnOffSettingsActivity.class);
+        intent.putExtra(AppConstants.EXTRA_KEY_DEVICE_TYPE, mDeviceType);
+        startActivity(intent);
     }
 
     public void onDeviceInfo(View view) {

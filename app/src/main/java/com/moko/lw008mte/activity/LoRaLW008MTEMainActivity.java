@@ -78,10 +78,13 @@ public class LoRaLW008MTEMainActivity extends BaseActivity implements MokoScanDe
 
     public static String PATH_LOGCAT;
 
+    private int mSelectedType;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mBind = Lw008MteActivityMainBinding.inflate(getLayoutInflater());
+        mSelectedType = getIntent().getIntExtra("TYPE", 0x00);
         setContentView(mBind.getRoot());
         // 初始化Xlog
         if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
@@ -168,7 +171,7 @@ public class LoRaLW008MTEMainActivity extends BaseActivity implements MokoScanDe
     @Override
     public void onScanDevice(DeviceInfo deviceInfo) {
         AdvInfo beaconInfo = advInfoAnalysis.parseDeviceInfo(deviceInfo);
-        if (beaconInfo == null)
+        if (beaconInfo == null || mSelectedType != beaconInfo.deviceType)
             return;
         beaconInfoHashMap.put(beaconInfo.mac, beaconInfo);
     }

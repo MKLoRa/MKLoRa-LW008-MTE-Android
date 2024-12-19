@@ -27,7 +27,6 @@ public class DeviceFragment extends Fragment {
 
     private final ArrayList<String> mLowPowerPrompts = new ArrayList<>(8);
     private int mSelectedLowPowerPrompt;
-    private boolean mLowPowerPayloadEnable;
 
 
     private DeviceInfoActivity activity;
@@ -72,6 +71,7 @@ public class DeviceFragment extends Fragment {
         mLowPowerPrompts.add("40%");
         mLowPowerPrompts.add("50%");
         mLowPowerPrompts.add("60%");
+        mBind.clLowPowerPrompt.setVisibility(activity.mDeviceType == 0x30 ? View.VISIBLE : View.GONE);
         return mBind.getRoot();
     }
 
@@ -131,7 +131,9 @@ public class DeviceFragment extends Fragment {
         final int interval = Integer.parseInt(intervalStr);
         ArrayList<OrderTask> orderTasks = new ArrayList<>();
         orderTasks.add(OrderTaskAssembler.setTimeZone(mSelectedTimeZone - 24));
-        orderTasks.add(OrderTaskAssembler.setLowPowerPercent(mSelectedLowPowerPrompt));
+        if (activity.mDeviceType == 0x30) {
+            orderTasks.add(OrderTaskAssembler.setLowPowerPercent(mSelectedLowPowerPrompt));
+        }
         orderTasks.add(OrderTaskAssembler.setLowPowerPayloadEnable(mBind.cbLowPowerPayload.isChecked() ? 1 : 0));
         orderTasks.add(OrderTaskAssembler.setLowPowerReportInterval(interval));
         LoRaLW008MTEMokoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));

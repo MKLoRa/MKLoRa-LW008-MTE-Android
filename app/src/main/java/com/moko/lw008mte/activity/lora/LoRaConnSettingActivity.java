@@ -350,7 +350,8 @@ public class LoRaConnSettingActivity extends BaseActivity implements CompoundBut
             // 注销广播
             unregisterReceiver(mReceiver);
         }
-        EventBus.getDefault().unregister(this);
+        if (EventBus.getDefault().isRegistered(this))
+            EventBus.getDefault().unregister(this);
     }
 
     public void onBack(View view) {
@@ -363,6 +364,7 @@ public class LoRaConnSettingActivity extends BaseActivity implements CompoundBut
     }
 
     private void backHome() {
+        EventBus.getDefault().unregister(this);
         setResult(RESULT_OK);
         finish();
     }

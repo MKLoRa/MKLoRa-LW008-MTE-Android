@@ -14,6 +14,7 @@ import com.moko.ble.lib.event.OrderTaskResponseEvent;
 import com.moko.ble.lib.task.OrderTask;
 import com.moko.ble.lib.task.OrderTaskResponse;
 import com.moko.ble.lib.utils.MokoUtils;
+import com.moko.lw008mte.AppConstants;
 import com.moko.lw008mte.R;
 import com.moko.lw008mte.activity.BaseActivity;
 import com.moko.lw008mte.databinding.Lw008MteActivityOnOffSettingsBinding;
@@ -40,15 +41,15 @@ public class OnOffSettingsActivity extends BaseActivity {
     private boolean shutdownPayloadOpen;
     private boolean offByButtonOpen;
     private boolean autoPowerOnOpen;
-
     private ArrayList<String> mValues;
-
     private int mSelected;
+    private int mDeviceType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mBind = Lw008MteActivityOnOffSettingsBinding.inflate(getLayoutInflater());
+        mDeviceType = getIntent().getIntExtra(AppConstants.EXTRA_KEY_DEVICE_TYPE, 0x00);
         setContentView(mBind.getRoot());
         EventBus.getDefault().register(this);
         // 注册广播接收器
@@ -57,8 +58,9 @@ public class OnOffSettingsActivity extends BaseActivity {
         registerReceiver(mReceiver, filter);
         mReceiverTag = true;
         mValues = new ArrayList<>();
-        mValues.add("Multiple approaches");
         mValues.add("Continuous approach");
+        mValues.add("Multiple approaches");
+        mBind.llAutoPowerOn.setVisibility(mDeviceType == 0x30 ? View.VISIBLE : View.GONE);
         if (!LoRaLW008MTEMokoSupport.getInstance().isBluetoothOpen()) {
             // 蓝牙未打开，开启蓝牙
             LoRaLW008MTEMokoSupport.getInstance().enableBluetooth();
@@ -68,7 +70,8 @@ public class OnOffSettingsActivity extends BaseActivity {
             orderTasks.add(OrderTaskAssembler.getOffByMagnetic());
             orderTasks.add(OrderTaskAssembler.getShutdownPayloadEnable());
             orderTasks.add(OrderTaskAssembler.getOffByButtonEnable());
-            orderTasks.add(OrderTaskAssembler.getAutoPowerOn());
+            if (mDeviceType == 0x30)
+                orderTasks.add(OrderTaskAssembler.getAutoPowerOn());
             LoRaLW008MTEMokoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
         }
         setListener();

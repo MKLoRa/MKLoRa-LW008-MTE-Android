@@ -275,7 +275,7 @@ public class MotionModeActivity extends BaseActivity {
                                         if (length > 0) {
                                             int strategy = value[5] & 0xFF;
                                             mStationarySelected = strategy;
-                                            mBind.tvPosStrategyOnStationary.setText(mValues.get(mEndSelected));
+                                            mBind.tvPosStrategyOnStationary.setText(mValues.get(mStationarySelected));
                                         }
                                         break;
                                 }

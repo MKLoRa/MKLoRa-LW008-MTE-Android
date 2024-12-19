@@ -157,7 +157,6 @@ public class ParamsWriteTask extends OrderTask {
                 (byte) 0x01,
                 (byte) cmdBytes[0],
                 (byte) cmdBytes[1],
-                (byte) 0x01,
                 (byte) 0x04,
                 intervalBytes[0],
                 intervalBytes[1],
