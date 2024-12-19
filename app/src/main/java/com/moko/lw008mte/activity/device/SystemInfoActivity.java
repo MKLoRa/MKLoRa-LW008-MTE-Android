@@ -77,7 +77,7 @@ public class SystemInfoActivity extends BaseActivity {
             orderTasks.add(OrderTaskAssembler.getBattery());
             orderTasks.add(OrderTaskAssembler.getDeviceModel());
             orderTasks.add(OrderTaskAssembler.getSoftwareVersion());
-//            orderTasks.add(OrderTaskAssembler.getFirmwareVersion());
+            orderTasks.add(OrderTaskAssembler.getFirmwareVersion());
             orderTasks.add(OrderTaskAssembler.getHardwareVersion());
             orderTasks.add(OrderTaskAssembler.getManufacturer());
             LoRaLW008MTEMokoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
