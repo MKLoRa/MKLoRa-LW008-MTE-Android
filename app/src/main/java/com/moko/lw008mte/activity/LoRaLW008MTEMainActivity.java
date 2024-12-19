@@ -261,7 +261,9 @@ public class LoRaLW008MTEMainActivity extends BaseActivity implements MokoScanDe
     public void onAbout(View view) {
         if (isWindowLocked())
             return;
-        startActivity(new Intent(this, AboutActivity.class));
+        Intent intent = new Intent(this, AboutActivity.class);
+        intent.putExtra(AppConstants.EXTRA_KEY_DEVICE_TYPE, mSelectedType);
+        startActivity(intent);
     }
 
 
