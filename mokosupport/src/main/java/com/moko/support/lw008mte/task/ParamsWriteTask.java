@@ -1627,7 +1627,7 @@ public class ParamsWriteTask extends OrderTask {
         }
     }
 
-    public void setGPSPosTimeoutL76(@IntRange(from = 60, to = 600) int timeout) {
+    public void setGPSPosTimeoutL76(@IntRange(from = 30, to = 600) int timeout) {
         byte[] timeoutBytes = MokoUtils.toByteArray(timeout, 2);
         byte[] cmdBytes = MokoUtils.toByteArray(ParamsKeyEnum.KEY_GPS_POS_TIMEOUT_L76C.getParamsKey(), 2);
         response.responseValue = data = new byte[]{

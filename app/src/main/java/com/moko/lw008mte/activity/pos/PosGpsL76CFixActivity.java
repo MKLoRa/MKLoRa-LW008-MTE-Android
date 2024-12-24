@@ -151,7 +151,7 @@ public class PosGpsL76CFixActivity extends BaseActivity {
         if (TextUtils.isEmpty(posTimeoutStr))
             return false;
         final int posTimeout = Integer.parseInt(posTimeoutStr);
-        if (posTimeout < 60 || posTimeout > 600) {
+        if (posTimeout < 30 || posTimeout > 600) {
             return false;
         }
         final String pdopLimitStr = mBind.etPdopLimit.getText().toString();

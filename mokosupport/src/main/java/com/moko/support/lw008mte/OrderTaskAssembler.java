@@ -1643,7 +1643,7 @@ public class OrderTaskAssembler {
         return task;
     }
 
-    public static OrderTask setGPSPosTimeoutL76C(@IntRange(from = 60, to = 600) int timeout) {
+    public static OrderTask setGPSPosTimeoutL76C(@IntRange(from = 30, to = 600) int timeout) {
         ParamsWriteTask task = new ParamsWriteTask();
         task.setGPSPosTimeoutL76(timeout);
         return task;
