@@ -29,11 +29,11 @@ import com.moko.lw008mte.R;
 import com.moko.lw008mte.activity.device.LogDataActivity;
 import com.moko.lw008mte.adapter.DeviceListAdapter;
 import com.moko.lw008mte.databinding.Lw008MteActivityMainBinding;
-import com.moko.lw008mte.dialog.AlertMessageDialog;
-import com.moko.lw008mte.dialog.LoadingDialog;
-import com.moko.lw008mte.dialog.LoadingMessageDialog;
-import com.moko.lw008mte.dialog.PasswordDialog;
-import com.moko.lw008mte.dialog.ScanFilterDialog;
+import com.moko.lib.loraui.dialog.AlertMessageDialog;
+import com.moko.lib.loraui.dialog.LoadingDialog;
+import com.moko.lib.loraui.dialog.LoadingMessageDialog;
+import com.moko.lib.loraui.dialog.PasswordDialog;
+import com.moko.lib.loraui.dialog.ScanFilterDialog;
 import com.moko.lw008mte.entity.AdvInfo;
 import com.moko.lw008mte.utils.AdvInfoAnalysisImpl;
 import com.moko.lw008mte.utils.SPUtiles;
@@ -108,7 +108,7 @@ public class LoRaLW008MTEMainActivity extends BaseActivity implements MokoScanDe
         adapter.openLoadAnimation();
         mBind.rvDevices.setLayoutManager(new LinearLayoutManager(this));
         DividerItemDecoration itemDecoration = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
-        itemDecoration.setDrawable(ContextCompat.getDrawable(this, R.drawable.lw008_shape_recycleview_divider));
+        itemDecoration.setDrawable(ContextCompat.getDrawable(this, R.drawable.shape_recycleview_divider));
         mBind.rvDevices.addItemDecoration(itemDecoration);
         mBind.rvDevices.setAdapter(adapter);
         mHandler = new Handler(Looper.getMainLooper());
@@ -132,7 +132,7 @@ public class LoRaLW008MTEMainActivity extends BaseActivity implements MokoScanDe
             LoRaLW008MTEMokoSupport.getInstance().enableBluetooth();
             return;
         }
-        animation = AnimationUtils.loadAnimation(this, R.anim.lw008_rotate_refresh);
+        animation = AnimationUtils.loadAnimation(this, R.anim.rotate_refresh);
         mBind.ivRefresh.startAnimation(animation);
         advInfoAnalysis = new AdvInfoAnalysisImpl();
         mokoBleScanner.startScanDevice(this);

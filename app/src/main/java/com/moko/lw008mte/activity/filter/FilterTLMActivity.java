@@ -13,7 +13,7 @@ import com.moko.ble.lib.utils.MokoUtils;
 import com.moko.lw008mte.R;
 import com.moko.lw008mte.activity.BaseActivity;
 import com.moko.lw008mte.databinding.Lw008MteActivityFilterTlmBinding;
-import com.moko.lw008mte.dialog.BottomDialog;
+import com.moko.lib.loraui.dialog.BottomDialog;
 import com.moko.lw008mte.utils.ToastUtils;
 import com.moko.support.lw008mte.LoRaLW008MTEMokoSupport;
 import com.moko.support.lw008mte.OrderTaskAssembler;
@@ -131,7 +131,7 @@ public class FilterTLMActivity extends BaseActivity {
                                     case KEY_FILTER_EDDYSTONE_TLM_ENABLE:
                                         if (length > 0) {
                                             mTLMEnable = value[5] == 1;
-                                            mBind.ivTlmEnable.setImageResource(mTLMEnable ? R.drawable.lw008_ic_checked : R.drawable.lw008_ic_unchecked);
+                                            mBind.ivTlmEnable.setImageResource(mTLMEnable ? R.drawable.ic_checked : R.drawable.ic_unchecked);
                                         }
                                         break;
                                 }
@@ -190,6 +190,6 @@ public class FilterTLMActivity extends BaseActivity {
         if (isWindowLocked())
             return;
         mTLMEnable = !mTLMEnable;
-        mBind.ivTlmEnable.setImageResource(mTLMEnable ? R.drawable.lw008_ic_checked : R.drawable.lw008_ic_unchecked);
+        mBind.ivTlmEnable.setImageResource(mTLMEnable ? R.drawable.ic_checked : R.drawable.ic_unchecked);
     }
 }

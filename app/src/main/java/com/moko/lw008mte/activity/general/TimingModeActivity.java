@@ -23,7 +23,7 @@ import com.moko.lw008mte.R;
 import com.moko.lw008mte.activity.BaseActivity;
 import com.moko.lw008mte.adapter.TimePointAdapter;
 import com.moko.lw008mte.databinding.Lw008MteActivityTimingModeBinding;
-import com.moko.lw008mte.dialog.BottomDialog;
+import com.moko.lib.loraui.dialog.BottomDialog;
 import com.moko.lw008mte.entity.TimePoint;
 import com.moko.lw008mte.entity.TimeSegmentedPoint;
 import com.moko.lw008mte.utils.ToastUtils;

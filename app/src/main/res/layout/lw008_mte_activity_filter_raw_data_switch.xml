@@ -7,7 +7,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="55dp"
-        android:background="@color/lw008_blue_2f84d0">
+        android:background="@color/blue_2f84d0">
 
         <ImageView
             android:layout_width="wrap_content"
@@ -16,14 +16,14 @@
             android:paddingLeft="12dp"
             android:paddingRight="12dp"
             android:scaleType="fitCenter"
-            android:src="@drawable/lw008_ic_back" />
+            android:src="@drawable/ic_back" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:text="Filter by Raw Data"
-            android:textColor="@color/lw008_white_ffffff"
+            android:textColor="@color/white_ffffff"
             android:textSize="17sp"
             android:textStyle="bold" />
     </RelativeLayout>
@@ -31,14 +31,14 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/lw008_grey_f2f2f2">
+        android:background="@color/grey_f2f2f2">
 
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:background="@color/lw008_white_ffffff"
+            android:background="@color/white_ffffff"
             android:orientation="vertical"
             android:paddingBottom="20dp">
 
@@ -55,7 +55,7 @@
                     android:layout_marginLeft="12dp"
                     android:layout_marginRight="12dp"
                     android:text="iBeacon"
-                    android:textColor="@color/lw008_black_333333"
+                    android:textColor="@color/black_333333"
                     android:textSize="15sp"
                     android:textStyle="bold" />
 
@@ -67,16 +67,16 @@
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="12dp"
                     android:layout_marginRight="12dp"
-                    android:drawableRight="@drawable/lw008_ic_arrow_right"
+                    android:drawableRight="@drawable/ic_arrow_right"
                     android:drawablePadding="10dp"
                     android:gravity="center_vertical"
                     android:text="ON"
-                    android:textColor="@color/lw008_black_333333"
+                    android:textColor="@color/black_333333"
                     android:textSize="15sp"
                     android:textStyle="bold" />
             </RelativeLayout>
 
-            <View style="@style/lw008_divider_line" />
+            <View style="@style/divider_line" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -91,7 +91,7 @@
                     android:layout_marginLeft="12dp"
                     android:layout_marginRight="12dp"
                     android:text="Eddystone-UID"
-                    android:textColor="@color/lw008_black_333333"
+                    android:textColor="@color/black_333333"
                     android:textSize="15sp"
                     android:textStyle="bold" />
 
@@ -103,16 +103,16 @@
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="12dp"
                     android:layout_marginRight="12dp"
-                    android:drawableRight="@drawable/lw008_ic_arrow_right"
+                    android:drawableRight="@drawable/ic_arrow_right"
                     android:drawablePadding="10dp"
                     android:gravity="center_vertical"
                     android:text="ON"
-                    android:textColor="@color/lw008_black_333333"
+                    android:textColor="@color/black_333333"
                     android:textSize="15sp"
                     android:textStyle="bold" />
             </RelativeLayout>
 
-            <View style="@style/lw008_divider_line" />
+            <View style="@style/divider_line" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -127,7 +127,7 @@
                     android:layout_marginLeft="12dp"
                     android:layout_marginRight="12dp"
                     android:text="Eddystone-URL"
-                    android:textColor="@color/lw008_black_333333"
+                    android:textColor="@color/black_333333"
                     android:textSize="15sp"
                     android:textStyle="bold" />
 
@@ -139,16 +139,16 @@
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="12dp"
                     android:layout_marginRight="12dp"
-                    android:drawableRight="@drawable/lw008_ic_arrow_right"
+                    android:drawableRight="@drawable/ic_arrow_right"
                     android:drawablePadding="10dp"
                     android:gravity="center_vertical"
                     android:text="ON"
-                    android:textColor="@color/lw008_black_333333"
+                    android:textColor="@color/black_333333"
                     android:textSize="15sp"
                     android:textStyle="bold" />
             </RelativeLayout>
 
-            <View style="@style/lw008_divider_line" />
+            <View style="@style/divider_line" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -163,7 +163,7 @@
                     android:layout_marginLeft="12dp"
                     android:layout_marginRight="12dp"
                     android:text="Eddystone-TLM"
-                    android:textColor="@color/lw008_black_333333"
+                    android:textColor="@color/black_333333"
                     android:textSize="15sp"
                     android:textStyle="bold" />
 
@@ -175,16 +175,16 @@
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="12dp"
                     android:layout_marginRight="12dp"
-                    android:drawableRight="@drawable/lw008_ic_arrow_right"
+                    android:drawableRight="@drawable/ic_arrow_right"
                     android:drawablePadding="10dp"
                     android:gravity="center_vertical"
                     android:text="ON"
-                    android:textColor="@color/lw008_black_333333"
+                    android:textColor="@color/black_333333"
                     android:textSize="15sp"
                     android:textStyle="bold" />
             </RelativeLayout>
 
-            <View style="@style/lw008_divider_line" />
+            <View style="@style/divider_line" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -199,7 +199,7 @@
                     android:layout_marginLeft="12dp"
                     android:layout_marginRight="12dp"
                     android:text="BXP - iBeacon"
-                    android:textColor="@color/lw008_black_333333"
+                    android:textColor="@color/black_333333"
                     android:textSize="15sp"
                     android:textStyle="bold" />
 
@@ -211,16 +211,16 @@
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="12dp"
                     android:layout_marginRight="12dp"
-                    android:drawableRight="@drawable/lw008_ic_arrow_right"
+                    android:drawableRight="@drawable/ic_arrow_right"
                     android:drawablePadding="10dp"
                     android:gravity="center_vertical"
                     android:text="ON"
-                    android:textColor="@color/lw008_black_333333"
+                    android:textColor="@color/black_333333"
                     android:textSize="15sp"
                     android:textStyle="bold" />
             </RelativeLayout>
 
-            <View style="@style/lw008_divider_line" />
+            <View style="@style/divider_line" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -235,7 +235,7 @@
                     android:layout_marginLeft="12dp"
                     android:layout_marginRight="12dp"
                     android:text="BXP - Device Info"
-                    android:textColor="@color/lw008_black_333333"
+                    android:textColor="@color/black_333333"
                     android:textSize="15sp"
                     android:textStyle="bold" />
 
@@ -247,10 +247,10 @@
                     android:layout_centerVertical="true"
                     android:paddingLeft="12dp"
                     android:paddingRight="12dp"
-                    android:src="@drawable/lw008_ic_unchecked" />
+                    android:src="@drawable/ic_unchecked" />
             </RelativeLayout>
 
-            <View style="@style/lw008_divider_line" />
+            <View style="@style/divider_line" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -265,7 +265,7 @@
                     android:layout_marginLeft="12dp"
                     android:layout_marginRight="12dp"
                     android:text="BXP – ACC"
-                    android:textColor="@color/lw008_black_333333"
+                    android:textColor="@color/black_333333"
                     android:textSize="15sp"
                     android:textStyle="bold" />
 
@@ -277,10 +277,10 @@
                     android:layout_centerVertical="true"
                     android:paddingLeft="12dp"
                     android:paddingRight="12dp"
-                    android:src="@drawable/lw008_ic_unchecked" />
+                    android:src="@drawable/ic_unchecked" />
             </RelativeLayout>
 
-            <View style="@style/lw008_divider_line" />
+            <View style="@style/divider_line" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -295,7 +295,7 @@
                     android:layout_marginLeft="12dp"
                     android:layout_marginRight="12dp"
                     android:text="@string/bxp_t_h"
-                    android:textColor="@color/lw008_black_333333"
+                    android:textColor="@color/black_333333"
                     android:textSize="15sp"
                     android:textStyle="bold" />
 
@@ -307,10 +307,10 @@
                     android:layout_centerVertical="true"
                     android:paddingLeft="12dp"
                     android:paddingRight="12dp"
-                    android:src="@drawable/lw008_ic_unchecked" />
+                    android:src="@drawable/ic_unchecked" />
             </RelativeLayout>
 
-            <View style="@style/lw008_divider_line" />
+            <View style="@style/divider_line" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -325,7 +325,7 @@
                     android:layout_marginLeft="12dp"
                     android:layout_marginRight="12dp"
                     android:text="BXP - Button"
-                    android:textColor="@color/lw008_black_333333"
+                    android:textColor="@color/black_333333"
                     android:textSize="15sp"
                     android:textStyle="bold" />
 
@@ -337,16 +337,16 @@
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="12dp"
                     android:layout_marginRight="12dp"
-                    android:drawableRight="@drawable/lw008_ic_arrow_right"
+                    android:drawableRight="@drawable/ic_arrow_right"
                     android:drawablePadding="10dp"
                     android:gravity="center_vertical"
                     android:text="ON"
-                    android:textColor="@color/lw008_black_333333"
+                    android:textColor="@color/black_333333"
                     android:textSize="15sp"
                     android:textStyle="bold" />
             </RelativeLayout>
 
-            <View style="@style/lw008_divider_line" />
+            <View style="@style/divider_line" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -361,7 +361,7 @@
                     android:layout_marginLeft="12dp"
                     android:layout_marginRight="12dp"
                     android:text="BXP - T&amp;S"
-                    android:textColor="@color/lw008_black_333333"
+                    android:textColor="@color/black_333333"
                     android:textSize="15sp"
                     android:textStyle="bold" />
 
@@ -373,16 +373,16 @@
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="12dp"
                     android:layout_marginRight="12dp"
-                    android:drawableRight="@drawable/lw008_ic_arrow_right"
+                    android:drawableRight="@drawable/ic_arrow_right"
                     android:drawablePadding="10dp"
                     android:gravity="center_vertical"
                     android:text="ON"
-                    android:textColor="@color/lw008_black_333333"
+                    android:textColor="@color/black_333333"
                     android:textSize="15sp"
                     android:textStyle="bold" />
             </RelativeLayout>
 
-            <View style="@style/lw008_divider_line" />
+            <View style="@style/divider_line" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -397,7 +397,7 @@
                     android:layout_marginLeft="12dp"
                     android:layout_marginRight="12dp"
                     android:text="MK-PIR"
-                    android:textColor="@color/lw008_black_333333"
+                    android:textColor="@color/black_333333"
                     android:textSize="15sp"
                     android:textStyle="bold" />
 
@@ -409,16 +409,16 @@
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="12dp"
                     android:layout_marginRight="12dp"
-                    android:drawableRight="@drawable/lw008_ic_arrow_right"
+                    android:drawableRight="@drawable/ic_arrow_right"
                     android:drawablePadding="10dp"
                     android:gravity="center_vertical"
                     android:text="ON"
-                    android:textColor="@color/lw008_black_333333"
+                    android:textColor="@color/black_333333"
                     android:textSize="15sp"
                     android:textStyle="bold" />
             </RelativeLayout>
 
-            <View style="@style/lw008_divider_line" />
+            <View style="@style/divider_line" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -433,7 +433,7 @@
                     android:layout_marginLeft="12dp"
                     android:layout_marginRight="12dp"
                     android:text="MK-TOF"
-                    android:textColor="@color/lw008_black_333333"
+                    android:textColor="@color/black_333333"
                     android:textSize="15sp"
                     android:textStyle="bold" />
 
@@ -445,16 +445,16 @@
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="12dp"
                     android:layout_marginRight="12dp"
-                    android:drawableRight="@drawable/lw008_ic_arrow_right"
+                    android:drawableRight="@drawable/ic_arrow_right"
                     android:drawablePadding="10dp"
                     android:gravity="center_vertical"
                     android:text="ON"
-                    android:textColor="@color/lw008_black_333333"
+                    android:textColor="@color/black_333333"
                     android:textSize="15sp"
                     android:textStyle="bold" />
             </RelativeLayout>
 
-            <View style="@style/lw008_divider_line" />
+            <View style="@style/divider_line" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -469,7 +469,7 @@
                     android:layout_marginLeft="12dp"
                     android:layout_marginRight="12dp"
                     android:text="Other"
-                    android:textColor="@color/lw008_black_333333"
+                    android:textColor="@color/black_333333"
                     android:textSize="15sp"
                     android:textStyle="bold" />
 
@@ -481,16 +481,16 @@
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="12dp"
                     android:layout_marginRight="12dp"
-                    android:drawableRight="@drawable/lw008_ic_arrow_right"
+                    android:drawableRight="@drawable/ic_arrow_right"
                     android:drawablePadding="10dp"
                     android:gravity="center_vertical"
                     android:text="ON"
-                    android:textColor="@color/lw008_black_333333"
+                    android:textColor="@color/black_333333"
                     android:textSize="15sp"
                     android:textStyle="bold" />
             </RelativeLayout>
 
-            <View style="@style/lw008_divider_line" />
+            <View style="@style/divider_line" />
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

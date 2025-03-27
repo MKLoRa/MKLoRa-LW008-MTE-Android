@@ -18,7 +18,7 @@ import com.moko.lw008mte.activity.BaseActivity;
 import com.moko.lw008mte.activity.LoRaLW008MTEMainActivity;
 import com.moko.lw008mte.adapter.LogDataListAdapter;
 import com.moko.lw008mte.databinding.Lw008MteActivityLogDataBinding;
-import com.moko.lw008mte.dialog.AlertMessageDialog;
+import com.moko.lib.loraui.dialog.AlertMessageDialog;
 import com.moko.lw008mte.entity.LogData;
 import com.moko.lw008mte.utils.Utils;
 import com.moko.support.lw008mte.LoRaLW008MTEMokoSupport;
@@ -156,7 +156,7 @@ public class LogDataActivity extends BaseActivity implements BaseQuickAdapter.On
             storeString = new StringBuilder();
             mBind.tvSyncSwitch.setText("Stop");
             isSync = true;
-            animation = AnimationUtils.loadAnimation(this, R.anim.lw008_rotate_refresh);
+            animation = AnimationUtils.loadAnimation(this, R.anim.rotate_refresh);
             mBind.ivSync.startAnimation(animation);
             LoRaLW008MTEMokoSupport.getInstance().enableLogNotify();
             Calendar calendar = Calendar.getInstance();

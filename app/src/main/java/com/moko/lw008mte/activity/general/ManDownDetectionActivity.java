@@ -18,7 +18,7 @@ import com.moko.ble.lib.task.OrderTaskResponse;
 import com.moko.ble.lib.utils.MokoUtils;
 import com.moko.lw008mte.activity.BaseActivity;
 import com.moko.lw008mte.databinding.Lw008MteActivityManDownDetectionBinding;
-import com.moko.lw008mte.dialog.AlertMessageDialog;
+import com.moko.lib.loraui.dialog.AlertMessageDialog;
 import com.moko.lw008mte.utils.ToastUtils;
 import com.moko.support.lw008mte.LoRaLW008MTEMokoSupport;
 import com.moko.support.lw008mte.OrderTaskAssembler;

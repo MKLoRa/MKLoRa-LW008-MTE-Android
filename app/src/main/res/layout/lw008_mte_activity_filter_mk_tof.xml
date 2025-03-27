@@ -3,13 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/lw008_grey_f2f2f2"
+    android:background="@color/grey_f2f2f2"
     android:orientation="vertical">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="55dp"
-        android:background="@color/lw008_blue_2f84d0">
+        android:background="@color/blue_2f84d0">
 
         <ImageView
             android:layout_width="wrap_content"
@@ -18,14 +18,14 @@
             android:paddingLeft="12dp"
             android:paddingRight="12dp"
             android:scaleType="fitCenter"
-            android:src="@drawable/lw008_ic_back" />
+            android:src="@drawable/ic_back" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:text="MK-TOF Filter"
-            android:textColor="@color/lw008_white_ffffff"
+            android:textColor="@color/white_ffffff"
             android:textSize="17sp"
             android:textStyle="bold" />
 
@@ -37,19 +37,19 @@
             android:onClick="onSave"
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
-            android:src="@drawable/lw008_ic_save" />
+            android:src="@drawable/ic_save" />
     </RelativeLayout>
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/lw008_grey_f2f2f2">
+        android:background="@color/grey_f2f2f2">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:background="@color/lw008_white_ffffff"
+            android:background="@color/white_ffffff"
             android:orientation="vertical"
             android:paddingBottom="20dp">
 
@@ -61,22 +61,22 @@
                 android:layout_marginRight="12dp"
                 android:button="@null"
                 android:checked="false"
-                android:drawableRight="@drawable/lw008_selector_cb_btn"
+                android:drawableRight="@drawable/selector_cb_btn"
                 android:text="MK TOF"
-                android:textColor="@color/lw008_black_333333"
+                android:textColor="@color/black_333333"
                 android:textSize="15sp"
                 android:textStyle="bold"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <View style="@style/lw008_divider_line" />
+            <View style="@style/divider_line" />
 
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/lw008_white_ffffff"
+                android:background="@color/white_ffffff"
                 android:focusable="true"
                 android:focusableInTouchMode="true"
                 android:padding="10dp">
@@ -85,7 +85,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="MFG Code"
-                    android:textColor="@color/lw008_black_333333"
+                    android:textColor="@color/black_333333"
                     android:textSize="15sp"
                     android:textStyle="bold"
                     app:layout_constraintBottom_toBottomOf="@id/iv_tof_add"
@@ -99,7 +99,7 @@
                     android:clickable="true"
                     android:onClick="onDel"
                     android:padding="12dp"
-                    android:src="@drawable/lw008_ic_del"
+                    android:src="@drawable/ic_del"
                     app:layout_constraintBottom_toBottomOf="@id/iv_tof_add"
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toTopOf="@id/iv_tof_add" />
@@ -111,7 +111,7 @@
                     android:clickable="true"
                     android:onClick="onAdd"
                     android:padding="12dp"
-                    android:src="@drawable/lw008_ic_add"
+                    android:src="@drawable/ic_add"
                     app:layout_constraintRight_toLeftOf="@id/iv_tof_del"
                     app:layout_constraintTop_toTopOf="parent" />
 

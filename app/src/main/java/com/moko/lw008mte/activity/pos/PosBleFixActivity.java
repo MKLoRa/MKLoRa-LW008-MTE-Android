@@ -23,7 +23,7 @@ import com.moko.lw008mte.activity.filter.FilterAdvNameActivity;
 import com.moko.lw008mte.activity.filter.FilterMacAddressActivity;
 import com.moko.lw008mte.activity.filter.FilterRawDataSwitchActivity;
 import com.moko.lw008mte.databinding.Lw008MteActivityPosBleBinding;
-import com.moko.lw008mte.dialog.BottomDialog;
+import com.moko.lib.loraui.dialog.BottomDialog;
 import com.moko.lw008mte.utils.ToastUtils;
 import com.moko.support.lw008mte.LoRaLW008MTEMokoSupport;
 import com.moko.support.lw008mte.OrderTaskAssembler;

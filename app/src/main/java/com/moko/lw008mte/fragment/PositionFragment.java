@@ -44,17 +44,17 @@ public class PositionFragment extends Fragment {
 
     public void setOfflineLocationEnable(int enable) {
         mOfflineLocationEnable = enable == 1;
-        mBind.ivOfflineFix.setImageResource(mOfflineLocationEnable ? R.drawable.lw008_ic_checked : R.drawable.lw008_ic_unchecked);
+        mBind.ivOfflineFix.setImageResource(mOfflineLocationEnable ? R.drawable.ic_checked : R.drawable.ic_unchecked);
     }
 
     public void setExtremeModeEnable(int enable) {
         mExtremeModeEnable = enable == 1;
-        mBind.ivGPSExtremeMode.setImageResource(mExtremeModeEnable ? R.drawable.lw008_ic_checked : R.drawable.lw008_ic_unchecked);
+        mBind.ivGPSExtremeMode.setImageResource(mExtremeModeEnable ? R.drawable.ic_checked : R.drawable.ic_unchecked);
     }
 
     public void setVoltageReportEnable(int enable) {
         mVoltageReportEnable = enable == 1;
-        mBind.ivVoltageReport.setImageResource(mVoltageReportEnable ? R.drawable.lw008_ic_checked : R.drawable.lw008_ic_unchecked);
+        mBind.ivVoltageReport.setImageResource(mVoltageReportEnable ? R.drawable.ic_checked : R.drawable.ic_unchecked);
     }
 
 

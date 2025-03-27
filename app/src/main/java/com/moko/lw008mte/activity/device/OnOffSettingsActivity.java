@@ -18,8 +18,8 @@ import com.moko.lw008mte.AppConstants;
 import com.moko.lw008mte.R;
 import com.moko.lw008mte.activity.BaseActivity;
 import com.moko.lw008mte.databinding.Lw008MteActivityOnOffSettingsBinding;
-import com.moko.lw008mte.dialog.AlertMessageDialog;
-import com.moko.lw008mte.dialog.BottomDialog;
+import com.moko.lib.loraui.dialog.AlertMessageDialog;
+import com.moko.lib.loraui.dialog.BottomDialog;
 import com.moko.lw008mte.utils.ToastUtils;
 import com.moko.support.lw008mte.LoRaLW008MTEMokoSupport;
 import com.moko.support.lw008mte.OrderTaskAssembler;
@@ -183,21 +183,21 @@ public class OnOffSettingsActivity extends BaseActivity {
                                     if (length == 1) {
                                         int enable = value[5] & 0xFF;
                                         shutdownPayloadOpen = enable == 1;
-                                        mBind.ivShutdownPayload.setImageResource(enable == 1 ? R.drawable.lw008_ic_checked : R.drawable.lw008_ic_unchecked);
+                                        mBind.ivShutdownPayload.setImageResource(enable == 1 ? R.drawable.ic_checked : R.drawable.ic_unchecked);
                                     }
                                     break;
                                 case KEY_OFF_BY_BUTTON:
                                     if (length == 1) {
                                         int enable = value[5] & 0xFF;
                                         offByButtonOpen = enable == 1;
-                                        mBind.ivOffByButton.setImageResource(enable == 1 ? R.drawable.lw008_ic_checked : R.drawable.lw008_ic_unchecked);
+                                        mBind.ivOffByButton.setImageResource(enable == 1 ? R.drawable.ic_checked : R.drawable.ic_unchecked);
                                     }
                                     break;
                                 case KEY_AUTO_POWER_ON_ENABLE:
                                     if (length == 1) {
                                         int enable = value[5] & 0xFF;
                                         autoPowerOnOpen = enable == 1;
-                                        mBind.ivAutoPowerOn.setImageResource(enable == 1 ? R.drawable.lw008_ic_checked : R.drawable.lw008_ic_unchecked);
+                                        mBind.ivAutoPowerOn.setImageResource(enable == 1 ? R.drawable.ic_checked : R.drawable.ic_unchecked);
                                     }
                                     break;
                             }

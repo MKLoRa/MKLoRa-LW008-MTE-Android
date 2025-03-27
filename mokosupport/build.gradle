@@ -1,10 +1,10 @@
 apply plugin: 'com.android.library'
 
 android {
+    namespace "com.moko.support.lw008mte"
     compileSdk 34
 
     defaultConfig {
-        namespace = "com.moko.support.lw008mte"
         minSdkVersion 26
         targetSdk 34
         versionCode 4
@@ -26,10 +26,10 @@ dependencies {
     api files('libs/mokoBleLib.jar')
     api 'no.nordicsemi.android.support.v18:scanner:1.6.0'
     api 'no.nordicsemi.android:dfu:2.4.1'
-    api 'org.greenrobot:eventbus:3.2.0'
+    api 'org.greenrobot:eventbus:3.3.1'
     api 'com.elvishew:xlog:1.6.1'
-    implementation 'no.nordicsemi.android:ble:2.7.2'
-    implementation 'androidx.appcompat:appcompat:1.0.0'
+    implementation 'no.nordicsemi.android:ble:2.7.3'
+    implementation 'androidx.appcompat:appcompat:1.6.1'
 }
 
 //修改jar名字+将指定jar生成的地方

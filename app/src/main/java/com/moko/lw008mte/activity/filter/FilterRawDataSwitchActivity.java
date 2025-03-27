@@ -123,10 +123,10 @@ public class FilterRawDataSwitchActivity extends BaseActivity {
                                             mBind.tvFilterByUid.setText(value[7] == 1 ? "ON" : "OFF");
                                             mBind.tvFilterByUrl.setText(value[8] == 1 ? "ON" : "OFF");
                                             mBind.tvFilterByTlm.setText(value[9] == 1 ? "ON" : "OFF");
-                                            mBind.ivFilterByBxpAcc.setImageResource(value[10] == 1 ? R.drawable.lw008_ic_checked : R.drawable.lw008_ic_unchecked);
-                                            mBind.ivFilterByBxpTh.setImageResource(value[11] == 1 ? R.drawable.lw008_ic_checked : R.drawable.lw008_ic_unchecked);
+                                            mBind.ivFilterByBxpAcc.setImageResource(value[10] == 1 ? R.drawable.ic_checked : R.drawable.ic_unchecked);
+                                            mBind.ivFilterByBxpTh.setImageResource(value[11] == 1 ? R.drawable.ic_checked : R.drawable.ic_unchecked);
                                             mBind.tvFilterByBxpTag.setText(value[12] == 1 ? "ON" : "OFF");
-                                            mBind.ivFilterByBxpDevice.setImageResource(value[13] == 1 ? R.drawable.lw008_ic_checked : R.drawable.lw008_ic_unchecked);
+                                            mBind.ivFilterByBxpDevice.setImageResource(value[13] == 1 ? R.drawable.ic_checked : R.drawable.ic_unchecked);
                                             mBind.tvFilterByBxpButton.setText(value[14] == 1 ? "ON" : "OFF");
                                             mBind.tvFilterByPir.setText(value[15] == 1 ? "ON" : "OFF");
                                             mBind.tvFilterByTof.setText(value[16] == 1 ? "ON" : "OFF");
