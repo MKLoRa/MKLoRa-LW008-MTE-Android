@@ -5,8 +5,6 @@ import com.moko.ble.lib.utils.MokoUtils;
 import com.moko.support.lw008mte.entity.OrderCHAR;
 import com.moko.support.lw008mte.entity.ParamsKeyEnum;
 
-import java.util.Arrays;
-
 public class ParamsReadTask extends OrderTask {
     public byte[] data;
 

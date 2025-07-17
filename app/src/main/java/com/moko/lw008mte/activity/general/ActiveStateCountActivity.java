@@ -13,24 +13,15 @@ import android.view.View;
 import com.moko.ble.lib.MokoConstants;
 import com.moko.ble.lib.event.ConnectStatusEvent;
 import com.moko.ble.lib.event.OrderTaskResponseEvent;
-import com.moko.ble.lib.task.OrderTask;
 import com.moko.ble.lib.task.OrderTaskResponse;
-import com.moko.ble.lib.utils.MokoUtils;
 import com.moko.lw008mte.activity.BaseActivity;
 import com.moko.lw008mte.databinding.Lw008MteActivityActiveStateCountBinding;
 import com.moko.lw008mte.utils.ToastUtils;
-import com.moko.support.lw008mte.LoRaLW008MTEMokoSupport;
-import com.moko.support.lw008mte.OrderTaskAssembler;
 import com.moko.support.lw008mte.entity.OrderCHAR;
-import com.moko.support.lw008mte.entity.ParamsKeyEnum;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 public class ActiveStateCountActivity extends BaseActivity {
 

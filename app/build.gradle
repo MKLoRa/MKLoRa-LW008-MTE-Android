@@ -6,13 +6,13 @@ if (!isLibrary.toBoolean()) {
 
 android {
     namespace "com.moko.lw008mte"
-    compileSdk 34
+    compileSdk 35
 
     defaultConfig {
-        minSdk 26
-        targetSdk 34
-        versionCode 5
-        versionName "1.0.4"
+        minSdk 28
+        targetSdk 35
+        versionCode 105
+        versionName "1.0.5"
 
         def formatDate = new Date().format("yyyyMMddHHmm")
         setProperty("archivesBaseName", "LW008-MTE_${versionName}_${formatDate}")
