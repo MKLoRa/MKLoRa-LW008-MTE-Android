@@ -48,7 +48,7 @@ public class DeviceModeActivity extends BaseActivity {
         mValues.add("Periodic Mode");
         mValues.add("Timing Mode");
         mValues.add("Motion Mode");
-        mValues.add("Timing & Periodic Mode");
+        mValues.add("Time-Segmented Mode");
         EventBus.getDefault().register(this);
         // 注册广播接收器
         IntentFilter filter = new IntentFilter();
