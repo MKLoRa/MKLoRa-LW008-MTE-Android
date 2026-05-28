@@ -132,7 +132,7 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tvSwipeTips"
-            tools:listitem="@layout/mte_item_time_segmented_point" />
+            tools:listitem="@layout/lw008_mte_item_time_segmented_point" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
