@@ -149,5 +149,5 @@
         android:overScrollMode="never"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
-        tools:listitem="@layout/mte_list_item_device" />
+        tools:listitem="@layout/lw008_mte_list_item_device" />
 </LinearLayout>
